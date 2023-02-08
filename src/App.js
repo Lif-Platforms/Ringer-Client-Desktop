@@ -2,7 +2,7 @@
 import './App.css';
 import './css/login.css';
 //import modules 
-import React from 'react'
+import React from 'react';
 
 
 //Component for the login form
