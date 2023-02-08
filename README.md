@@ -1,70 +1,30 @@
-# Getting Started with Create React App
+![Ringer Logo](https://github.com/Lif-Platforms/Ringer-Client-Windows/blob/main/.github/Ringerlogo.png)
+# Ringer-Client
+Ringer is a new messaging app for windows. Its currently in beta but lets work together to make it better. The code here is snapshot code so it might not work as intended. To get the latest stable build pls download the installer. 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**NOTE: Ringer doesn't have very good security as of right now. If you do sign up please make your password not the same as everywhere else.**
 
-## Available Scripts
+# Server Code
 
-In the project directory, you can run:
+Ringers server code is located in another repository: https://github.com/Lif-Platforms/Ringer-Server
 
-### `npm start`
+# Install Latest Stable Build
+ 1. Navigate to the main directory
+ 2. Download the file named "Ringer Installer.exe". 
+ 3. Once Downloaded, run the "Ringer Installer.exe", wait a minute for the installer to open.
+ 4. Once open, click the "Install" button and Ringer will begin installing.
+ 5. After the installer completes, search for Ringer in windows search. If you cant find Ringer through windows search, navigate to "C:/Ringer Software" and run "Ringer.exe" 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+# Ringer Setup
+**NOTE: This section is for the software setup after installation. If you have not installed Ringer, please refer to the previous section.**
+ 1. Upon first launch of the ringer software, you should see a window saying "Welcome To Ringer". Underneath, click the button "Lets Go". 
+ 2. If you do not have a ringer account, click "No, Create One" If you have a ringer account, click "Yes, Log Me In" and login from there. 
+ 3. If you don't have a ringer account, enter your information and click "Create". If you get a "Failed to connect to server" message, close the software  and try again later. 
+ **NOTE: Use unique a unique password. Passwords are viewable by the owner of the ringer server.** 
+ 4. After you create your account, you will see a "Account Created" screen. Click the "Lets Go" button and your all set. 
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+#  Credits
+ - Superior126
+ 
+ # How To Contribute
+ In the projects setion there is a project that has a list of things that need to be worked on and their status. Working on the stuff in the project would be the best way to contribute. 
