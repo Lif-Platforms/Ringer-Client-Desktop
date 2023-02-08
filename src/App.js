@@ -1,6 +1,7 @@
 //import files
 import './App.css';
 import './css/login.css';
+import { logIn } from './Scripts/login.js'
 //import modules 
 import React from 'react';
 
@@ -9,10 +10,14 @@ import React from 'react';
 class LoginForm extends React.Component {
   render () {
     return(
-      <form>
+      <form className='loginForm'>
         <input type="text" placeholder="Username" id="username" />
         <br />
-        <input type="text" placeholder='Password' id='password'/>
+        <br />
+        <input type="password" placeholder='Password' id='password'/>
+        <br />
+        <br />
+        <button className='loginButton' onClick={logIn} type="button">Login</button>
       </form>
     )
   }
@@ -36,7 +41,7 @@ function App() {
     <div className="App">
       <div className="container">
         <section>
-          <h1>Login With Lif</h1>
+          <h1 className='loginLifHeader'>Login With Lif</h1>
           <LoginForm />
         </section>
         <SignUpForm />

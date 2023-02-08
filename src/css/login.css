@@ -18,7 +18,7 @@ section {
     background-image: url("../Images/login_bg.png");
     background-position: center;
     background-repeat: no-repeat;
-    padding-top: 10%;
+    padding-top: 50%;
 }
 
 .signUpHeader {
@@ -56,3 +56,46 @@ section {
     transition: 0.3s ease-in-out;
 }
 
+.loginLifHeader {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 50px;
+    color: orange;
+}
+
+.loginForm input {
+    font-size: 30px;
+    padding: 10px;
+    border-radius: 0.5em;
+    border-style: solid;
+    background-color: rgb(61, 61, 61);
+    color: white;
+}
+
+.loginButton {
+    padding: 8px;
+    background-color: orange;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: large;
+    border-color: transparent;
+    border-radius: 1em;
+    padding-left: 40px;
+    padding-right: 40px;
+    transition: 0.3s ease-in-out;
+    font-size: xx-large;
+}
+
+.loginButton:hover {
+    padding: 8px;
+    background-color: orange;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: large;
+    border-color: transparent;
+    border-radius: 1em;
+    padding-left: 40px;
+    padding-right: 40px;
+    transition: 0.3s ease-in-out;
+    font-size: xx-large;
+    transform: scale(1.1);
+}

@@ -7,8 +7,8 @@ function createWindow () {
   const mainWindow = new BrowserWindow({
     width: 1500,
     height: 800,
-    minWidth:1500,
-    minHeight: 800,
+    minWidth:900,
+    minHeight: 600,
     title: "Ringer",
     icon: __dirname + 'public/Ringer-Icon.ico',
     webPreferences: {
