@@ -5,14 +5,15 @@ const path = require('path')
 function createWindow () {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 1500,
-    height: 800,
+    width: 1000,
+    height: 600,
     minWidth:900,
     minHeight: 600,
     title: "Ringer",
     icon: __dirname + 'public/Ringer-Icon.ico',
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true
     }
   })
 
