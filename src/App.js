@@ -1,12 +1,12 @@
-//import files
+// Import files
 import './App.css';
 import './css/login.css';
-import { logIn } from './Scripts/login.js'
-//import modules 
+import { logIn } from './Scripts/login.js';
+// Import modules 
 import React from 'react';
 
 
-//Component for the login form
+// Component for the login form
 class LoginForm extends React.Component {
   render () {
     return(
@@ -19,11 +19,11 @@ class LoginForm extends React.Component {
         <br />
         <button className='loginButton' onClick={logIn} type="button">Login</button>
       </form>
-    )
+    );
   }
 }
 
-//Component for sign-up form
+// Component for sign-up form
 class SignUpForm extends React.Component {
   render () {
     return(
@@ -31,11 +31,22 @@ class SignUpForm extends React.Component {
         <h1 className='signUpHeader'>New Here?</h1>
         <button>Sign Up</button>
       </div>
-    )
+    );
   }
 }
 
-//Main App Function
+class LoginFooter extends React.Component {
+  render() {
+    return(
+      <div className='loginFooter'>
+        <a href='#placeholder'>Forgot Password</a>
+        <p id="loginStatus"></p>
+      </div>
+    );
+  }
+}
+
+// Main App Function
 function App() {
   return (
     <div className="App">
@@ -43,6 +54,7 @@ function App() {
         <section>
           <h1 className='loginLifHeader'>Login With Lif</h1>
           <LoginForm />
+          <LoginFooter />
         </section>
         <SignUpForm />
       </div>

@@ -10,9 +10,8 @@ function createWindow () {
     minWidth:900,
     minHeight: 600,
     title: "Ringer",
-    icon: __dirname + 'public/Ringer-Icon.ico',
+    icon: __dirname + 'public/favicon.ico',
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true
     }
   })
