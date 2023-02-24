@@ -100,3 +100,12 @@ section {
     font-size: xx-large;
     transform: scale(1.1);
 }
+
+.loginFooter {
+    padding-top: 30px;
+}
+
+.loginFooter a {
+    font-family: Arial, Helvetica, sans-serif;
+    color: aqua;
+}
