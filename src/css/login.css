@@ -79,10 +79,10 @@ section {
     font-family: Arial, Helvetica, sans-serif;
     font-size: large;
     border-color: transparent;
-    border-radius: 1em;
+    border-radius: 0.5em;
     padding-left: 40px;
     padding-right: 40px;
-    transition: 0.3s ease-in-out;
+    transition: 0.2s ease-in-out;
     font-size: xx-large;
 }
 
@@ -93,10 +93,10 @@ section {
     font-family: Arial, Helvetica, sans-serif;
     font-size: large;
     border-color: transparent;
-    border-radius: 1em;
+    border-radius: 0.5em;
     padding-left: 40px;
     padding-right: 40px;
-    transition: 0.3s ease-in-out;
+    transition: 0.2s ease-in-out;
     font-size: xx-large;
     transform: scale(1.1);
 }

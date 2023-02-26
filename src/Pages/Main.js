@@ -1,10 +1,14 @@
-import React from 'react';
+// Import Files
+import '../App.css';
+import '../css/main.css';
+// Import Modules
+import React from "react";
 
-export function MainPage() {
-    return (
-      <div>
-        <h2>Main</h2>
-      </div>
+function MainPage() {
+    return(
+        <div>
+            <h1>Test</h1>
+        </div>
     );
 }
 
