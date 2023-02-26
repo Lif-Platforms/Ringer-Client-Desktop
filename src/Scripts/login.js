@@ -1,4 +1,4 @@
-export function logIn() {
+export function logIn(navigate) {
     // Create a WebSocket instance
     const ws = new WebSocket('ws://localhost:8000');
 
@@ -43,7 +43,9 @@ export function logIn() {
             // Changes the status of "loginStatus"
             loginStatus.innerHTML = "Login Successful";
             
-            //Add Redirect Here
+            // Navigates to main page
+            console.log("Navigating to main page...");
+            navigate("../Pages/main");
         }
 
         // Checks if the login was not successful
@@ -53,6 +55,8 @@ export function logIn() {
 
             // Changes the status of "loginStatus"
             loginStatus.innerHTML = "Login Unsuccessful";
+
+            return "Login Bad";
         }
     });
 

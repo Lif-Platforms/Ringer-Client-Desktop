@@ -1,65 +1,41 @@
-// Import files
-import './App.css';
-import './css/login.css';
-import { logIn } from './Scripts/login.js';
-// Import modules 
 import React from 'react';
+import { BrowserRouter as Router, Route, useNavigate, Routes } from 'react-router-dom';
+import LoginPage from './Pages/login';
+import { useEffect, useState } from 'react';
+import MainPage from './Pages/main';
 
-
-// Component for the login form
-class LoginForm extends React.Component {
-  render () {
-    return(
-      <form className='loginForm'>
-        <input type="text" placeholder="Username" id="username" />
-        <br />
-        <br />
-        <input type="password" placeholder='Password' id='password'/>
-        <br />
-        <br />
-        <button className='loginButton' onClick={logIn} type="button">Login</button>
-      </form>
-    );
-  }
-}
-
-// Component for sign-up form
-class SignUpForm extends React.Component {
-  render () {
-    return(
-      <div className='signUp'>
-        <h1 className='signUpHeader'>New Here?</h1>
-        <button>Sign Up</button>
-      </div>
-    );
-  }
-}
-
-class LoginFooter extends React.Component {
-  render() {
-    return(
-      <div className='loginFooter'>
-        <a href='#placeholder'>Forgot Password</a>
-        <p id="loginStatus"></p>
-      </div>
-    );
-  }
-}
-
-// Main App Function
 function App() {
+
+  // Define the navigation
+  const navigate = useNavigate();
+  // This will be changed to something else later
+  const [redirectToLogin, setRedirectToLogin] = useState(false); // set this to true or false based on your condition
+
+  // Navigates to Login Page
+  useEffect(() => {
+    if (!redirectToLogin) {
+      console.log("Navigating to login page...")
+      setRedirectToLogin(true);
+      navigate("/Pages/login");
+    }
+  }, [redirectToLogin, navigate]);
+
   return (
-    <div className="App">
-      <div className="container">
-        <section>
-          <h1 className='loginLifHeader'>Login With Lif</h1>
-          <LoginForm />
-          <LoginFooter />
-        </section>
-        <SignUpForm />
-      </div>
+    <div>
+      <Routes>
+        <Route path="/Pages/login" element={<LoginPage />} />
+        <Route path="/Pages/main" element={<MainPage />} />
+      </Routes>
     </div>
   );
 }
 
-export default App;
+function Main() {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+}
+
+export default Main;

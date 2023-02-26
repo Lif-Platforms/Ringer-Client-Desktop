@@ -10,7 +10,7 @@ function createWindow () {
     minWidth:900,
     minHeight: 600,
     title: "Ringer",
-    icon: __dirname + 'public/favicon.ico',
+    icon: path.join(__dirname, 'favicon.ico'),
     webPreferences: {
       nodeIntegration: true
     }
@@ -21,6 +21,9 @@ function createWindow () {
 
   // and load the index.html of the app.
   mainWindow.loadURL('http://localhost:3000')
+
+  // Sets the icon for the app
+  mainWindow.setIcon(path.join(__dirname, '/public/Ringer-Icon.png'));
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
