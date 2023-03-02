@@ -1,0 +1,76 @@
+.appContainer {
+    display: grid;
+    grid-template-columns: 200px auto;
+    height: 100vh;
+}
+
+.sideBar {
+    margin-top: 10px;
+    width: 100%;
+    height: 85%;
+    background-color: rgb(39, 39, 39);
+    border-radius: 0.5em;
+    color: white;
+    margin-left: 20px;
+    user-select: none;
+}
+
+.sidebarHeader {
+    text-align: center;
+    font-size: x-small;
+    user-select: none;
+}
+
+.userProfile {
+    display: flex;
+    margin-left: 20px;
+    user-select: none;
+    background-color: rgb(39, 39, 39);
+    border-radius: 0.5em;
+    width: 100%;
+}
+
+.userProfile h1 {
+    color: white;
+    font-size: small;
+    vertical-align: middle;
+    padding-left: 10px;
+    padding-top: 3px;
+}
+
+.avatar img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    padding: 5px;
+    vertical-align: middle;
+}
+
+.messages {
+    background-color: rgb(39, 39, 39);
+    width: 100%;
+    height: 85%;
+    border-radius: 0.5em;
+    margin-top: 13px;
+}
+
+.messagesContainer {
+    margin-left: 40px;
+    margin-right: 20px;
+}
+
+.messageSender {
+    margin-right: 17px;
+}
+
+.messageSender input {
+    width: 100%;
+    border-radius: 0.5em;
+    margin-top: 15px;
+    height: 32px;
+    padding-left: 10px;
+    background-color: rgb(39, 39, 39);
+    color: white;
+    border: solid;
+    border-color: transparent;
+}
