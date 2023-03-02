@@ -4,6 +4,7 @@
     grid-template-columns: 70% auto;
     background-color: black;
     color: white;
+    user-select: none;
 }
 
 section {

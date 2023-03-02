@@ -13,4 +13,82 @@ body {
 html {
     padding: 0;
     margin: 0;
+}
+
+.windowHeader {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 20px;
+    background-color: #333; /* customize to your liking */
+    -webkit-app-region: drag;
+  }
+
+  .control {
+    position: absolute;
+    top: 0;
+    height: 20px;
+    width: 20px;
+    -webkit-app-region: no-drag;
+  }
+  
+  .minimize {
+    right: 48px;
+    transition: ease-in-out 0.2s;
+  }
+  
+  .minimize:hover {
+    right: 48px;
+    background-color: rgb(129, 129, 129);
+    transition: ease-in-out 0.2s;
+  }
+
+  .maximize {
+    right: 24px;
+    transition: ease-in-out 0.2s;
+  }
+
+  .maximize:hover {
+    right: 24px;
+    background-color: rgb(129, 129, 129);
+    transition: ease-in-out 0.2s;
+  }
+
+  .close {
+    right: 0;
+    transition: ease-in-out 0.2s;
+  }
+
+  .close:hover {
+    right: 0;
+    background-color: red;
+    transition: ease-in-out 0.2s;
+  }
+
+  .windowControls {
+    background-color: transparent;
+    border: none;
+    height: 20px;
+    width: 20px;
+    padding: 0;
+    margin: 0;
+  }
+
+  .windowControls img {
+    height: 20px;
+    width: 20px;
+    padding: 0;
+    margin: 0;
+  }
+
+  .windowTitle h1 {
+    color: white;
+    font-size: small;
+    top: 0;
+  }
+  .windowTitle {
+    left: 8px;
+    top: -8px;
+    position: absolute;
   }

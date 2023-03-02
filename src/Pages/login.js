@@ -6,7 +6,6 @@ import { logIn } from '../Scripts/login.js';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-
 // Component for the login form
 class LoginForm extends React.Component {
   render () {

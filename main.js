@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
 const path = require('path')
 
 function createWindow () {
@@ -9,7 +9,10 @@ function createWindow () {
     height: 600,
     minWidth:900,
     minHeight: 600,
+    frame: true,
     title: "Ringer",
+    contextIsolation: false,
+    enableRemoteModule: true,
     icon: path.join(__dirname, 'favicon.ico'),
     webPreferences: {
       nodeIntegration: true
