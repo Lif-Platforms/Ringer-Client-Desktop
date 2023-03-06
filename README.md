@@ -10,7 +10,7 @@ Ringer Client Windows is a Ringer Client made entirely in python. Ringer Client 
 
 # Server Code
 
-Ringers server code is located in another repository: https://github.com/Lif-Platforms/Ringer-Server
+Ringers server code is located in another repository: https://github.com/Lif-Platforms/New-Ringer-Server
 
 # Install Latest Stable Build
 This version of Ringer has not yet been published. We will update this section once we do!
