@@ -42,6 +42,9 @@ export function logIn(navigate) {
 
             // Changes the status of "loginStatus"
             loginStatus.innerHTML = "Login Successful";
+
+            // Closes websocket connection
+            ws.close()
             
             // Navigates to main page
             console.log("Navigating to main page...");
