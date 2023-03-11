@@ -6,10 +6,18 @@ import { addNewConversation } from '../Scripts/mainPage/connectionHandler';
 // Import Modules
 import React, { useState } from 'react';
 
-function SimplePopup(props) {
+// Pop up menu for adding new conversations
+function AddNewConversationMenu(props) {
   const handleClose = () => {
     props.onClose();
   };
+
+  // Function for handling adding conversations
+  async function handleAddConversation(username) {
+    const result = await addNewConversation(username);
+    
+    console.log(result); 
+  }
 
   return (
     <div className="popup">
@@ -18,10 +26,10 @@ function SimplePopup(props) {
           &times;
         </span>
         <h3>Add Conversation</h3>
-        <input placeholder='Example: RingerBot123'></input>
+        <input placeholder='Example: RingerBot123' id="conversationInput"></input>
         <br />
         <br />
-        <span className='addConversation' onClick={addNewConversation}>Add</span>
+        <span className='addConversation' onClick={() => handleAddConversation(document.getElementById('conversationInput').value)}>Add</span>
       </div>
     </div>
   );
@@ -44,7 +52,7 @@ function SideBar() {
       <div className="sidebarHeader">
         <h1>Direct Messages</h1>
         <button onClick={handleButtonClick}> + </button>
-        {showPopup && <SimplePopup onClose={handleClosePopup} />}
+        {showPopup && <AddNewConversationMenu onClose={handleClosePopup} />}
       </div>
     </div>
   );

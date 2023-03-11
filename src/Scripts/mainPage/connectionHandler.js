@@ -16,8 +16,10 @@ ws.addEventListener('close', (event) => {
 });
 
 // Function for adding direct messages
-export function addNewConversation() {
-    ws.send('Hello Server!'); // This is a test. will be removed later
+export async function addNewConversation(username) {
+    ws.send('Hello ' + username); // This is a test. will be removed later
+
+    return Promise.resolve('Hello World');
 }
 
 export default addNewConversation;

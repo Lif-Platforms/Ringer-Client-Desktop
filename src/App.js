@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, useNavigate, Routes } from 'react-route
 import LoginPage from './Pages/login';
 import { useEffect, useState } from 'react';
 import MainPage from './Pages/main';
+import CreateAccount from './Pages/createAccount';
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
       <Routes>
         <Route path="/Pages/login" element={<LoginPage />} />
         <Route path="/Pages/main" element={<MainPage />} />
+        <Route path="/Pages/createAccount" element={<CreateAccount />} />
       </Routes>
     </div>
   );
