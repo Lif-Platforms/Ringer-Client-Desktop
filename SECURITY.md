@@ -6,8 +6,8 @@ Here are the current supported versions of Ringer.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 3.0     | :white_check_mark: |
-| < 2.3   | :x:                |
+| 4.0     | :white_check_mark: |
+| < 3.0   | :x:                |
 
 ## Reporting a Vulnerability
 
