@@ -22,7 +22,7 @@ export async function createAccount() {
     // Handles Incoming Messages
     ws.addEventListener('message', (event) => {
         // Checks if the server asked for the credentials 
-        if(event.data === "CREDENTIALS?") {
+        if (event.data === "CREDENTIALS?") {
             // Gets the text inside the username input
             var usernameInput = document.getElementById('username');
             var username = usernameInput.value; 
@@ -41,7 +41,20 @@ export async function createAccount() {
 
             // Sends data to the server
             ws.send(data);
-
+        }
+        // Checks if the server says that the account already exists
+        if (event.data === "ERROR_ACCOUNT_EXISTING") {
+            // Changes the account status to say the account exists
+            const status = document.getElementById('accountStatus');
+            status.innerHTML = "Account Already Exists"; 
+            status.style.color = 'red'; 
+        }
+        // Checks if the server has created the account 
+        if (event.data === "ACCOUNT_CREATED") {
+            // Changes the account status to say that thw account has been created
+            const status = document.getElementById("accountStatus"); 
+            status.innerHTML = "Account Created";
+            status.style.color = "green"; 
         }
     })
 }

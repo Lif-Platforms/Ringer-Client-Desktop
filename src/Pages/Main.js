@@ -3,8 +3,9 @@ import '../App.css';
 import '../css/main.css';
 import profile from '../Images/profile_placeholder.png';
 import { addNewConversation } from '../Scripts/mainPage/connectionHandler';
+import { GetToken } from '../Scripts/mainPage/getToken';
 // Import Modules
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Pop up menu for adding new conversations
 function AddNewConversationMenu(props) {
@@ -25,7 +26,7 @@ function AddNewConversationMenu(props) {
         <span className="close-btn" onClick={handleClose}>
           &times;
         </span>
-        <h3>Add Conversation</h3>
+        <h3>Add Friend</h3>
         <input placeholder='Example: RingerBot123' id="conversationInput"></input>
         <br />
         <br />
@@ -50,7 +51,7 @@ function SideBar() {
   return (
     <div className="sideBar">
       <div className="sidebarHeader">
-        <h1>Direct Messages</h1>
+        <h1>Friends</h1>
         <button onClick={handleButtonClick}> + </button>
         {showPopup && <AddNewConversationMenu onClose={handleClosePopup} />}
       </div>
@@ -86,7 +87,16 @@ function MessageSender() {
   );
 }
 
+// Main Component for this page
 function MainPage() {
+  useEffect(() => {
+    async function Token(){
+      const token = await GetToken(); 
+
+      console.log("Token: " + token); 
+    }
+    Token()
+  }, []); 
   return (
     <div className="appContainer">
       <div>

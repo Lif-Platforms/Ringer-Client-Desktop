@@ -14,8 +14,10 @@ export function logIn(navigate) {
     ws.addEventListener('message', (event) => {
         console.log('Message received from server:', event.data);
 
+        var message = event.data;
+
         // Checks if the message sent by the server was asking for the login credentials
-        if (event.data === "SEND_CREDENTIALS") {
+        if (message === "SEND_CREDENTIALS") {
 
             // Gets the username from the input element
             var usernameInput = document.getElementById("username");
@@ -36,30 +38,46 @@ export function logIn(navigate) {
         }
 
         // Checks if the login was successful
-        if (event.data === "LOGIN_GOOD") {
+        if (message === "LOGIN_GOOD") {
             // Gets the element "loginStatus"
             const loginStatus = document.getElementById('loginStatus');
 
             // Changes the status of "loginStatus"
             loginStatus.innerHTML = "Login Successful";
+            loginStatus.style.color = "green";
 
-            // Closes websocket connection
-            ws.close()
-            
-            // Navigates to main page
-            console.log("Navigating to main page...");
-            navigate("../Pages/main");
+            // Requests a token from the server
+            ws.send('TOKEN');
         }
 
         // Checks if the login was not successful
-        if (event.data === "INVALID_CREDENTIALS") {
+        if (message === "INVALID_CREDENTIALS") {
             // Gets the element "loginStatus"
             const loginStatus = document.getElementById('loginStatus');
 
             // Changes the status of "loginStatus"
-            loginStatus.innerHTML = "Login Unsuccessful";
+            loginStatus.innerHTML = "Incorrect username or password";
+            loginStatus.style.color = "red";
 
             return "Login Bad";
+        }
+
+        // Checks if the server sent a token
+        if (message.startsWith('TOKEN:')) {
+            // Extracts the token from the message
+            var token = message.slice(6);
+
+            // Sets the token in a cookie for later access
+            document.cookie = "Token=" + token;
+            
+            // Closes the connection
+            ws.close();
+
+            // Navigates to main page
+            
+            console.log("Navigating to main page...");
+            navigate("../Pages/main");
+            
         }
     });
 
