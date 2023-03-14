@@ -17,7 +17,13 @@ ws.addEventListener('close', (event) => {
 
 // Function for adding direct messages
 export async function addNewConversation(username) {
-    ws.send('Hello ' + username); // This is a test. will be removed later
+    // Requests to send a friend request from the server 
+    ws.send("SEND_FRIEND_REQUEST");
+
+    // Adds a temporary event listener for communicating with the server
+    ws.addEventListener('message', (event) => {
+        console.log(event.data)
+    });
 
     return Promise.resolve('Hello World');
 }

@@ -18,6 +18,7 @@ function SignUpForm() {
                 <br />
                 <button type='button' onClick={createAccount}>Create Account</button>
             </form>
+            <p id='accountStatus'></p>
         </div>
     )
 }
