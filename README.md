@@ -4,6 +4,9 @@ Ringer is a new messaging app for windows. Its currently in beta but lets work t
 
 **NOTE: Ringer doesn't have very good security as of right now. If you do sign up please make your password not the same as everywhere else.**
 
+# HELP WANTED
+Lif Platforms is looking for contributers for Ringer and other services from Lif. If you are interested please reach out at: Lif.Platforms@gmail.com
+
 # Whats The Diffrence Between Ringer Windows and Ringer Desktop?
 
 Ringer Client Windows is a Ringer Client made entirely in python. Ringer Client Desktop is a complete rewrite of the Ringer python client using React and Electron. 
