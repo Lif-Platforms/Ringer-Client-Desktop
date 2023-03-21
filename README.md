@@ -21,8 +21,8 @@ This version of Ringer has not yet been published. We will update this section o
 # Ringer Setup
 This version of Ringer has not yet been published. We will update this section once we do!
 
-#  Contrubuters 
-[![](https://opencollective.com/html-react-parser/contributors.svg?width=890&button=false)](https://github.com/Lif-Platforms/RingerClient-Desktop/contributors)
+#  Our Team 
+<img src="https://avatars.githubusercontent.com/u/90008321?s=64&v=4"/>
  
  # How To Contribute
  In the projects setion there is a project that has a list of things that need to be worked on and their status. Working on the stuff in the project would be the best way to contribute. 
