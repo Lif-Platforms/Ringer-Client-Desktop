@@ -44,8 +44,6 @@ function FriendRequestsPopup({ onClose }) {
   const [isLoading, setIsLoading] = useState(true);
   const [notificationData, setNotificationData] = useState(null);
 
-  
-
   useEffect(() => {
     async function fetchData() {
       var output = await requestFriendRequestsList();

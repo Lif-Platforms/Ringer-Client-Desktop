@@ -1,0 +1,221 @@
+.appContainer {
+    display: grid;
+    grid-template-columns: 200px auto;
+    height: 100vh;
+}
+
+.sideBar {
+    margin-top: 10px;
+    width: 100%;
+    height: 85%;
+    background-color: rgb(39, 39, 39);
+    border-radius: 0.5em;
+    color: white;
+    margin-left: 20px;
+    user-select: none;
+}
+
+.sidebarHeader {
+    text-align: center;
+    font-size: x-small;
+    user-select: none;
+}
+
+.addFriendButton {
+    width: 90%;
+    font-weight: 900;
+    background-color: rgb(39, 39, 39);
+    border: solid;
+    border-color: white;
+    color: white;
+    border-radius: 0.5em;
+    text-align: center;
+    border-width: 1px;
+    transition: 0.2s;
+}
+
+.addFriendButton:hover {
+    transition: 0.2s;
+    width: 90%;
+    font-weight: 900;
+    background-color: rgb(85, 85, 85);
+    border: solid;
+    border-color: white;
+    color: white;
+    border-radius: 0.5em;
+    text-align: center;
+    border-width: 1px;
+}
+
+.userProfile {
+    margin-top: 14px;
+    display: flex;
+    margin-left: 20px;
+    user-select: none;
+    background-color: rgb(39, 39, 39);
+    border-radius: 0.5em;
+    width: 100%;
+}
+
+.userProfile h1 {
+    color: white;
+    font-size: small;
+    vertical-align: middle;
+    padding-left: 10px;
+    padding-top: 3px;
+}
+
+.avatar img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    padding: 5px;
+    vertical-align: middle;
+}
+
+.messages {
+    background-color: rgb(39, 39, 39);
+    width: 100%;
+    height: 85%;
+    border-radius: 0.5em;
+    margin-top: 13px;
+}
+
+.messagesContainer {
+    margin-left: 40px;
+    margin-right: 20px;
+}
+
+.messageSender {
+    margin-right: 17px;
+}
+
+.messageSender input {
+    width: 100%;
+    border-radius: 0.5em;
+    margin-top: 15px;
+    height: 32px;
+    padding-left: 10px;
+    background-color: rgb(39, 39, 39);
+    color: white;
+    border: solid;
+    border-color: transparent;
+}
+
+.messageSender input:focus {
+    outline: none;
+}
+
+@keyframes popUpAnimation {
+    0% {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -70%);
+        background-color: rgb(51, 51, 51);
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        border-radius: 5px;
+        padding: 20px;
+        max-width: 400px;
+        z-index: 999;
+        opacity: 0;
+    }
+    100% {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -100%);
+        background-color: rgb(51, 51, 51);
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        border-radius: 5px;
+        padding: 20px;
+        max-width: 400px;
+        z-index: 999;
+        opacity: 1;
+    }
+}
+
+.popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    background-color: rgb(51, 51, 51);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    padding: 20px;
+    max-width: 400px;
+    z-index: 999;
+    animation: popUpAnimation 0.2s ease-out;
+  }
+  
+  .popup h3 {
+    font-size: 1.5rem;
+    margin-top: 0;
+  }
+  
+  .popup p {
+    margin-bottom: 0;
+  }
+
+  .popup input {
+    background-color: rgb(51, 51, 51);
+    border: solid white 1px;
+    border-radius: 0.5em;
+    font-size: large;
+    padding: 5px;
+    color: white;
+  }
+  
+  .popup .close-btn {
+    position: absolute;
+    top: -5px;
+    right: 5px;
+    cursor: pointer;
+    font-size: x-large;
+  }
+
+.addConversation {
+    padding: 5px;
+    background-color: orange;
+    border-radius: 0.5em;
+    font-size: x-large;
+    cursor: pointer;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.notificationButton {
+    background-color: transparent;
+    border: none;
+}
+.notificationButton img {
+    width: 15px;
+    height: 15px;
+    
+}
+.notificationButton {
+    position: absolute;
+    top: 20px;
+    left: 180px;
+}
+
+@keyframes friendRequestPopupAnimation {
+    0% {
+        left: 190px;
+        opacity: 0;
+    }
+    100% {
+        left: 225px;
+        opacity: 1;
+    }
+}
+.friendRequestsPopup {
+    animation: friendRequestPopupAnimation 0.2s ease-out;
+    position: absolute;
+    top: 15px;
+    left: 225px;
+    background-color: rgb(51, 51, 51);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 0.5em;
+    padding: 10px;
+}
