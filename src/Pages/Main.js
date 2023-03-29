@@ -2,8 +2,11 @@
 import '../App.css';
 import '../css/main.css';
 import profile from '../Images/profile_placeholder.png';
+import notification from '../Images/Notification.png';
 import { addNewConversation } from '../Scripts/mainPage/connectionHandler';
+import { requestFriendRequestsList } from '../Scripts/mainPage/connectionHandler';
 import { GetToken } from '../Scripts/mainPage/getToken';
+import { GetUsername } from '../Scripts/mainPage/getUsername';
 // Import Modules
 import React, { useState, useEffect } from 'react';
 
@@ -36,9 +39,31 @@ function AddNewConversationMenu(props) {
   );
 }
 
+// Popup for showing all incoming friend requests
+function FriendRequestsPopup({ onClose }) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [notificationData, setNotificationData] = useState(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      var output = await requestFriendRequestsList();
+      console.log(output); 
+    }
+    fetchData();
+  }, []);
+  return (
+    <div className="friendRequestsPopup">
+      <h2>Incoming Friend Requests</h2>
+      <p>You have no new friend requests.</p>
+      <button onClick={onClose}>Close</button>
+    </div>
+  );
+}
+
 // Component for direct message side bar
 function SideBar() {
   const [showPopup, setShowPopup] = useState(false);
+  const [showNotificationPopup, setShowNotificationPopup] = useState(false);
 
   const handleButtonClick = () => {
     setShowPopup(true);
@@ -48,26 +73,48 @@ function SideBar() {
     setShowPopup(false);
   };
 
+  const handleNotificationButtonClick = () => {
+    setShowNotificationPopup(true);
+  };
+
+  const handleCloseNotificationPopup = () => {
+    setShowNotificationPopup(false);
+  };
+
   return (
     <div className="sideBar">
       <div className="sidebarHeader">
         <h1>Friends</h1>
-        <button onClick={handleButtonClick}> + </button>
+        <button onClick={handleNotificationButtonClick} className='notificationButton'>
+          <img src={notification} alt="notification"/>
+        </button>
+        <button onClick={handleButtonClick} className='addFriendButton'> + </button>
         {showPopup && <AddNewConversationMenu onClose={handleClosePopup} />}
+        {showNotificationPopup && <FriendRequestsPopup onClose={handleCloseNotificationPopup} />}
       </div>
     </div>
   );
 }
 
+
 // Component for user profile
 function UserProfile() {
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    async function fetchData() {
+      const username = await GetUsername();
+      setUsername(username);
+    }
+    fetchData();
+  }, []);
   return (
     <div className="userProfile">
       <div className="avatar">
         <img src={profile} alt="Avatar" draggable="false" />
       </div>
       <div>
-        <h1>Username</h1>
+        <h1>{username}</h1>
       </div>
     </div>
   );
@@ -95,7 +142,7 @@ function MainPage() {
 
       console.log("Token: " + token); 
     }
-    Token()
+    Token();
   }, []); 
   return (
     <div className="appContainer">
