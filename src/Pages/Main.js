@@ -2,11 +2,8 @@
 import '../App.css';
 import '../css/main.css';
 import profile from '../Images/profile_placeholder.png';
-import notification from '../Images/Notification.png';
 import { addNewConversation } from '../Scripts/mainPage/connectionHandler';
-import { requestFriendRequestsList } from '../Scripts/mainPage/connectionHandler';
 import { GetToken } from '../Scripts/mainPage/getToken';
-import { GetUsername } from '../Scripts/mainPage/getUsername';
 // Import Modules
 import React, { useState, useEffect } from 'react';
 
@@ -69,7 +66,6 @@ function FriendRequestsPopup({ onClose }) {
 // Component for direct message side bar
 function SideBar() {
   const [showPopup, setShowPopup] = useState(false);
-  const [showNotificationPopup, setShowNotificationPopup] = useState(false);
 
   const handleButtonClick = () => {
     setShowPopup(true);
@@ -79,48 +75,26 @@ function SideBar() {
     setShowPopup(false);
   };
 
-  const handleNotificationButtonClick = () => {
-    setShowNotificationPopup(true);
-  };
-
-  const handleCloseNotificationPopup = () => {
-    setShowNotificationPopup(false);
-  };
-
   return (
     <div className="sideBar">
       <div className="sidebarHeader">
         <h1>Friends</h1>
-        <button onClick={handleNotificationButtonClick} className='notificationButton'>
-          <img src={notification} alt="notification"/>
-        </button>
-        <button onClick={handleButtonClick} className='addFriendButton'> + </button>
+        <button onClick={handleButtonClick}> + </button>
         {showPopup && <AddNewConversationMenu onClose={handleClosePopup} />}
-        {showNotificationPopup && <FriendRequestsPopup onClose={handleCloseNotificationPopup} />}
       </div>
     </div>
   );
 }
 
-
 // Component for user profile
 function UserProfile() {
-  const [username, setUsername] = useState('');
-
-  useEffect(() => {
-    async function fetchData() {
-      const username = await GetUsername();
-      setUsername(username);
-    }
-    fetchData();
-  }, []);
   return (
     <div className="userProfile">
       <div className="avatar">
         <img src={profile} alt="Avatar" draggable="false" />
       </div>
       <div>
-        <h1>{username}</h1>
+        <h1>Username</h1>
       </div>
     </div>
   );
@@ -148,7 +122,7 @@ function MainPage() {
 
       console.log("Token: " + token); 
     }
-    Token();
+    Token()
   }, []); 
   return (
     <div className="appContainer">
