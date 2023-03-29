@@ -44,6 +44,10 @@ function FriendRequestsPopup({ onClose }) {
   const [isLoading, setIsLoading] = useState(true);
   const [notificationData, setNotificationData] = useState(null);
 
+  async function requestFriendRequestsList() {
+    // define this function according to your API
+  }
+
   useEffect(() => {
     async function fetchData() {
       var output = await requestFriendRequestsList();
@@ -51,11 +55,17 @@ function FriendRequestsPopup({ onClose }) {
     }
     fetchData();
   }, []);
+
+  function handleClosePopup() {
+    // define this function according to your needs
+    onClose();
+  }
+
   return (
     <div className="friendRequestsPopup">
       <h2>Incoming Friend Requests</h2>
       <p>You have no new friend requests.</p>
-      <button onClick={onClose}>Close</button>
+      <button onClick={handleClosePopup}>Close</button>
     </div>
   );
 }
