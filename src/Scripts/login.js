@@ -46,6 +46,15 @@ export function logIn(navigate) {
             loginStatus.innerHTML = "Login Successful";
             loginStatus.style.color = "green";
 
+            // Gets the username from the input element to store in a cookie
+            var usernameInput2 = document.getElementById("username");
+            var username2 = usernameInput2.value;
+
+            console.log("USERNAME: " + username2)
+
+            // Sets the username in a cookie for later access
+            document.cookie = "Username=" + username2;
+
             // Requests a token from the server
             ws.send('TOKEN');
         }
