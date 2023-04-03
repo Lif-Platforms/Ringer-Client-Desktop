@@ -80,57 +80,57 @@ var sentFriendRequestList = false;
 var requestSent = false;
 
 export async function requestFriendRequestsList() {
+  if (!requestSent) {
+    // Requests friend requests 
+    ws.send("LIST_FRIEND_REQUESTS");
+    requestSent = true;
+  }
 
-    if (!requestSent) {
-      // Requests friend requests 
-      ws.send("LIST_FRIEND_REQUESTS");
-      requestSent = true;
-    }
+  return new Promise((resolve, reject) => {
+    // Adds a temporary event listener for communicating with the server
+    const listener = async (event) => {
+      console.log(event.data);
+      const message = event.data;
 
-    return new Promise((resolve, reject) => {
-      // Adds a temporary event listener for communicating with the server
-      const listener = async (event) => {
-        console.log(event.data);
-        const message = event.data;
-  
-        // Checks if the server has requested the user
-        if (message === "VERIFY?") {
-          // Gets the username of the user sending the request
-          const sender = await GetUsername();
-  
-          // Gets the token of the user sending
-          const token = await GetToken();
-  
-          // Prepares the data to be sent to the server
-          const userData = { Username: sender, Token: token };
-          const data = JSON.stringify(userData);
-  
-          // Sends the data to the server
-          ws.send(data);
-          console.log("sent user to server");
+      // Checks if the server has requested the user
+      if (message === "VERIFY?") {
+        // Gets the username of the user sending the request
+        const sender = await GetUsername();
+
+        // Gets the token of the user sending
+        const token = await GetToken();
+
+        // Prepares the data to be sent to the server
+        const userData = { Username: sender, Token: token };
+        const data = JSON.stringify(userData);
+
+        // Sends the data to the server
+        ws.send(data);
+        console.log("sent user to server");
+      }
+
+      // Checks if the request was sent
+      if (message === "INVALID_TOKEN") {
+        console.log("Invalid Token");
+        ws.removeEventListener("message", listener);
+        requestSent = false;
+        reject(new Error("Invalid Token"));
+      } else if (message) {
+        try {
+          const parsedMessage = JSON.parse(message);
+          ws.removeEventListener("message", listener);
+          requestSent = false;
+          console.log("Got List")
+          resolve(parsedMessage);
+        } catch (e) {
+          console.log("Error parsing message:", e);
         }
-        
-        // Checks if the request was sent
-        if (sentFriendRequestList === true) {
+      }
+    };
 
-          if (message === "INVALID_TOKEN") {
-            console.log("Invalid Token");
-            ws.removeEventListener("message", listener);
-            requestSent = false;
-            sentFriendRequestList = false;
-            reject(new Error("Invalid Token"));
-          } else {
-            ws.removeEventListener("message", listener);
-            requestSent = false;
-            sentFriendRequestList = false;
-            resolve(message);
-          }
-        }
-  
-      };
-  
-      ws.addEventListener("message", listener);
-    });    
+    ws.addEventListener("message", listener);
+  });    
 }
+
 
 export default { addNewConversation, requestFriendRequestsList };
