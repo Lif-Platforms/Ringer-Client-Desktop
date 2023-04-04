@@ -79,6 +79,7 @@ var sentFriendRequestList = false;
 
 var requestSent = false;
 
+// Function for requesting friend requests from the server
 export async function requestFriendRequestsList() {
   if (!requestSent) {
     // Requests friend requests 

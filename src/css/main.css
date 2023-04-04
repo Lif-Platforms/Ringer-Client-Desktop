@@ -222,16 +222,12 @@
     padding: 10px;
 }
 
-.friendRequestsPopup button {
-    background-color: orange;
-    border-radius: 0.5em;
-    border: none;
-    color: white;
+.friendRequestsPopup ul {
+    list-style-type: none;
+    padding: 0;
     font-size: large;
-    padding: 5px;
-    transition: 0.3s;
 }
-.friendRequestsPopup button:hover {
+.closeRequestsButton:hover {
     background-color: rgb(255, 198, 92);
     border-radius: 0.5em;
     border: none;
@@ -240,4 +236,54 @@
     padding: 5px;
     transition: 0.3s;
     cursor: pointer;
+}
+.closeRequestsButton  {
+    background-color: orange;
+    border-radius: 0.5em;
+    border: none;
+    color: white;
+    font-size: large;
+    padding: 5px;
+    transition: 0.3s;
+}
+.acceptButton {
+    background-color: transparent;
+    border: none;
+    border-radius: 0.5em;
+    padding: 5px;
+    color:greenyellow;
+    font-size: large;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 10px;
+}
+
+.acceptButton:hover {
+    background-color: transparent;
+    border: none;
+    border-radius: 0.5em;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color:greenyellow;
+    font-size: large;
+    margin-left: 10px;
+    background-color: rgb(83, 83, 83);
+}
+.denyButton {
+    background-color: transparent;
+    border: none;
+    border-radius: 0.5em;
+    padding: 5px;
+    color:red;
+    font-size: large;
+}
+.denyButton:hover {
+    background-color: transparent;
+    border: none;
+    border-radius: 0.5em;
+    padding: 5px;
+    color:red;
+    font-size: large;
+    background-color: rgb(83, 83, 83);
 }

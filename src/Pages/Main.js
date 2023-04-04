@@ -48,6 +48,8 @@ function FriendRequestsPopup({ onClose }) {
     async function fetchData() {
       var output = await requestFriendRequestsList();
       console.log("Friends: " + output["Requests"]); 
+      setNotificationData(output["Requests"]);
+      setIsLoading(false);
     }
     fetchData();
   }, []);
@@ -56,14 +58,40 @@ function FriendRequestsPopup({ onClose }) {
     onClose();
   }
 
+  function handleAccept(request) {
+    console.log("Accepted friend request: " + request);
+  }
+
+  function handleDeny(request) {
+    console.log("Denied friend request: " + request);
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="friendRequestsPopup">
       <h2>Incoming Friend Requests</h2>
-      <p>You have no new friend requests.</p>
-      <button onClick={handleClosePopup}>Close</button>
+      {notificationData.length === 0 ? (
+        <p>You have no new friend requests.</p>
+      ) : (
+        <ul>
+          {notificationData.map((request, index) => (
+            <li key={index}>
+              {request}
+              <button onClick={() => handleAccept(request)} className='acceptButton'>&#x2713;</button>
+              <button onClick={() => handleDeny(request)} className='denyButton'>&#10060;</button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <button onClick={handleClosePopup} className='closeRequestsButton'>Close</button>
     </div>
   );
 }
+
+
 
 // Component for direct message side bar
 function SideBar() {
