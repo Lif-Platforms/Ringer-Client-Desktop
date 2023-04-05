@@ -133,5 +133,38 @@ export async function requestFriendRequestsList() {
   });    
 }
 
+// Function for accepting friend requests
+export async function acceptFriendRequest(request) {
+  // Tells the server that the client is accepting a friend request 
+  ws.send("ACCEPT_FREIND_REQUEST");
 
-export default { addNewConversation, requestFriendRequestsList };
+  return new Promise((resolve, reject) => { 
+    // Adds a temporary event listener for communicating with the server
+    const listener = async (event) => {
+      console.log(event.data);
+      const message = event.data;
+      // Checks if the server has requested the user
+      if (message === "USER?") {
+        // Gets the username of the client
+        const username = await GetUsername();
+
+        // Gets the token 
+        const token = await GetToken();
+
+        // Prepares the data to be sent to the server
+        const data = {Username:username, Request:request, Token:token};
+        const sendData = JSON.stringify(data)
+
+        // Sends data to the server
+        ws.send(sendData); 
+      }
+      // Checks if the server has accepted the request
+      if (message === "REQUEST_ACCEPTED") {
+        resolve("ACCEPTED!");
+      }
+    }
+    ws.addEventListener("message", listener);
+  });
+}
+
+export default { addNewConversation, requestFriendRequestsList, acceptFriendRequest };

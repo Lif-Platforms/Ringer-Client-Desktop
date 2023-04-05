@@ -3,7 +3,7 @@ import '../App.css';
 import '../css/main.css';
 import profile from '../Images/profile_placeholder.png';
 import notification from '../Images/Notification.png';
-import { addNewConversation } from '../Scripts/mainPage/connectionHandler';
+import { acceptFriendRequest, addNewConversation } from '../Scripts/mainPage/connectionHandler';
 import { requestFriendRequestsList } from '../Scripts/mainPage/connectionHandler';
 import { GetToken } from '../Scripts/mainPage/getToken';
 import { GetUsername } from '../Scripts/mainPage/getUsername';
@@ -58,8 +58,9 @@ function FriendRequestsPopup({ onClose }) {
     onClose();
   }
 
-  function handleAccept(request) {
-    console.log("Accepted friend request: " + request);
+  async function handleAccept(request) {
+    const status = await acceptFriendRequest(request);
+    console.log(status)
   }
 
   function handleDeny(request) {
@@ -67,7 +68,7 @@ function FriendRequestsPopup({ onClose }) {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   return (
