@@ -15,7 +15,8 @@ function createWindow () {
     enableRemoteModule: true,
     icon: path.join(__dirname, 'favicon.ico'),
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      devTools: true // Set this to false before packaging 
     }
   })
 

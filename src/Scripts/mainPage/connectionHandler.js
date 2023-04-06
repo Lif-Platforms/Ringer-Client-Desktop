@@ -54,11 +54,13 @@ export async function addNewConversation(username) {
   
         if (message === "INVALID_TOKEN") {
           console.log("Invalid Token");
+          ws.removeEventListener("message", listener);
           reject(new Error("Invalid Token"));
         }
   
         if (message === "USER_NO_EXIST") {
           console.log("Nonexistent User");
+          ws.removeEventListener("message", listener);
           reject(new Error("Nonexistent User"));
         }
   
@@ -160,6 +162,7 @@ export async function acceptFriendRequest(request) {
       }
       // Checks if the server has accepted the request
       if (message === "REQUEST_ACCEPTED") {
+        ws.removeEventListener("message", listener);
         resolve("ACCEPTED!");
       }
     }
