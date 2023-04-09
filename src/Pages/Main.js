@@ -7,11 +7,14 @@ import { acceptFriendRequest, addNewConversation } from '../Scripts/mainPage/con
 import { requestFriendRequestsList } from '../Scripts/mainPage/connectionHandler';
 import { GetToken } from '../Scripts/mainPage/getToken';
 import { GetUsername } from '../Scripts/mainPage/getUsername';
+import '../css/Animations/checkmark.css';
 // Import Modules
 import React, { useState, useEffect } from 'react';
 
 // Pop up menu for adding new conversations
 function AddNewConversationMenu(props) {
+  const [conversationAdded, setConversationAdded] = useState(false);
+
   const handleClose = () => {
     props.onClose();
   };
@@ -21,6 +24,7 @@ function AddNewConversationMenu(props) {
     const result = await addNewConversation(username);
     
     console.log(result); 
+    setConversationAdded(true);
   }
 
   return (
@@ -29,15 +33,28 @@ function AddNewConversationMenu(props) {
         <span className="close-btn" onClick={handleClose}>
           &times;
         </span>
-        <h3>Add Friend</h3>
-        <input placeholder='Example: RingerBot123' id="conversationInput"></input>
-        <br />
-        <br />
-        <span className='addConversation' onClick={() => handleAddConversation(document.getElementById('conversationInput').value)}>Add</span>
+        {conversationAdded ? (
+          <>
+            <h3>Request Sent!</h3>
+            <svg className="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+              <circle className="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+              <path className="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
+          </>
+        ) : (
+          <>
+            <h3>Add Friend</h3>
+            <input placeholder='Example: RingerBot123' id="conversationInput"></input>
+            <br />
+            <br />
+            <span className='addConversation' onClick={() => handleAddConversation(document.getElementById('conversationInput').value)}>Add</span>
+          </>
+        )}
       </div>
     </div>
   );
 }
+
 
 // Popup for showing all incoming friend requests
 function FriendRequestsPopup({ onClose }) {
