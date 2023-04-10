@@ -11,7 +11,9 @@ function connect() {
   ws.addEventListener('open', (event) => {
     console.log('WebSocket connection opened');
     const element = document.getElementById("ReconnectBar");
-    element.classList.remove("reconnectBarShow");
+    if ( element.classList.contains("reconnectBarShow")) {
+      element.classList.remove("reconnectBarShow");
+    }
     element.classList.add("reconnectBarHide");
   });
 
@@ -24,7 +26,9 @@ function connect() {
   ws.addEventListener('close', (event) => {
     console.log('WebSocket connection closed:', event.code, event.reason);
     const element = document.getElementById("ReconnectBar");
-    element.classList.remove("reconnectBarHide");
+    if ( element.classList.contains("reconnectBarShow")) {
+      element.classList.remove("reconnectBarShow");
+    }
     element.classList.add("reconnectBarShow");
     console.log('Reconnecting in 1 seconds...');
     setTimeout(() => connect(), 1000);
@@ -90,6 +94,11 @@ export async function addNewConversation(username) {
       ws.addEventListener("message", listener);
     });
   }
+
+// Variable for checking if the client requested the requests list
+var sentFriendRequestList = false;
+
+var requestSent = false;
 
 // Variable for checking if the client requested the requests list
 var sentFriendRequestList = false;
@@ -183,6 +192,46 @@ export async function acceptFriendRequest(request) {
     }
     ws.addEventListener("message", listener);
   });
+}
+
+var requestCurrentFriendsList = false;
+
+// Function for getting current friends
+export async function getFriends() {
+  // Tells the server to list current friends
+  ws.send("LIST_FRIENDS"); 
+
+  return new Promise((resolve, reject) => {
+    const listener = async (event) => {
+      console.log(event.data);
+      const message = event.data;
+      
+      if (message === "VERIFY?") {
+        // Gets the username and token
+        const username = await GetUsername();
+        const token = await GetToken();
+
+        // Prepares data for sending
+        const data = {Username:username, Token:token}; 
+
+        // Sends data to server
+        ws.send(data);
+
+        // sets requestCurrentFriendsList to true so it knows that the request has been sent
+        requestCurrentFriendsList = true; 
+      }
+      if (requestCurrentFriendsList === true) {
+        if (message === "INVALID_TOKEN") {
+          ws.removeEventListener("message", listener); 
+          resolve("Invalid Token");
+        } else {
+          ws.removeEventListener("message", listener); 
+          resolve(message); 
+        }
+      }
+    }
+    ws.addEventListener("message", listener);
+  })
 }
 
 export default { addNewConversation, requestFriendRequestsList, acceptFriendRequest };

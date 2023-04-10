@@ -11,15 +11,6 @@ import '../css/Animations/checkmark.css';
 // Import Modules
 import React, { useState, useEffect } from 'react';
 
-// Component for showing if the client is reconnecting
-function ReconnectingBar() {
-  return (
-    <div className='reconnectBarHide' id="ReconnectBar">
-      <p>Reconnecting...</p>
-    </div>
-  )
-}
-
 // Pop up menu for adding new conversations
 function AddNewConversationMenu(props) {
   const [conversationAdded, setConversationAdded] = useState(false);
@@ -205,7 +196,7 @@ function MainPage() {
     Token();
   }, []); 
   return (
-    <div className="appContainer"> 
+    <div className="appContainer">
       <div>
         <SideBar />
         <UserProfile />
@@ -214,7 +205,6 @@ function MainPage() {
         <Messages />
         <MessageSender />
       </div>
-      <ReconnectingBar />
     </div>
   );
 }
