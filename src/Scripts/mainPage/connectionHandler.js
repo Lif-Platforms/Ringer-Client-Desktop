@@ -11,9 +11,7 @@ function connect() {
   ws.addEventListener('open', (event) => {
     console.log('WebSocket connection opened');
     const element = document.getElementById("ReconnectBar");
-    if ( element.classList.contains("reconnectBarShow")) {
-      element.classList.remove("reconnectBarShow");
-    }
+    element.classList.remove("reconnectBarShow");
     element.classList.add("reconnectBarHide");
   });
 
@@ -26,9 +24,7 @@ function connect() {
   ws.addEventListener('close', (event) => {
     console.log('WebSocket connection closed:', event.code, event.reason);
     const element = document.getElementById("ReconnectBar");
-    if ( element.classList.contains("reconnectBarShow")) {
-      element.classList.remove("reconnectBarShow");
-    }
+    element.classList.remove("reconnectBarShow");
     element.classList.add("reconnectBarShow");
     console.log('Reconnecting in 1 seconds...');
     setTimeout(() => connect(), 1000);
