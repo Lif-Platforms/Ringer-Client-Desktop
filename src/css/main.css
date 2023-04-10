@@ -287,3 +287,36 @@
     font-size: large;
     background-color: rgb(83, 83, 83);
 }
+.reconnectBarHide {
+    background-color: orange;
+    width: 100%;
+    position: absolute;
+    top: -30px;
+    height: min-content;
+    transition: 0.2s;
+}
+
+.reconnectBarHide p {
+    text-align: center;
+    padding: 3px;
+    margin: 0;
+    color: white;
+    font-weight: bold;
+}
+
+.reconnectBarShow {
+    background-color: orange;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    height: min-content;
+    transition: 0.2s;
+}
+
+.reconnectBarShow p {
+    text-align: center;
+    padding: 3px;
+    margin: 0;
+    color: white;
+    font-weight: bold;
+}
