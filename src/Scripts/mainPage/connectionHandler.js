@@ -1,23 +1,38 @@
 // Import files
 import { GetUsername } from './getUsername'; 
 import { GetToken } from './getToken';
+let ws = null;
 
-const ws = new WebSocket('ws://localhost:8000');
+// Function to establish the WebSocket connection
+function connect() {
+  ws = new WebSocket('ws://localhost:8000');
 
-// Open the connection
-ws.addEventListener('open', (event) => {
+  // Open the connection
+  ws.addEventListener('open', (event) => {
     console.log('WebSocket connection opened');
-});
+    const element = document.getElementById("ReconnectBar");
+    element.classList.remove("reconnectBarShow");
+    element.classList.add("reconnectBarHide");
+  });
 
-// Handle errors
-ws.addEventListener('error', (error) => {
+  // Handle errors
+  ws.addEventListener('error', (error) => {
     console.error('WebSocket error:', error);
-});
+  });
 
-// Handle connection close
-ws.addEventListener('close', (event) => {
+  // Handle connection close and attempt to reconnect
+  ws.addEventListener('close', (event) => {
     console.log('WebSocket connection closed:', event.code, event.reason);
-});
+    const element = document.getElementById("ReconnectBar");
+    element.classList.remove("reconnectBarHide");
+    element.classList.add("reconnectBarShow");
+    console.log('Reconnecting in 1 seconds...');
+    setTimeout(() => connect(), 1000);
+  });
+}
+
+// Call the connect function to establish the initial connection
+connect();
 
 var sentFriendRequest = false;
 
