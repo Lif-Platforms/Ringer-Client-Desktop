@@ -190,12 +190,16 @@ export async function acceptFriendRequest(request) {
   });
 }
 
-var requestCurrentFriendsList = false;
+let requestCurrentFriendsList = false;
+let sentListFriends = false;
 
 // Function for getting current friends
 export async function getFriends() {
-  // Tells the server to list current friends
-  ws.send("LIST_FRIENDS"); 
+  // Send LIST_FRIENDS message only if it hasn't been sent yet
+  if (!sentListFriends) {
+    ws.send("LIST_FRIENDS");
+    sentListFriends = true;
+  }
 
   return new Promise((resolve, reject) => {
     const listener = async (event) => {
@@ -210,24 +214,26 @@ export async function getFriends() {
         // Prepares data for sending
         const data = {Username:username, Token:token}; 
 
-        // Sends data to server
-        ws.send(data);
+        // Converts data to string before sending
+        const stringData = JSON.stringify(data);
 
-        // sets requestCurrentFriendsList to true so it knows that the request has been sent
-        requestCurrentFriendsList = true; 
-      }
-      if (requestCurrentFriendsList === true) {
-        if (message === "INVALID_TOKEN") {
+        // Sends data to server
+        ws.send(stringData);
+      } else {
+        try {
+          const friends = JSON.parse(message);
           ws.removeEventListener("message", listener); 
-          resolve("Invalid Token");
-        } else {
+          resolve(friends); 
+        } catch (error) {
           ws.removeEventListener("message", listener); 
-          resolve(message); 
+          resolve("Invalid Response");
         }
       }
     }
     ws.addEventListener("message", listener);
   })
 }
+
+
 
 export default { addNewConversation, requestFriendRequestsList, acceptFriendRequest };

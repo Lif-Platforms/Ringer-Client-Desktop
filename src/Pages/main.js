@@ -8,6 +8,7 @@ import { requestFriendRequestsList } from '../Scripts/mainPage/connectionHandler
 import { GetToken } from '../Scripts/mainPage/getToken';
 import { GetUsername } from '../Scripts/mainPage/getUsername';
 import '../css/Animations/checkmark.css';
+import { getFriends } from '../Scripts/mainPage/connectionHandler';
 // Import Modules
 import React, { useState, useEffect } from 'react';
 
@@ -124,6 +125,7 @@ function FriendRequestsPopup({ onClose }) {
 function SideBar() {
   const [showPopup, setShowPopup] = useState(false);
   const [showNotificationPopup, setShowNotificationPopup] = useState(false);
+  const [friends, setFriends] = useState({});
 
   const handleButtonClick = () => {
     setShowPopup(true);
@@ -141,6 +143,16 @@ function SideBar() {
     setShowNotificationPopup(false);
   };
 
+  useEffect(() => {
+    async function getFriendsList() {
+      const friends = await getFriends();
+      console.log("Friends" + friends)
+      setFriends(friends);
+    }
+
+    getFriendsList();
+  }, []);
+
   return (
     <div className="sideBar">
       <div className="sidebarHeader">
@@ -152,9 +164,21 @@ function SideBar() {
         {showPopup && <AddNewConversationMenu onClose={handleClosePopup} />}
         {showNotificationPopup && <FriendRequestsPopup onClose={handleCloseNotificationPopup} />}
       </div>
+      {Object.keys(friends).length > 0 ? (
+        <div className="friendsList">
+          {Object.keys(friends).map((key) => (
+            <div key={key} className='friends'> 
+            <button>{key}</button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
-  );
+  );   
 }
+
 
 
 // Component for user profile

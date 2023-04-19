@@ -321,3 +321,12 @@
     color: white;
     font-weight: bold;
 }
+
+.friends button{
+    font-size: medium;
+    margin-left: 15px;
+    margin-top: 10px;
+    color: white;
+    background-color: transparent;
+    border-color: transparent;
+}
