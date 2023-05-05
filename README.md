@@ -4,6 +4,8 @@ Ringer is a new messaging app for windows. Its currently in beta but lets work t
 
 **NOTE: Ringer doesn't have very good security as of right now. If you do sign up please make your password not the same as everywhere else.**
 
+<img src="https://github.com/Lif-Platforms/Ringer-Client-Desktop/blob/master/.github/Ringer-Mockup-1.png" alt="Ringer Mockup" style="width: 100%" /> 
+
 # HELP WANTED
 Lif Platforms is looking for contributers for Ringer and other services from Lif. If you are interested please reach out at: Lif.Platforms@gmail.com
 
