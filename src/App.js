@@ -4,6 +4,7 @@ import LoginPage from './Pages/login';
 import { useEffect, useState } from 'react';
 import MainPage from './Pages/main';
 import CreateAccount from './Pages/createAccount';
+import PasswordReset from './Pages/passwordReset';
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
         <Route path="/Pages/login" element={<LoginPage />} />
         <Route path="/Pages/main" element={<MainPage />} />
         <Route path="/Pages/createAccount" element={<CreateAccount />} />
+        <Route path="/Pages/passwordReset" element={<PasswordReset />} />
       </Routes>
     </div>
   );

@@ -5,6 +5,7 @@ import { logIn } from '../Scripts/login.js';
 // Import modules 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 // Component for the login form
 class LoginForm extends React.Component {
@@ -43,7 +44,7 @@ class LoginFooter extends React.Component {
   render() {
     return(
       <div className='loginFooter'>
-        <a href='#placeholder'>Forgot Password</a>
+        <Link to="/Pages/passwordReset">Forgot Password</Link>
         <p id="loginStatus"></p>
       </div>
     );

@@ -81,6 +81,7 @@
     height: 85%;
     border-radius: 0.5em;
     margin-top: 13px;
+    position: relative;
 }
 
 .messagesContainer {
@@ -221,6 +222,7 @@
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
     border-radius: 0.5em;
     padding: 10px;
+    z-index: 999;
 }
 
 .friendRequestsPopup ul {
@@ -322,11 +324,75 @@
     font-weight: bold;
 }
 
+.friendsList {
+    margin-top: 15px;
+}
+
+.friends {
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 3px;
+    display: flex;
+    padding: 5px;
+    border-radius: 0.3em;
+    transition: 0.3s;
+}
+
+.friends:active {
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 3px;
+    display: flex;
+    padding: 5px;
+    border-radius: 0.3em;
+    transition: 0.3s;
+    background-color: transparent;
+    transform: scale(0.95);
+}
+
+.friends:hover {
+    margin-left: 15px;
+    margin-right: 15px;
+    display: flex;
+    margin-top: 3px;
+    padding: 5px;
+    background-color: rgb(80, 80, 80);
+    border-radius: 0.3em;
+    transition: 0.3s;
+}
+
+.friends img {
+    width: 30px;
+    border-radius: 1em;
+}
+
 .friends button{
     font-size: medium;
-    margin-left: 15px;
-    margin-top: 10px;
     color: white;
     background-color: transparent;
     border-color: transparent;
+}
+
+.conversationHeader img {
+    width: 50px;
+    border-radius: 2em;
+}
+
+.conversationHeader {
+    display: flex;
+    padding-left: 20px;
+    padding-top: 10px;
+    position: absolute;
+    top: 0;
+    user-select: none;
+}
+
+.conversationHeader h1 {
+    color: white;
+    padding-left: 20px;
+    font-size: large;
+}
+
+.loading {
+    text-align: center;
 }

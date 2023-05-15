@@ -26,9 +26,13 @@ function SignUpForm() {
 // Main Function for This Page
 function CreateAccount() {
     return(
-        <div className='pageContainer'>
-            <SignUpForm />
-        </div>
+        <div className='bg'>
+            <div className='appContainer'>
+                <div className='pageContainer'>
+                    <SignUpForm />
+                </div>
+            </div> 
+        </div>  
     );
 }
 

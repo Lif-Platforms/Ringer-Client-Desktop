@@ -1,3 +1,9 @@
+.bg {
+    background-image: url("../Images/login_bg.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
 .pageContainer {
     width: min-content;
     position: absolute;
@@ -5,24 +11,23 @@
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    border: solid;
     border-radius: 0.5em;
-    border-color: white;
-    border-width: 1px;
     padding: 60px;
-    background-color: rgb(14, 14, 14);
+    backdrop-filter: blur(15px);
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
 .signUpForm h1 {
-    color: white;
+    color: black;
+    user-select: none;
 }
 
 .signUpForm input {
     font-size: larger;
     margin-bottom: 20px;
     border-radius: 0.5em;
-    background-color: black;
-    color: white;
+    background-color: white;
+    color: black;
     border: solid;
     border-color: white;
     border-width: 1px;
@@ -38,6 +43,7 @@
     font-weight: bold;
     padding: 10px;
     transition: 0.3s;
+    user-select: none;
 }
 
 .signUpForm button:hover {

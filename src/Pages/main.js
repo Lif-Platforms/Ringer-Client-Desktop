@@ -67,9 +67,10 @@ function AddNewConversationMenu(props) {
 
 
 // Popup for showing all incoming friend requests
-function FriendRequestsPopup({ onClose }) {
+function FriendRequestsPopup({ onClose }, props) {
   const [isLoading, setIsLoading] = useState(true);
   const [notificationData, setNotificationData] = useState(null);
+  const [reload, setReload] = useState(false); // Initialize reload state variable to false
 
   useEffect(() => {
     async function fetchData() {
@@ -92,6 +93,7 @@ function FriendRequestsPopup({ onClose }) {
 
   function handleDeny(request) {
     console.log("Denied friend request: " + request);
+    setReload(!reload);
   }
 
   if (isLoading) {
@@ -121,11 +123,10 @@ function FriendRequestsPopup({ onClose }) {
 
 
 
-// Component for direct message side bar
-function SideBar() {
+// Sidebar component
+function SideBar({ friends, setFriends, switchConversation }) {
   const [showPopup, setShowPopup] = useState(false);
   const [showNotificationPopup, setShowNotificationPopup] = useState(false);
-  const [friends, setFriends] = useState({});
 
   const handleButtonClick = () => {
     setShowPopup(true);
@@ -143,15 +144,10 @@ function SideBar() {
     setShowNotificationPopup(false);
   };
 
-  useEffect(() => {
-    async function getFriendsList() {
-      const friends = await getFriends();
-      console.log("Friends" + friends)
-      setFriends(friends);
-    }
-
-    getFriendsList();
-  }, []);
+  const reload = async () => {
+    const updatedFriends = await getFriends();
+    setFriends(updatedFriends);
+  };
 
   return (
     <div className="sideBar">
@@ -162,24 +158,25 @@ function SideBar() {
         </button>
         <button onClick={handleButtonClick} className='addFriendButton'> + </button>
         {showPopup && <AddNewConversationMenu onClose={handleClosePopup} />}
-        {showNotificationPopup && <FriendRequestsPopup onClose={handleCloseNotificationPopup} />}
+        {showNotificationPopup && <FriendRequestsPopup onClose={handleCloseNotificationPopup} reload={reload} />}
       </div>
       {Object.keys(friends).length > 0 ? (
         <div className="friendsList">
           {Object.keys(friends).map((key) => (
-            <div key={key} className='friends'> 
-            <button>{key}</button>
+            <div key={key} className="friends">
+              <img src={profile} alt="Profile" />
+              <button onClick={() => switchConversation(key, friends[key])}>
+                {key}
+              </button>
             </div>
           ))}
         </div>
       ) : (
-        <p>Loading...</p>
+        <p className='loading'>Loading...</p>
       )}
     </div>
   );   
 }
-
-
 
 // Component for user profile
 function UserProfile() {
@@ -205,8 +202,17 @@ function UserProfile() {
 }
 
 // Component for messages
-function Messages() {
-  return <div className="messages"></div>;
+function Messages({ selectedConversation }) {
+  return (
+    <div className="messages">
+      {selectedConversation && (
+        <div className='conversationHeader'>
+          <img src={profile} alt="Avatar" draggable="false" className='selectedConversationAvatar' />
+          <h1>{selectedConversation.Name}</h1>  
+        </div>
+      )}
+    </div>
+  );
 }
 
 // Component for text input
@@ -220,23 +226,45 @@ function MessageSender() {
 
 // Main Component for this page
 function MainPage() {
-  useEffect(() => {
-    async function Token(){
-      const token = await GetToken(); 
+  const [friends, setFriends] = useState({});
+  const [selectedConversation, setSelectedConversation] = useState('');
 
-      console.log("Token: " + token); 
+  useEffect(() => {
+    async function fetchFriends() {
+      const friends = await getFriends();
+      setFriends(friends);
     }
-    Token();
-  }, []); 
+
+    fetchFriends();
+  }, []);
+
+  useEffect(() => {
+    async function getToken() {
+      const token = await GetToken();
+      console.log("Token: " + token);
+    }
+
+    getToken();
+  }, []);
+
+  const switchConversation = (conversationName, conversationId) => {
+    const selectedConversation = {
+      Name: conversationName,
+      Id: conversationId
+    };
+    console.log(selectedConversation);
+    setSelectedConversation(selectedConversation);
+  };
+
   return (
     <div className="appContainer">
       <div>
-        <SideBar />
+        <SideBar friends={friends} setFriends={setFriends} switchConversation={switchConversation} />
         <UserProfile />
       </div>
       <div className="messagesContainer">
-        <Messages />
-        <MessageSender />
+        <Messages selectedConversation={selectedConversation} />
+        <MessageSender conversationId={selectedConversation} />
       </div>
       <ReconnectingBar />
     </div>
