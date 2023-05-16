@@ -15,6 +15,9 @@ Ringer is a new messaging app for windows. Its currently in beta but lets work t
 # 👋🏻 HELP WANTED
 Lif Platforms is looking for contributers for Ringer and other services from Lif. If you are interested please reach out at: Lif.Platforms@gmail.com
 
+# 🛡️ Licence
+This project is under the GNU 2.0 Licence. See the [`LICENSE`](LICENSE) file for details.
+
 # 🔥 Features 
 Ringer has features such as: 
  - Lif Accounts
