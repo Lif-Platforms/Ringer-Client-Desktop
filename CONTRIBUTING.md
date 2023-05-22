@@ -5,8 +5,8 @@ Here we will talk about how to be a great contributer to Lif Platforms software 
 
 # Prior Knowledge 
 Before you start, you should read up on these: 
- - README
- - Code Of Conduct
+ - [`README`](README.md)
+ - [`CODE OF CONDUCT`](CODE_OF_CONDUCT.md)
 
 # What We Are Looking For
 We are looking for contributers to help speed up development, fix issues, or add features. Looking at the Ringer projects can help you get a good idea of what we are looking for.
