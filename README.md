@@ -47,4 +47,4 @@ Ringers server code is located in another repository: https://github.com/Lif-Pla
 
  
  # 🛠️ How To Contribute
- In the projects setion there is a project that has a list of things that need to be worked on and their status. Working on the stuff in the project would be the best way to contribute. 
+ In the projects setion there is a project that has a list of things that need to be worked on and their status. Working on the stuff in the project would be the best way to contribute. See [`CONTRIBUTING`](CONTRIBUTING.md) for details. 
