@@ -8,6 +8,13 @@ Before you start, you should read up on these:
  - [`README`](README.md)
  - [`CODE OF CONDUCT`](CODE_OF_CONDUCT.md)
 
+Another thing you will need before you start is a moderate understanding of the React framework, and a pretty good understanding of python.
+
+Some technologies you will need to know are:
+ - React Js
+ - Sqlite Databases
+ - Websocket Networking 
+
 # 🔎 What We Are Looking For
 We are looking for contributers to help speed up development, fix issues, or add features. Looking at the Ringer projects can help you get a good idea of what we are looking for.
 
