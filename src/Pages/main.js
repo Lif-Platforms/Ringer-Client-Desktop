@@ -4,11 +4,11 @@ import '../css/main.css';
 import profile from '../Images/profile_placeholder.png';
 import notification from '../Images/Notification.png';
 import { acceptFriendRequest, addNewConversation } from '../Scripts/mainPage/connectionHandler';
-import { requestFriendRequestsList } from '../Scripts/mainPage/connectionHandler';
 import { GetToken } from '../Scripts/mainPage/getToken';
 import { GetUsername } from '../Scripts/mainPage/getUsername';
 import '../css/Animations/checkmark.css';
 import { getFriends } from '../Scripts/mainPage/connectionHandler';
+import Error_Image from "../Images/Error.png";
 // Import Modules
 import React, { useState, useEffect } from 'react';
 
@@ -30,12 +30,29 @@ function AddNewConversationMenu(props) {
   };
 
   // Function for handling adding conversations
-  async function handleAddConversation(username) {
-    const result = await addNewConversation(username);
-    
-    console.log(result); 
-    setConversationAdded(true);
-  }
+  async function handleAddConversation(add_user) {
+      const token = await GetToken();
+      const username = await GetUsername();
+
+      fetch('http://localhost:8001/add_friend/' + username + '/' + token + '/' + add_user)
+      .then(response => {
+        if (response.ok) {
+          return response.json(); // Convert response to JSON
+        } else {
+          throw new Error('Request failed with status code: ' + response.status);
+        }
+      })
+      .then(data => {
+        // Work with the data
+        if (data.Status === "Ok") {
+          setConversationAdded(true);
+        }
+      })
+      .catch(error => {
+        // Handle any errors
+        console.error(error);
+      });
+    }
 
   return (
     <div className="popup">
@@ -67,17 +84,36 @@ function AddNewConversationMenu(props) {
 
 
 // Popup for showing all incoming friend requests
-function FriendRequestsPopup({ onClose }, props) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [notificationData, setNotificationData] = useState(null);
+function FriendRequestsPopup({ onClose, setFriendsListState }, props) {
+  const [notificationData, setNotificationData] = useState('loading');
   const [reload, setReload] = useState(false); // Initialize reload state variable to false
 
   useEffect(() => {
     async function fetchData() {
-      var output = await requestFriendRequestsList();
-      console.log("Friends: " + output["Requests"]); 
-      setNotificationData(output["Requests"]);
-      setIsLoading(false);
+      // Gets username and token
+      const username = await GetUsername();
+      const token = await GetToken();
+
+      fetch('http://localhost:8001/get_friend_requests/' + username + '/' + token)
+      .then(response => {
+        if (response.ok) {
+          return response.json(); // Convert response to JSON
+        } else {
+          throw new Error('Request failed with status code: ' + response.status);
+        }
+      })
+      .then(data => {
+        // Work with the data
+        console.log(data);
+        console.log(typeof data);
+
+        setNotificationData(JSON.parse(data));
+
+      })
+      .catch(error => {
+        // Handle any errors
+        console.error(error);
+      });
     }
     fetchData();
   }, []);
@@ -87,8 +123,34 @@ function FriendRequestsPopup({ onClose }, props) {
   }
 
   async function handleAccept(request) {
-    const status = await acceptFriendRequest(request);
-    console.log(status)
+    console.log('Accepting: ' + request);
+
+    // Gets username and token
+    const username = await GetUsername();
+    const token = await GetToken();
+
+    fetch(`http://localhost:8001/accept_friend_request/${username}/${token}/${request}`)
+    .then(response => {
+      if (response.ok) {
+        return response.json(); // Convert response to JSON
+      } else {
+        throw new Error('Request failed with status code: ' + response.status);
+      }
+    })
+    .then(data => {
+      // Work with the data
+      console.log(data);
+
+      if (data.Status === "Ok") {
+        setFriendsListState("loading")
+        setNotificationData("loading");
+      }
+
+    })
+    .catch(error => {
+      // Handle any errors
+      console.error(error);
+    });
   }
 
   function handleDeny(request) {
@@ -96,37 +158,122 @@ function FriendRequestsPopup({ onClose }, props) {
     setReload(!reload);
   }
 
-  if (isLoading) {
-    return <div></div>;
-  }
-
-  return (
-    <div className="friendRequestsPopup">
-      <h2>Incoming Friend Requests</h2>
-      {notificationData.length === 0 ? (
-        <p>You have no new friend requests.</p>
-      ) : (
-        <ul>
-          {notificationData.map((request, index) => (
-            <li key={index}>
-              {request}
-              <button onClick={() => handleAccept(request)} className='acceptButton'>&#x2713;</button>
-              <button onClick={() => handleDeny(request)} className='denyButton'>&#10060;</button>
+  if (notificationData === "loading") {
+    return (
+      <div className="friendRequestsPopup">
+        <h2>Incoming Friend Requests</h2>
+        <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+        <br />
+        <button onClick={handleClosePopup} className='closeRequestsButton'>Close</button>
+      </div>
+    );
+  } else if (Array.isArray(notificationData) && notificationData.length === 0) {
+      return(
+        <div className="friendRequestsPopup">
+          <h2>Incoming Friend Requests</h2>
+          <p>No Pending Requests</p>
+          <button onClick={handleClosePopup} className='closeRequestsButton'>Close</button>
+        </div>
+      );
+  } else if (Array.isArray(notificationData) && notificationData.length > 0) {
+      return(
+        <div className="friendRequestsPopup">
+          <h2>Incoming Friend Requests</h2>
+          <ul>
+            {notificationData.map(item => (
+              <li key={item}>
+                {item.name}
+                <button className='acceptButton' onClick={() => handleAccept(item.name)}>&#x2713;</button>
+                <button className='denyButton'>&#10060;</button>
             </li>
-          ))}
-        </ul>
-      )}
-      <button onClick={handleClosePopup} className='closeRequestsButton'>Close</button>
-    </div>
-  );
+            ))}
+          </ul>
+          <button onClick={handleClosePopup} className='closeRequestsButton'>Close</button>
+        </div>
+      );
+  } else {
+    return(
+      <div className="friendRequestsPopup">
+          <h2>Incoming Friend Requests</h2>
+          <img src={Error_Image} className='error_image' />
+          <p>Something Went Wrong</p>
+          <button onClick={handleClosePopup} className='closeRequestsButton'>Close</button>
+      </div>
+    )
+  }
 }
 
+function FriendsList({friendsListState, setFriendsListState}) {
+  // Fetch friends list from server
+  useEffect(() => {
+    async function get_friends() {
+      // Gets username and token
+      const username = await GetUsername();
+      const token = await GetToken();
 
+      console.log("Request Username: " + username);
+      console.log("Request Token: " + token);
+
+      fetch('http://localhost:8001/get_friends_list/' + username + '/' + token)
+      .then(response => {
+        if (response.ok) {
+          return response.json(); // Convert response to JSON
+        } else {
+          throw new Error('Request failed with status code: ' + response.status);
+        }
+      })
+      .then(data => {
+        // Work with the data
+        console.log(data);
+
+        if ("ERROR_CODE" in data) {
+          setFriendsListState("Error");
+        } else {
+          setFriendsListState(data);
+        }
+      })
+      .catch(error => {
+        // Handle any errors
+        console.error(error);
+      });
+    }
+    if (friendsListState === "loading") {
+      get_friends();
+    }
+  }, [friendsListState]) // Add empty dependency array here
+
+  if (friendsListState === "loading") {
+    return(
+      <div className='friends_list'>
+        <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+      </div>
+    )
+  } else if (friendsListState === "Error"){
+    return(
+      <div className='friends_list'>
+        <img src={Error_Image} alt='Error' className='error_image' />
+        <p>Something Went Wrong!</p>
+      </div>
+    )
+  } else if (Array.isArray(friendsListState)) {
+    return(
+      <div className='friends_list'>
+        {friendsListState.map(item => (
+          <div className="friends">
+            <img src={`http://localhost:8002/get_pfp/${item.Username}.png`} alt="Profile" />
+            <button>{item.Username}</button>
+          </div>
+        ))}
+      </div> 
+    );
+  }
+}
 
 // Sidebar component
-function SideBar({ friends, setFriends, switchConversation }) {
+function SideBar() {
   const [showPopup, setShowPopup] = useState(false);
   const [showNotificationPopup, setShowNotificationPopup] = useState(false);
+  const [friendsListState, setFriendsListState] = useState('loading');
 
   const handleButtonClick = () => {
     setShowPopup(true);
@@ -144,11 +291,6 @@ function SideBar({ friends, setFriends, switchConversation }) {
     setShowNotificationPopup(false);
   };
 
-  const reload = async () => {
-    const updatedFriends = await getFriends();
-    setFriends(updatedFriends);
-  };
-
   return (
     <div className="sideBar">
       <div className="sidebarHeader">
@@ -158,22 +300,9 @@ function SideBar({ friends, setFriends, switchConversation }) {
         </button>
         <button onClick={handleButtonClick} className='addFriendButton'> + </button>
         {showPopup && <AddNewConversationMenu onClose={handleClosePopup} />}
-        {showNotificationPopup && <FriendRequestsPopup onClose={handleCloseNotificationPopup} reload={reload} />}
+        {showNotificationPopup && <FriendRequestsPopup onClose={handleCloseNotificationPopup} setFriendsListState={setFriendsListState} />}
       </div>
-      {Object.keys(friends).length > 0 ? (
-        <div className="friendsList">
-          {Object.keys(friends).map((key) => (
-            <div key={key} className="friends">
-              <img src={profile} alt="Profile" />
-              <button onClick={() => switchConversation(key, friends[key])}>
-                {key}
-              </button>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p className='loading'>Loading...</p>
-      )}
+      <FriendsList friendsListState={friendsListState} setFriendsListState={setFriendsListState} />
     </div>
   );   
 }
@@ -189,10 +318,11 @@ function UserProfile() {
     }
     fetchData();
   }, []);
+  let url = `http://localhost:8002/get_pfp/${username}.png`;
   return (
     <div className="userProfile">
       <div className="avatar">
-        <img src={profile} alt="Avatar" draggable="false" />
+        <img src={url} alt="Avatar" draggable="false" />
       </div>
       <div>
         <h1>{username}</h1>

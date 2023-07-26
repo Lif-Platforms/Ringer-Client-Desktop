@@ -45,7 +45,7 @@ class LoginFooter extends React.Component {
     return(
       <div className='loginFooter'>
         <Link to="/Pages/passwordReset">Forgot Password</Link>
-        <p id="loginStatus"></p>
+        <p id="loginStatus" style={{"color": "red"}}></p>
       </div>
     );
   }
