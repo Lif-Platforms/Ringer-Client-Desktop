@@ -15,6 +15,7 @@
     padding: 60px;
     backdrop-filter: blur(15px);
     background-color: rgba(255, 255, 255, 0.3);
+    user-select: none;
 }
 
 .signUpForm h1 {
@@ -56,4 +57,40 @@
     padding: 10px;
     transform: scale(1.1);
     transition: 0.3s;
+}
+
+.back-button {
+    background-color: black;
+    border: 1px solid white;
+    border-radius: 0.5em;
+    color: white;
+    font-size: large;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    user-select: none;
+    transition: 0.3s ease-in-out;
+}
+
+.back-button:hover {
+    background-color: rgb(65, 65, 65);
+}
+
+.back-button:active {
+    background-color: rgb(65, 65, 65);
+    transform: scale(0.90);
+}
+
+.loader {
+    border: 5px solid #f3f3f3; /* Light grey */
+    border-top: 5px solid #000000; /* Blue */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 0.5s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

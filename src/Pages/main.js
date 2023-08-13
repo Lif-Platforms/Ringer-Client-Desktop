@@ -203,7 +203,7 @@ function FriendRequestsPopup({ onClose, setFriendsListState }, props) {
   }
 }
 
-function FriendsList({friendsListState, setFriendsListState}) {
+function FriendsList({friendsListState, setFriendsListState, switchConversation}) {
   // Fetch friends list from server
   useEffect(() => {
     async function get_friends() {
@@ -261,7 +261,7 @@ function FriendsList({friendsListState, setFriendsListState}) {
         {friendsListState.map(item => (
           <div className="friends">
             <img src={`http://localhost:8002/get_pfp/${item.Username}.png`} alt="Profile" />
-            <button>{item.Username}</button>
+            <button onClick={() => switchConversation(item.Username, item.Id)}>{item.Username}</button>
           </div>
         ))}
       </div> 
@@ -270,7 +270,7 @@ function FriendsList({friendsListState, setFriendsListState}) {
 }
 
 // Sidebar component
-function SideBar() {
+function SideBar({switchConversation}) {
   const [showPopup, setShowPopup] = useState(false);
   const [showNotificationPopup, setShowNotificationPopup] = useState(false);
   const [friendsListState, setFriendsListState] = useState('loading');
@@ -302,7 +302,7 @@ function SideBar() {
         {showPopup && <AddNewConversationMenu onClose={handleClosePopup} />}
         {showNotificationPopup && <FriendRequestsPopup onClose={handleCloseNotificationPopup} setFriendsListState={setFriendsListState} />}
       </div>
-      <FriendsList friendsListState={friendsListState} setFriendsListState={setFriendsListState} />
+      <FriendsList friendsListState={friendsListState} setFriendsListState={setFriendsListState} switchConversation={switchConversation} />
     </div>
   );   
 }
@@ -337,7 +337,7 @@ function Messages({ selectedConversation }) {
     <div className="messages">
       {selectedConversation && (
         <div className='conversationHeader'>
-          <img src={profile} alt="Avatar" draggable="false" className='selectedConversationAvatar' />
+          <img src={`http://localhost:8002/get_pfp/${selectedConversation.Name}.png`} alt="Avatar" draggable="false" className='selectedConversationAvatar' />
           <h1>{selectedConversation.Name}</h1>  
         </div>
       )}
@@ -346,10 +346,49 @@ function Messages({ selectedConversation }) {
 }
 
 // Component for text input
-function MessageSender() {
+function MessageSender({conversationId}) {
+
+  async function handle_send(event) {
+    // Checks if the enter key was pressed
+    if (event.key === 'Enter') {
+      console.log('enter was pressed!');
+
+      const message = document.getElementById('message-box').value; 
+      const username = await GetUsername();
+      const token = await GetToken();
+
+      fetch('http://localhost:8001/send_message/' + username + '/' + token + '/' + message + '/' + conversationId.Id)
+      .then(response => {
+        if (response.ok) {
+          return response.json(); // Convert response to JSON
+        } else {
+          throw new Error('Request failed with status code: ' + response.status);
+        }
+      })
+      .then(data => {
+        // Work with the data
+        console.log(data);
+      })
+      .catch(error => {
+        // Handle any errors
+        console.error(error);
+      });
+
+    }
+  }
+
+  useEffect(() => {
+    // Only allows input if a conversation is selected
+    if (conversationId) {
+      document.getElementById('message-box').disabled = false;
+    } else {
+      document.getElementById('message-box').disabled = true;
+    }
+  }, [conversationId])
+  
   return (
     <div className="messageSender">
-      <input placeholder="Send a Message"></input>
+      <input placeholder="Send a Message" onKeyDown={handle_send} id='message-box' />
     </div>
   );
 }
@@ -396,7 +435,6 @@ function MainPage() {
         <Messages selectedConversation={selectedConversation} />
         <MessageSender conversationId={selectedConversation} />
       </div>
-      <ReconnectingBar />
     </div>
   );
 }

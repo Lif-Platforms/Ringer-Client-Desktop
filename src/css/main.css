@@ -82,6 +82,9 @@
     border-radius: 0.5em;
     margin-top: 13px;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 .messagesContainer {
@@ -373,29 +376,29 @@
     border-color: transparent;
 }
 
-.conversationHeader img {
-    width: 50px;
-    border-radius: 2em;
-}
-
 .conversationHeader {
     display: flex;
-    padding-left: 20px;
-    padding-top: 10px;
-    position: absolute;
-    top: 0;
+    align-items: center;
+    padding: 10px 20px; /* Adjust padding for spacing */
     user-select: none;
+    background-color: rgb(58, 58, 58);
+    width: 90%;
+    margin-top: 10px;
+    border-radius: 0.5em;
+}
+
+.conversationHeader img {
+    width: 50px;
+    height: 50px; /* Adjust height if needed */
+    border-radius: 2em;
+    margin-right: 10px; /* Add margin between image and h1 */
 }
 
 .conversationHeader h1 {
     color: white;
-    padding-left: 20px;
     font-size: large;
-}
-
-.friends_list {
-    padding-top: 20px;
-    text-align: center;
+    margin: 0; /* Remove default margin for h1 */
+    padding-left: 10px;
 }
 
 .error_image {

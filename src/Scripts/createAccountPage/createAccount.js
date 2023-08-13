@@ -1,62 +1,32 @@
-export async function createAccount() {
-    // Creates new Websocket Instance 
-    const ws = new WebSocket('ws://localhost:8000');
+export function createAccount() {
+    // Get account info
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const email = document.getElementById('email').value;
 
-    // Open the connection
-    ws.addEventListener('open', (event) => {
-        console.log('WebSocket connection opened');
-        
-        // Requests Account Creation
-        ws.send("CREATE_ACCOUNT");
-    });
-
-    // Handle errors
-    ws.addEventListener('error', (error) => {
-        console.error('WebSocket error:', error);
-    });
-
-    // Handle connection close
-    ws.addEventListener('close', (event) => {
-        console.log('WebSocket connection closed:', event.code, event.reason);
-    });
-    // Handles Incoming Messages
-    ws.addEventListener('message', (event) => {
-        // Checks if the server asked for the credentials 
-        if (event.data === "CREDENTIALS?") {
-            // Gets the text inside the username input
-            var usernameInput = document.getElementById('username');
-            var username = usernameInput.value; 
-
-            // Gets the text inside the email input
-            var emailInput = document.getElementById('email');
-            var email = emailInput.value;
-
-            // Gets the text inside the password input 
-            var passwordInput = document.getElementById('password');
-            var password = passwordInput.value; 
-
-            // Compiles all the data into json format
-            var credentials = {Username : username, Email : email, Password : password};
-            var data = JSON.stringify(credentials);
-
-            // Sends data to the server
-            ws.send(data);
+    // Make server request
+    return fetch(`http://localhost:8002/create_account/${username}/${email}/${password}`)
+      .then(response => {
+        if (response.ok) {
+          return response.json(); // Convert response to JSON
+        } else {
+          throw new Error('Request failed with status code: ' + response.status);
         }
-        // Checks if the server says that the account already exists
-        if (event.data === "ERROR_ACCOUNT_EXISTING") {
-            // Changes the account status to say the account exists
-            const status = document.getElementById('accountStatus');
-            status.innerHTML = "Account Already Exists"; 
-            status.style.color = 'red'; 
+      })
+      .then(data => {
+        // Work with the data
+        console.log(data);
+        if (data.status === "unsuccessful") {
+            return {"status": "FAIL!", "reason": data.reason}
+        } else {
+            return {"status": "COMPLETE!"}
         }
-        // Checks if the server has created the account 
-        if (event.data === "ACCOUNT_CREATED") {
-            // Changes the account status to say that thw account has been created
-            const status = document.getElementById("accountStatus"); 
-            status.innerHTML = "Account Created";
-            status.style.color = "green"; 
-        }
-    })
+      })
+      .catch(error => {
+        // Handle any errors
+        console.error(error);
+        return {"status": "FAIL!", "reason": "Something Went Wrong!"}
+      });
 }
 
 export default createAccount;
