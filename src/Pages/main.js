@@ -1,16 +1,15 @@
 // Import Files
 import '../App.css';
 import '../css/main.css';
-import profile from '../Images/profile_placeholder.png';
 import notification from '../Images/Notification.png';
-import { acceptFriendRequest, addNewConversation } from '../Scripts/mainPage/connectionHandler';
 import { GetToken } from '../Scripts/mainPage/getToken';
 import { GetUsername } from '../Scripts/mainPage/getUsername';
 import '../css/Animations/checkmark.css';
 import { getFriends } from '../Scripts/mainPage/connectionHandler';
 import Error_Image from "../Images/Error.png";
+import connectSocket from "../Scripts/mainPage/notification_conn_handler";
 // Import Modules
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 // Component for showing if the client is reconnecting
 function ReconnectingBar() {
@@ -333,6 +332,54 @@ function UserProfile() {
 
 // Component for messages
 function Messages({ selectedConversation }) {
+  const [messages, setMessages] = useState('loading');
+  const messagesRef = useRef(messages); // Create a mutable ref for messages
+  const conversationIdRef = useRef(selectedConversation.Id); // Create a mutable ref for conversation ID
+
+  useEffect(() => {
+    messagesRef.current = messages; // Update the ref when messages change
+  }, [messages]);
+
+  useEffect(() => {
+    conversationIdRef.current = selectedConversation.Id; // Update the ref when conversation ID changes
+  }, [selectedConversation]);
+
+  // Connect to notification handler
+  useEffect(() => {
+    connectSocket(conversationIdRef.current, messagesRef.current, setMessages);
+  }, [])
+
+  // Load messages
+  useEffect(() => {
+    async function handle_message_load() {
+      // Get auth data
+      const username = await GetUsername();
+      const token = await GetToken();
+
+      // Change the message container to loading
+      setMessages('loading');
+
+      fetch('http://localhost:8001/load_messages/' + username + '/' + token + '/' + selectedConversation.Id)
+      .then(response => {
+        if (response.ok) {
+          return response.json(); // Convert response to JSON
+        } else {
+          throw new Error('Request failed with status code: ' + response.status);
+        }
+      })
+      .then(data => {
+        // Work with the data
+        console.log(data);
+        setMessages(data);
+      })
+      .catch(error => {
+        // Handle any errors
+        console.error(error);
+      });
+    }
+    handle_message_load()
+  }, [selectedConversation])
+
   return (
     <div className="messages">
       {selectedConversation && (
@@ -340,6 +387,27 @@ function Messages({ selectedConversation }) {
           <img src={`http://localhost:8002/get_pfp/${selectedConversation.Name}.png`} alt="Avatar" draggable="false" className='selectedConversationAvatar' />
           <h1>{selectedConversation.Name}</h1>  
         </div>
+      )}
+      {messages === 'loading' ? (
+        <div className="lds-ellipsis">
+          <div></div><div></div><div></div><div></div>
+        </div>
+      ) : (
+        typeof messages === 'object' && messages !== null ? (
+          <div className='message-container' id='message-container'>
+            {messages.map((message, index) => (
+              <div key={index} className='message'>
+                <img src={`http://localhost:8002/get_pfp/${message.Author}.png`} alt='' />
+                <div>
+                  <h1>{message.Author}</h1>
+                  <p>{message.Message}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <h1>Nothing to see here...</h1>
+        )
       )}
     </div>
   );
@@ -354,6 +422,8 @@ function MessageSender({conversationId}) {
       console.log('enter was pressed!');
 
       const message = document.getElementById('message-box').value; 
+      document.getElementById('message-box').value = "Sending..."; 
+      document.getElementById('message-box').disabled = true; 
       const username = await GetUsername();
       const token = await GetToken();
 
@@ -368,6 +438,10 @@ function MessageSender({conversationId}) {
       .then(data => {
         // Work with the data
         console.log(data);
+        if (data.Status === "Ok") {
+          document.getElementById('message-box').value = null; 
+          document.getElementById('message-box').disabled = false; 
+        }
       })
       .catch(error => {
         // Handle any errors
@@ -435,6 +509,7 @@ function MainPage() {
         <Messages selectedConversation={selectedConversation} />
         <MessageSender conversationId={selectedConversation} />
       </div>
+      <ReconnectingBar />
     </div>
   );
 }

@@ -45,5 +45,10 @@
   },
   "devDependencies": {
     "electron-packager": "^17.1.1"
+  },
+  "browser": {
+    "fs": false,
+    "os": false,
+    "path": false
   }
 }

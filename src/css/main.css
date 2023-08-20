@@ -2,7 +2,23 @@
     display: grid;
     grid-template-columns: 200px auto;
     height: 100vh;
-    margin-bottom: 0;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #3f3f3f;
+    border-radius: 1em;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #636262;
+    border-radius: 1em;
 }
 
 .sideBar {
@@ -81,15 +97,71 @@
     height: 85%;
     border-radius: 0.5em;
     margin-top: 13px;
-    position: relative;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    overflow: hidden; /* Hide any overflowing content */
+}
+
+.message-container {
+    width: 90%;
+    margin-top: 10px;
+    overflow: auto;
+    margin-bottom: 10px;
+}
+
+.message {
+    display: flex;
     align-items: flex-start;
+    margin-bottom: 20px; /* Adjust spacing between messages */
+    margin-right: 5px;
+    padding: 3px;
+    border-radius: 0.5em;
+}
+
+.message:hover {
+    background-color: #202020;
+}
+
+.message img {
+    width: 50px; /* Adjust the size of the profile picture */
+    height: 50px; /* Adjust the size of the profile picture */
+    border-radius: 50%;
+    margin-right: 10px; /* Add spacing between profile picture and content */
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
+.message div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.message h1 {
+    margin: 0;
+    font-size: 20px; /* Adjust font size for username */
+    margin: 0;
+    color: white;
+    font-weight: normal;
+    user-select: none;
+}
+
+.message p {
+    margin: 0;
+    color: white;
+    font-size: 14px; /* Adjust font size for message */
+    max-width: 100%; /* Message width limited to the container's width */
+    word-break: break-word; /* Allow long words to break */
 }
 
 .messagesContainer {
+    display: flex;
+    flex-direction: column;
     margin-left: 40px;
     margin-right: 20px;
+    overflow: hidden; /* Ensure no overflow outside the grid cell */
 }
 
 .messageSender {
@@ -327,7 +399,7 @@
     font-weight: bold;
 }
 
-.friendsList {
+.friends_list {
     margin-top: 15px;
 }
 
