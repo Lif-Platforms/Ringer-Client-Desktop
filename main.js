@@ -1,11 +1,18 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, ipcMain} = require('electron')
-const path = require('path')
+const {app, BrowserWindow, ipcMain} = require('electron');
+const path = require('path');
+require('dotenv').config();
+
+// Determine the environment
+const isDev = process.env.NODE_ENV === 'development';
 
 function createWindow () {
+  // Dynamically set the window width
+  const window_width = isDev ? 1500 : 1000;
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 1000,
+    width: window_width,
     height: 600,
     minWidth:900,
     minHeight: 600,
@@ -16,7 +23,7 @@ function createWindow () {
     icon: path.join(__dirname, 'favicon.ico'),
     webPreferences: {
       nodeIntegration: true,
-      devTools: true // Set this to false before packaging 
+      devTools: true // Dynamically enables/disables the dev tools based in environment
     }
   })
 
@@ -26,11 +33,16 @@ function createWindow () {
   // and load the index.html of the app.
   mainWindow.loadURL('http://localhost:3000')
 
+  // Set the icon path based on the environment
+  const iconPath = isDev ? '/public/Ringer-Icon-Dev.png' : '/public/Ringer-Icon-Production.png';
+
   // Sets the icon for the app
-  mainWindow.setIcon(path.join(__dirname, '/public/Ringer-Icon.png'));
+  mainWindow.setIcon(path.join(__dirname, iconPath));
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  if (isDev === true){
+    mainWindow.webContents.openDevTools();
+  }
 }
 
 // This method will be called when Electron has finished

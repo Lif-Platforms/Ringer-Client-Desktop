@@ -1,6 +1,6 @@
 {
   "name": "ringer",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "main": "main.js",
   "dependencies": {
@@ -9,7 +9,8 @@
     "@testing-library/user-event": "^13.5.0",
     "concurrently": "^7.6.0",
     "cross-env": "^7.0.3",
-    "electron": "^22.2.0",
+    "dotenv": "^16.3.1",
+    "electron-notification": "^1.0.0",
     "net": "^1.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -18,9 +19,16 @@
     "wait-on": "^7.0.1",
     "web-vitals": "^2.1.4"
   },
+  "build": {
+    "appId": "com.lifplatforms.ringer",
+    "files": [
+      "main.js"
+    ],
+    "asar": true
+  },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "electron-builder",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "ringer-start": "concurrently \"cross-env BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\""
@@ -44,6 +52,7 @@
     ]
   },
   "devDependencies": {
+    "electron-builder": "^24.6.4",
     "electron-packager": "^17.1.1"
   },
   "browser": {
