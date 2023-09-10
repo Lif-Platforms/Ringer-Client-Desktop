@@ -1,9 +1,13 @@
 ![Ringer Logo](https://github.com/Lif-Platforms/Ringer-Client-Windows/blob/main/.github/Ringerlogo.png)
-![GitHub](https://img.shields.io/github/license/Lif-Platforms/Ringer-Client-Desktop?style=for-the-badge) 
-![GitHub package.json version](https://img.shields.io/github/package-json/v/Lif-Platforms/Ringer-Client-Desktop?style=for-the-badge)
-![GitHub issues](https://img.shields.io/github/issues/Lif-Platforms/Ringer-Client-Desktop?style=for-the-badge)
-![GitHub contributors](https://img.shields.io/github/contributors/Lif-Platforms/Ringer-Client-Desktop?style=for-the-badge)
-![GitHub all releases](https://img.shields.io/github/downloads/Lif-Platforms/Ringer-Client-Desktop/total?style=for-the-badge)
+
+<!-- Place Badges Here -->
+<div align="center">
+  <img src="https://img.shields.io/github/license/Lif-Platforms/Ringer-Client-Desktop?style=for-the-badge" alt="Badge">
+  <img src="https://img.shields.io/github/package-json/v/Lif-Platforms/Ringer-Client-Desktop?style=for-the-badge" alt="Badge">
+  <img src="https://img.shields.io/github/issues/Lif-Platforms/Ringer-Client-Desktop?style=for-the-badge" alt="Badge">
+  <img src="https://img.shields.io/github/contributors/Lif-Platforms/Ringer-Client-Desktop?style=for-the-badge" alt="Badge">
+  <img src="https://img.shields.io/github/downloads/Lif-Platforms/Ringer-Client-Desktop/total?style=for-the-badge" alt="Badge">
+</div>
 
 # 💬 Ringer-Client
 Ringer is a new messaging app for windows. Its currently in beta but lets work together to make it better. The code here is snapshot code so it might not work as intended. To get the latest stable build pls download the installer. 
