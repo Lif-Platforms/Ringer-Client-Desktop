@@ -1,12 +1,14 @@
 import { GetToken } from './getToken';
 import { GetUsername } from './getUsername';
 
-// Get client auth info
-async function connectSocket(conversation_id, messages, update_messages) {
+async function connectSocket(conversationIdRef, messagesRef, update_messages) {
+    console.log("Conversation Id: " + conversationIdRef.current);
+
     let socket = null;
     let reconnectInterval = 1000; // Initial reconnect interval in milliseconds
     const maxReconnectInterval = 30000; // Maximum reconnect interval in milliseconds
 
+    // Get client auth info
     const username = await GetUsername();
     const token = await GetToken();
 
@@ -24,20 +26,24 @@ async function connectSocket(conversation_id, messages, update_messages) {
             socket.send(JSON.stringify({ Username: username, Token: token }));
         };
 
-        socket.onmessage = (event) => {
+        socket.onmessage = async (event) => {
             console.log("Received:", event.data);
             let server_data = JSON.parse(event.data);
 
-            console.log(conversation_id);
+            console.log(conversationIdRef.current);
         
             if (server_data.Type === "MESSAGE_UPDATE") {
-                if (server_data.Id === conversation_id) {
-                    // Create a new array with the new message added
-                    const updatedMessages = [...messages, server_data.Message];
-                    update_messages(updatedMessages);
-                    console.log("Conversation Updated!");
+                if (server_data.Id === conversationIdRef.current) {
+                  console.log("Type of messagesRef.current:", typeof messagesRef.current);
+                  // Update the ref values directly
+                  messagesRef.current = [...messagesRef.current, server_data.Message];
+                  // You don't need to update conversationIdRef.current if it's not changing
+              
+                  // Call update_messages with the updated array
+                  update_messages(messagesRef.current);
+                  console.log("Conversation Updated!");
                 } else {
-                    console.log("Received message! Conversation Not Selected");
+                  console.log("Received message! Conversation Not Selected");
                 }
             }
         };

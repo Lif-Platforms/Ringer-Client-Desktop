@@ -333,22 +333,35 @@ function UserProfile() {
 // Component for messages
 function Messages({ selectedConversation }) {
   const [messages, setMessages] = useState('loading');
-  const messagesRef = useRef(messages); // Create a mutable ref for messages
-  const conversationIdRef = useRef(selectedConversation.Id); // Create a mutable ref for conversation ID
 
+  // Allow messages to be changed during the runtime of the socket function
+  const messagesRef = useRef(messages);
+
+  // Allow the conversation id to be changed during the runtime of the socket function
+  const conversationIdRef = useRef(selectedConversation.Id);
+
+  // Update messages ref when they are changed
   useEffect(() => {
-    messagesRef.current = messages; // Update the ref when messages change
+    if (messages !== "loading" && messages !== false) {
+      messagesRef.current = messages;
+      console.log("Updated Messages: ", messagesRef.current);
+
+      // Scroll to the bottom of the message
+      let messages_div = document.getElementById("message-container");
+      messages_div.scrollTop = messages_div.scrollHeight;
+    }
   }, [messages]);
 
   useEffect(() => {
-    conversationIdRef.current = selectedConversation.Id; // Update the ref when conversation ID changes
-  }, [selectedConversation]);
+    conversationIdRef.current = selectedConversation.Id;
+    console.log("Updated conversation id: ", conversationIdRef.current);
+  }, [selectedConversation])
 
-  // Connect to notification handler
+  // Start websocket connection to notification server
   useEffect(() => {
-    connectSocket(conversationIdRef.current, messagesRef.current, setMessages);
-  }, [])
-
+    connectSocket(conversationIdRef, messagesRef, setMessages);
+  }, []);
+   
   // Load messages
   useEffect(() => {
     async function handle_message_load() {
@@ -359,7 +372,7 @@ function Messages({ selectedConversation }) {
       // Change the message container to loading
       setMessages('loading');
 
-      fetch('http://localhost:8001/load_messages/' + username + '/' + token + '/' + selectedConversation.Id)
+      fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/load_messages/${username}/${token}/${selectedConversation.Id}`)
       .then(response => {
         if (response.ok) {
           return response.json(); // Convert response to JSON
@@ -427,7 +440,7 @@ function MessageSender({conversationId}) {
       const username = await GetUsername();
       const token = await GetToken();
 
-      fetch('http://localhost:8001/send_message/' + username + '/' + token + '/' + message + '/' + conversationId.Id)
+      fetch(`http://localhost:8001/send_message/` + username + '/' + token + '/' + message + '/' + conversationId.Id)
       .then(response => {
         if (response.ok) {
           return response.json(); // Convert response to JSON
