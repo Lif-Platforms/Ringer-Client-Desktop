@@ -23,7 +23,7 @@ function createWindow () {
     icon: path.join(__dirname, 'favicon.ico'),
     webPreferences: {
       nodeIntegration: true,
-      devTools: true // Dynamically enables/disables the dev tools based in environment
+      devTools: isDev // Dynamically enables/disables the dev tools based on environment
     }
   })
 
