@@ -330,9 +330,75 @@ function UserProfile() {
   );
 }
 
+// Component for unfriending someone 
+function UnfriendUser({ unfriendState, setUnfriendState, selectedConversation }) {
+  // Handle the unfriending process
+  async function handle_unfriend() {
+    // Set popup state
+    setUnfriendState('loading');
+
+    // Get client auth info
+    const username = await GetUsername();
+    const token = await GetToken();
+
+    fetch(`http://localhost:8001/remove_conversation/${selectedConversation.Id}/${username}/${token}/`)
+      .then(response => {
+        if (response.ok) {
+          return response.json(); // Convert response to JSON
+        } else {
+          throw new Error('Request failed with status code: ' + response.status);
+        }
+      })
+      .then(data => {
+        // Work with the data
+        console.log(data);
+        if (data.Status === "Ok") {
+          setUnfriendState("completed");
+        }
+      })
+      .catch(error => {
+        // Handle any errors
+        console.error(error);
+      });
+  }
+
+  if (unfriendState !== "hide" && unfriendState !== "loading" && unfriendState !== "completed") {
+    return(
+      <div className='unfriend-popup'>
+        <h1>Unfriend {unfriendState}?</h1>
+        <p>You will no longer be able to send or receive messages from this person.</p>
+        <div>
+          <button id='unfriend-button' onClick={handle_unfriend}>Yes, Do it!</button>
+          <button id='unfriend-cancel-button' onClick={() => setUnfriendState('hide')}>No, Don't!</button>
+        </div>
+      </div>
+    )
+  } else if (unfriendState === "loading") {
+    return(
+      <div className='unfriend-popup'>
+        <div className="lds-ellipsis">
+          <div></div><div></div><div></div><div></div>
+        </div>
+      </div>
+    )
+  } else if (unfriendState === "completed") {
+    return(
+      <div className='unfriend-popup'>
+        <svg className="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+            <circle className="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+            <path className="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+          </svg>
+          <h1>Successfully Unfriended User</h1>
+          <button onClick={() => setUnfriendState('hide')}>Close</button>
+      </div>
+    )
+  }
+}
+
 // Component for messages
 function Messages({ selectedConversation }) {
   const [messages, setMessages] = useState('loading');
+  const [unfriendState, setUnfriendState] = useState('hide');
 
   // Allow messages to be changed during the runtime of the socket function
   const messagesRef = useRef(messages);
@@ -399,6 +465,7 @@ function Messages({ selectedConversation }) {
         <div className='conversationHeader'>
           <img src={`http://localhost:8002/get_pfp/${selectedConversation.Name}.png`} alt="Avatar" draggable="false" className='selectedConversationAvatar' />
           <h1>{selectedConversation.Name}</h1>  
+          <button className='unfriend-button' title="Unfriend" onClick={() => setUnfriendState(selectedConversation.Name)}>&#10006;</button>
         </div>
       )}
       {messages === 'loading' ? (
@@ -422,6 +489,7 @@ function Messages({ selectedConversation }) {
           <h1>Nothing to see here...</h1>
         )
       )}
+      <UnfriendUser unfriendState={unfriendState} setUnfriendState={setUnfriendState} selectedConversation={selectedConversation} />
     </div>
   );
 }
