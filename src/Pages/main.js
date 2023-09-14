@@ -505,10 +505,25 @@ function MessageSender({conversationId}) {
       const message = document.getElementById('message-box').value; 
       document.getElementById('message-box').value = "Sending..."; 
       document.getElementById('message-box').disabled = true; 
+
       const username = await GetUsername();
       const token = await GetToken();
 
-      fetch(`http://localhost:8001/send_message/` + username + '/' + token + '/' + message + '/' + conversationId.Id)
+      // Create request body
+      const message_data = {
+        username: username,
+        token: token,
+        message: message,
+        conversation_id: conversationId.Id
+      }
+
+      fetch(`http://localhost:8001/send_message`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(message_data),
+      })
       .then(response => {
         if (response.ok) {
           return response.json(); // Convert response to JSON
