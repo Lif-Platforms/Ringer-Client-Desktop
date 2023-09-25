@@ -10,14 +10,15 @@
 </div>
 
 # 💬 Ringer-Client
-Ringer is a new messaging app for windows. Its currently in beta but lets work together to make it better. The code here is snapshot code so it might not work as intended. To get the latest stable build pls download the installer. 
+Ringer is a new messaging app for Windows. It's currently in beta but let's work together to make it better. The code here is snapshot code so it might not work as intended. To get the latest stable build pls download the installer. 
 
-**NOTE: Ringer doesn't have very good security as of right now. If you do sign up please make sure your password is unique to Ringer and not somthing you use for another service.**
+> [!WARNING]\
+> Ringer doesn't have very good security as of right now. If you do sign up please make sure your password is unique to Ringer and not something you use for another service.
 
 <img src="https://github.com/Lif-Platforms/Ringer-Client-Desktop/blob/master/.github/Ringer-Mockup-1.png" alt="Ringer Mockup" style="width: 100%" /> 
 
 # 👋🏻 HELP WANTED
-Lif Platforms is looking for contributers for Ringer and other services from Lif. If you are interested please reach out at: Lif.Platforms@gmail.com
+Lif Platforms is looking for contributors for Ringer and other services from Lif. If you are interested please reach out to: Lif.Platforms@gmail.com
 
 # 🛡️ Licence
 This project is under the GNU 2.0 Licence. See the [`LICENSE`](LICENSE) file for details.
