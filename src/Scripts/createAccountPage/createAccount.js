@@ -5,7 +5,7 @@ export function createAccount() {
     const email = document.getElementById('email').value;
 
     // Make server request
-    return fetch(`http://localhost:8002/create_account/${username}/${email}/${password}`)
+    return fetch(`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/create_account/${username}/${email}/${password}`)
       .then(response => {
         if (response.ok) {
           return response.json(); // Convert response to JSON
