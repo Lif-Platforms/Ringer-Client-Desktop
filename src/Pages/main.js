@@ -33,7 +33,7 @@ function AddNewConversationMenu(props) {
       const token = await GetToken();
       const username = await GetUsername();
 
-      fetch('http://localhost:8001/add_friend/' + username + '/' + token + '/' + add_user)
+      fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/add_friend/${username}/${token}/${add_user}`)
       .then(response => {
         if (response.ok) {
           return response.json(); // Convert response to JSON
@@ -93,7 +93,7 @@ function FriendRequestsPopup({ onClose, setFriendsListState }, props) {
       const username = await GetUsername();
       const token = await GetToken();
 
-      fetch('http://localhost:8001/get_friend_requests/' + username + '/' + token)
+      fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/get_friend_requests/${username}/${token}`)
       .then(response => {
         if (response.ok) {
           return response.json(); // Convert response to JSON
@@ -128,7 +128,7 @@ function FriendRequestsPopup({ onClose, setFriendsListState }, props) {
     const username = await GetUsername();
     const token = await GetToken();
 
-    fetch(`http://localhost:8001/accept_friend_request/${username}/${token}/${request}`)
+    fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/accept_friend_request/${username}/${token}/${request}`)
     .then(response => {
       if (response.ok) {
         return response.json(); // Convert response to JSON
@@ -213,7 +213,7 @@ function FriendsList({friendsListState, setFriendsListState, switchConversation}
       console.log("Request Username: " + username);
       console.log("Request Token: " + token);
 
-      fetch('http://localhost:8001/get_friends_list/' + username + '/' + token)
+      fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/get_friends_list/${username}/${token}`)
       .then(response => {
         if (response.ok) {
           return response.json(); // Convert response to JSON
@@ -259,7 +259,7 @@ function FriendsList({friendsListState, setFriendsListState, switchConversation}
       <div className='friends_list'>
         {friendsListState.map(item => (
           <div className="friends">
-            <img src={`http://localhost:8002/get_pfp/${item.Username}.png`} alt="Profile" />
+            <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${item.Username}.png`} alt="Profile" />
             <button onClick={() => switchConversation(item.Username, item.Id)}>{item.Username}</button>
           </div>
         ))}
@@ -317,7 +317,7 @@ function UserProfile() {
     }
     fetchData();
   }, []);
-  let url = `http://localhost:8002/get_pfp/${username}.png`;
+  let url = `${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${username}.png`;
   return (
     <div className="userProfile">
       <div className="avatar">
@@ -341,7 +341,7 @@ function UnfriendUser({ unfriendState, setUnfriendState, selectedConversation })
     const username = await GetUsername();
     const token = await GetToken();
 
-    fetch(`http://localhost:8001/remove_conversation/${selectedConversation.Id}/${username}/${token}/`)
+    fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/remove_conversation/${selectedConversation.Id}/${username}/${token}/`)
       .then(response => {
         if (response.ok) {
           return response.json(); // Convert response to JSON
@@ -463,7 +463,7 @@ function Messages({ selectedConversation }) {
     <div className="messages">
       {selectedConversation && (
         <div className='conversationHeader'>
-          <img src={`http://localhost:8002/get_pfp/${selectedConversation.Name}.png`} alt="Avatar" draggable="false" className='selectedConversationAvatar' />
+          <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${selectedConversation.Name}.png`} alt="Avatar" draggable="false" className='selectedConversationAvatar' />
           <h1>{selectedConversation.Name}</h1>  
           <button className='unfriend-button' title="Unfriend" onClick={() => setUnfriendState(selectedConversation.Name)}>&#10006;</button>
         </div>
@@ -477,7 +477,7 @@ function Messages({ selectedConversation }) {
           <div className='message-container' id='message-container'>
             {messages.map((message, index) => (
               <div key={index} className='message'>
-                <img src={`http://localhost:8002/get_pfp/${message.Author}.png`} alt='' />
+                <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${message.Author}.png`} alt='' />
                 <div>
                   <h1>{message.Author}</h1>
                   <p>{message.Message}</p>
@@ -517,7 +517,7 @@ function MessageSender({conversationId}) {
         conversation_id: conversationId.Id
       }
 
-      fetch(`http://localhost:8001/send_message`, {
+      fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/send_message`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

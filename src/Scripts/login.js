@@ -3,7 +3,7 @@ export function logIn(navigate) {
     const username = document.getElementById('username').value;
     const password  = document.getElementById('password').value; 
 
-    fetch('http://localhost:8002/login/' + username + '/' + password)
+    fetch(`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/login/${username}/${password}`)
     .then(response => {
     if (response.ok) {
         return response.json(); // Convert response to JSON

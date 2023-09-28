@@ -17,7 +17,7 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
         if (socket !== null) {
             socket.close(); // Close the existing socket if it exists
         }
-        socket = new WebSocket("ws://localhost:8001/live_updates");
+        socket = new WebSocket(`${process.env.REACT_APP_RINGER_WS_URL}/live_updates`);
 
         socket.onopen = (event) => {
             console.log("WebSocket connection opened:", event);
