@@ -5,7 +5,6 @@ import notification from '../Images/Notification.png';
 import { GetToken } from '../Scripts/mainPage/getToken';
 import { GetUsername } from '../Scripts/mainPage/getUsername';
 import '../css/Animations/checkmark.css';
-import { getFriends } from '../Scripts/mainPage/connectionHandler';
 import Error_Image from "../Images/Error.png";
 import connectSocket from "../Scripts/mainPage/notification_conn_handler";
 // Import Modules
@@ -594,14 +593,6 @@ function MainPage() {
   const [friends, setFriends] = useState({});
   const [selectedConversation, setSelectedConversation] = useState('');
 
-  useEffect(() => {
-    async function fetchFriends() {
-      const friends = await getFriends();
-      setFriends(friends);
-    }
-
-    fetchFriends();
-  }, []);
 
   useEffect(() => {
     async function getToken() {

@@ -5,22 +5,24 @@ import { useEffect, useState } from 'react';
 import MainPage from './Pages/main';
 import CreateAccount from './Pages/createAccount';
 import PasswordReset from './Pages/passwordReset';
+import Cookies from 'js-cookie';
 
 function App() {
-
-  // Define the navigation
   const navigate = useNavigate();
-  // This will be changed to something else later
-  const [redirectToLogin, setRedirectToLogin] = useState(false); // set this to true or false based on your condition
 
-  // Navigates to Login Page
   useEffect(() => {
-    if (!redirectToLogin) {
-      console.log("Navigating to login page...")
-      setRedirectToLogin(true);
-      navigate("/Pages/login");
+    const token = Cookies.get('Token');
+    const username = Cookies.get('Username');
+
+    // Check if the user is already logged in
+    if (token && username) {
+      console.log('User is logged in.');
+      navigate('/Pages/main');
+    } else {
+      console.log('User is not logged in.');
+      navigate('/Pages/login');
     }
-  }, [redirectToLogin, navigate]);
+  }, [navigate]);
 
   return (
     <div>
