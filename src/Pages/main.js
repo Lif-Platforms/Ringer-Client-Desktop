@@ -142,7 +142,7 @@ function FriendRequestsPopup({ onClose, setFriendsListState }, props) {
 
       if (data.Status === "Ok") {
         setFriendsListState("loading")
-        setNotificationData("loading");
+        onClose();
       }
 
     })
@@ -152,9 +152,35 @@ function FriendRequestsPopup({ onClose, setFriendsListState }, props) {
     });
   }
 
-  function handleDeny(request) {
+  async function handleDeny(request) {
     console.log("Denied friend request: " + request);
-    setReload(!reload);
+    
+    // Gets username and token
+    const username = await GetUsername();
+    const token = await GetToken();
+
+    fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/deny_friend_request/${username}/${token}/${request}`)
+    .then(response => {
+      if (response.ok) {
+        return response.json(); // Convert response to JSON
+      } else {
+        throw new Error('Request failed with status code: ' + response.status);
+      }
+    })
+    .then(data => {
+      // Work with the data
+      console.log(data);
+
+      if (data.Status === "Ok") {
+        console.log(notificationData);
+        console.log("Operation Successful");
+      }
+
+    })
+    .catch(error => {
+      // Handle any errors
+      console.error(error);
+    });
   }
 
   if (notificationData === "loading") {
@@ -183,7 +209,7 @@ function FriendRequestsPopup({ onClose, setFriendsListState }, props) {
               <li key={item}>
                 {item.name}
                 <button className='acceptButton' onClick={() => handleAccept(item.name)}>&#x2713;</button>
-                <button className='denyButton'>&#10060;</button>
+                <button className='denyButton' onClick={() => handleDeny(item.name)}>&#10060;</button>
             </li>
             ))}
           </ul>
