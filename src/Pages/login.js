@@ -6,6 +6,9 @@ import { logIn } from '../Scripts/login.js';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { useEffect } from "react";
+import GetUsername from '../Scripts/mainPage/getUsername';
+import GetToken from '../Scripts/mainPage/getToken';
 
 // Component for the login form
 class LoginForm extends React.Component {
@@ -56,6 +59,17 @@ function LoginPage() {
 
   // Define the navigation
   const navigate = useNavigate();
+
+  // Used for testing. Will be removed before final build
+  useEffect(() => {
+    async function test_cookies() {
+      const username = await GetUsername();
+      const token = await GetToken();
+
+      console.log(`Username: ${username} \nToken: ${token}`);
+    }
+    test_cookies()
+  }, []);
 
   return (
     <div className="App">
