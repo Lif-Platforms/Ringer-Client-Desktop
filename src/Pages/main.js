@@ -7,6 +7,7 @@ import { GetUsername } from '../Scripts/mainPage/getUsername';
 import '../css/Animations/checkmark.css';
 import Error_Image from "../Images/Error.png";
 import connectSocket from "../Scripts/mainPage/notification_conn_handler";
+import MoreIcon from "../Images/More-Icon.png";
 // Import Modules
 import React, { useState, useEffect, useRef } from 'react';
 
@@ -331,9 +332,25 @@ function SideBar({switchConversation}) {
   );   
 }
 
+function UserOptionMenu({ optionMenuState, setOptionMenuState }) {
+  if (optionMenuState === "open") {
+    return(
+      <div className='user-option-menu'>
+        <h1>Options</h1>
+        <hr />
+        <div className='options'>
+          <button>Log Out</button>
+          <button onClick={() => setOptionMenuState('closed')}>Close</button>
+        </div>
+      </div>
+    )
+  }
+}
+
 // Component for user profile
 function UserProfile() {
   const [username, setUsername] = useState('');
+  const [optionMenuState, setOptionMenuState] = useState('closed');
 
   useEffect(() => {
     async function fetchData() {
@@ -351,6 +368,8 @@ function UserProfile() {
       <div>
         <h1>{username}</h1>
       </div>
+      <button onClick={() => setOptionMenuState('open')}><img src={MoreIcon} /></button>
+      <UserOptionMenu optionMenuState={optionMenuState} setOptionMenuState={setOptionMenuState} />
     </div>
   );
 }

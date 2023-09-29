@@ -73,6 +73,7 @@
     background-color: rgb(39, 39, 39);
     border-radius: 0.5em;
     width: 100%;
+    position: relative;
 }
 
 .userProfile h1 {
@@ -81,6 +82,67 @@
     vertical-align: middle;
     padding-left: 10px;
     padding-top: 3px;
+}
+
+.userProfile button {
+    height: max-content;
+    display: block;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 30px;
+    background-color: transparent;
+    color: white;
+    border: none;
+    border-radius: 0.5em;
+    transition: ease-in-out 0.2s;
+}
+
+.userProfile button:hover {
+    background-color: rgb(78, 78, 78);
+}
+
+.userProfile button:active {
+    transform: scale(0.93);
+}
+
+.userProfile button > img {
+    width: 20px;
+}
+
+@keyframes option-menu-animation {
+    0% {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.user-option-menu {
+    position: absolute;
+    width: 95%;
+    top: -140px;
+    background-color: rgb(39, 39, 39);
+    padding: 5px;
+    box-shadow: 10px 0px 20px rgba(0, 0, 0, 0.5);
+    border-radius: 0.5em;
+    animation-name: option-menu-animation;
+    animation-duration: 0.2s;
+}
+
+.user-option-menu > .options button {
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    width: 90%;
+}
+
+.user-option-menu > .options button:active {
+    transform: scale(0.98);
 }
 
 .avatar img {
