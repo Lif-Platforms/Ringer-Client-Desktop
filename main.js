@@ -116,6 +116,8 @@ app.on('before-quit', async () => {
     });
 
     console.log('Saved Credentials!');
+  } else {
+    store.delete('credentials');
   }
 });
 
