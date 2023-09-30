@@ -64,11 +64,12 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
     };
 
     // Close the WebSocket connection before leaving the page
-    window.addEventListener('beforeunload', () => {
+    window.onbeforeunload = function(event) {
         if (socket !== null) {
             socket.close();
+            console.log("Connection Closed!")
         }
-    });
+    }
 
     connect();
 }
