@@ -20,7 +20,8 @@
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
     "wait-on": "^7.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yarn": "^1.22.19"
   },
   "build": {
     "appId": "com.lifplatforms.ringer",
