@@ -31,19 +31,19 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
             let server_data = JSON.parse(event.data);
 
             console.log(conversationIdRef.current);
-        
+
             if (server_data.Type === "MESSAGE_UPDATE") {
                 if (server_data.Id === conversationIdRef.current) {
-                  console.log("Type of messagesRef.current:", typeof messagesRef.current);
-                  // Update the ref values directly
-                  messagesRef.current = [...messagesRef.current, server_data.Message];
-                  // You don't need to update conversationIdRef.current if it's not changing
-              
-                  // Call update_messages with the updated array
-                  update_messages(messagesRef.current);
-                  console.log("Conversation Updated!");
+                    console.log("Type of messagesRef.current:", typeof messagesRef.current);
+                    // Update the ref values directly
+                    messagesRef.current = [...messagesRef.current, server_data.Message];
+                    // You don't need to update conversationIdRef.current if it's not changing
+
+                    // Call update_messages with the updated array
+                    update_messages(messagesRef.current);
+                    console.log("Conversation Updated!");
                 } else {
-                  console.log("Received message! Conversation Not Selected");
+                    console.log("Received message! Conversation Not Selected");
                 }
             }
         };
@@ -51,15 +51,25 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
         socket.onclose = (event) => {
             console.log("WebSocket connection closed:", event);
 
-            // Reconnect with an increasing interval
-            setTimeout(() => {
-                reconnectInterval = Math.min(reconnectInterval * 2, maxReconnectInterval);
-                document.getElementById("ReconnectBar").classList.remove('reconnectBarHide');
-                document.getElementById("ReconnectBar").classList.add('reconnectBarShow');
-                connect();
-            }, reconnectInterval);
+            // Reconnect only if the connection was not closed intentionally
+            if (event.code !== 1000) {
+                setTimeout(() => {
+                    reconnectInterval = Math.min(reconnectInterval * 2, maxReconnectInterval);
+                    document.getElementById("ReconnectBar").classList.remove('reconnectBarHide');
+                    document.getElementById("ReconnectBar").classList.add('reconnectBarShow');
+                    connect();
+                }, reconnectInterval);
+            }
         };
     };
+
+    // Close the WebSocket connection before leaving the page
+    window.onbeforeunload = function(event) {
+        if (socket !== null) {
+            socket.close();
+            console.log("Connection Closed!")
+        }
+    }
 
     connect();
 }

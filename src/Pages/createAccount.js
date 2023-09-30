@@ -48,7 +48,7 @@ function CreateAccount() {
 
     // Handle back button
     function handle_back_button() {
-        navigate('/pages/login');
+        navigate('/');
     }
     return(
         <div className='bg'>

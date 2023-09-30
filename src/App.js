@@ -8,26 +8,10 @@ import PasswordReset from './Pages/passwordReset';
 import Cookies from 'js-cookie';
 
 function App() {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = Cookies.get('Token');
-    const username = Cookies.get('Username');
-
-    // Check if the user is already logged in
-    if (token && username) {
-      console.log('User is logged in.');
-      navigate('/Pages/main');
-    } else {
-      console.log('User is not logged in.');
-      navigate('/Pages/login');
-    }
-  }, [navigate]);
-
   return (
     <div>
       <Routes>
-        <Route path="/Pages/login" element={<LoginPage />} />
+        <Route path="/" element={<LoginPage />} />
         <Route path="/Pages/main" element={<MainPage />} />
         <Route path="/Pages/createAccount" element={<CreateAccount />} />
         <Route path="/Pages/passwordReset" element={<PasswordReset />} />

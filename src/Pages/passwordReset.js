@@ -81,7 +81,7 @@ function Stage4() {
     return(
         <div className='resetContainer'>
             <h1>Your All Set! Try To Remember Your Password This Time.</h1>
-            <Link to="/Pages/login">&lt;&lt; Back To Login</Link>
+            <Link to="/">&lt;&lt; Back To Login</Link>
         </div>
     );
 }

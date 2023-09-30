@@ -7,8 +7,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useEffect } from "react";
-import GetUsername from '../Scripts/mainPage/getUsername';
-import GetToken from '../Scripts/mainPage/getToken';
+import Cookies from "js-cookie";
 
 // Component for the login form
 class LoginForm extends React.Component {
@@ -60,15 +59,17 @@ function LoginPage() {
   // Define the navigation
   const navigate = useNavigate();
 
-  // Used for testing. Will be removed before final build
   useEffect(() => {
-    async function test_cookies() {
-      const username = await GetUsername();
-      const token = await GetToken();
+    const token = Cookies.get('Token');
+    const username = Cookies.get('Username');
 
-      console.log(`Username: ${username} \nToken: ${token}`);
+    // Check if the user is already logged in
+    if (token && username) {
+      console.log('User is logged in.');
+      navigate('/Pages/main');
+    } else {
+      console.log('User is not logged in.');
     }
-    test_cookies()
   }, []);
 
   return (
