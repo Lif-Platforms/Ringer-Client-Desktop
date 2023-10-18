@@ -4,7 +4,6 @@ const path = require('path');
 require('dotenv').config();
 const { session } = require('electron');
 const Store = require('electron-store');
-const keytar = require('keytar');
 
 // Create new local storge for browser cookies
 // Will be loaded into storage before app quit
@@ -30,7 +29,7 @@ function createWindow () {
     icon: path.join(__dirname, 'favicon.ico'),
     webPreferences: {
       nodeIntegration: true,
-      devTools: isDev // Dynamically enables/disables the dev tools based on environment
+      devTools: true // Dynamically enables/disables the dev tools based on environment
     }
   })
 
