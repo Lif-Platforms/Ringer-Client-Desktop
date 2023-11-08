@@ -5,7 +5,7 @@ require('dotenv').config();
 const { session } = require('electron');
 const Store = require('electron-store');
 
-// Create new local storge for browser cookies
+// Create new local storage for browser cookies
 // Will be loaded into storage before app quit
 const store = new Store();
 
@@ -28,7 +28,6 @@ function createWindow () {
     enableRemoteModule: true,
     icon: path.join(__dirname, 'favicon.ico'),
     webPreferences: {
-      nodeIntegration: true,
       devTools: true // Dynamically enables/disables the dev tools based on environment
     }
   })
@@ -37,7 +36,7 @@ function createWindow () {
   mainWindow.setMenuBarVisibility(false);
 
   // and load the index.html of the app.
-  mainWindow.loadURL('http://localhost:3000')
+  mainWindow.loadURL('http://localhost:3000');
 
   // Set the icon path based on the environment
   const iconPath = isDev ? '/public/Ringer-Icon-Dev.png' : '/public/Ringer-Icon-Production.png';
