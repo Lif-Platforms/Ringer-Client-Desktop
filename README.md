@@ -10,10 +10,7 @@
 </div>
 
 # 💬 Ringer-Client
-Ringer is a new messaging app for Windows. It's currently in beta but let's work together to make it better. The code here is snapshot code so it might not work as intended. To get the latest stable build pls download the installer. 
-
-> [!WARNING]\
-> Ringer doesn't have very good security as of right now. If you do sign up please make sure your password is unique to Ringer and not something you use for another service.
+Ringer is a new cross platform messaging app for Windows, mac, and linux. It's currently in beta so bugs and querks are expected.  To get the latest stable build please download the installer. 
 
 <img src="https://github.com/Lif-Platforms/Ringer-Client-Desktop/blob/master/.github/Ringer-Mockup-1.png" alt="Ringer Mockup" style="width: 100%" /> 
 
