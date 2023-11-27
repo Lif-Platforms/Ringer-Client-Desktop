@@ -10,7 +10,10 @@ const Store = require('electron-store');
 const store = new Store();
 
 // Determine the environment
-const isDev = process.env.NODE_ENV === 'development';
+const isDev = require('electron-is-dev');
+
+// Allow remote debugging
+//app.commandLine.appendSwitch('remote-debugging-port', '9222');
 
 function createWindow () {
   // Dynamically set the window width
@@ -32,11 +35,21 @@ function createWindow () {
     }
   })
 
+  mainWindow.webContents.openDevTools();
+
   //removes the menu bar from the main window
   mainWindow.setMenuBarVisibility(false);
 
-  // and load the index.html of the app.
-  mainWindow.loadURL('http://localhost:3000');
+  // Load app based on environment
+  if (isDev) {
+    mainWindow.loadURL('http://localhost:3000');
+  } else {
+    mainWindow.loadURL(url.format({
+      pathname: path.join(__dirname, 'build/index.html'),
+      protocol: 'file:',
+      slashes: true
+    }));
+  }
 
   // Set the icon path based on the environment
   const iconPath = isDev ? '/public/Ringer-Icon-Dev.png' : '/public/Ringer-Icon-Production.png';
@@ -44,10 +57,6 @@ function createWindow () {
   // Sets the icon for the app
   mainWindow.setIcon(path.join(__dirname, iconPath));
 
-  // Open the DevTools.
-  if (isDev === true){
-    mainWindow.webContents.openDevTools();
-  }
 }
 
 // This method will be called when Electron has finished
