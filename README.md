@@ -10,6 +10,9 @@
 </div>
 
 # 💬 Ringer-Client
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b7f31a7c7f3a4f5aab81407301252925)](https://app.codacy.com/gh/Lif-Platforms/Ringer-Client-Desktop?utm_source=github.com&utm_medium=referral&utm_content=Lif-Platforms/Ringer-Client-Desktop&utm_campaign=Badge_Grade)
+
 Ringer is a new cross platform messaging app for Windows, mac, and linux. It's currently in beta so bugs and querks are expected.  To get the latest stable build please download the installer. 
 
 <img src="https://github.com/Lif-Platforms/Ringer-Client-Desktop/blob/master/.github/Ringer-Mockup-1.png" alt="Ringer Mockup" style="width: 100%" /> 
