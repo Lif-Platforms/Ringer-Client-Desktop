@@ -12,6 +12,7 @@ import { log_out } from '../Scripts/utils/user-log-out';
 // Import Modules
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie';
 
 // Component for showing if the client is reconnecting
 function ReconnectingBar() {
@@ -92,8 +93,8 @@ function FriendRequestsPopup({ onClose, setFriendsListState }, props) {
   useEffect(() => {
     async function fetchData() {
       // Gets username and token
-      const username = await GetUsername();
-      const token = await GetToken();
+      const username = Cookies.get('Username');
+      const token = Cookies.get('Token');
 
       fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/get_friend_requests/${username}/${token}`)
       .then(response => {
@@ -127,8 +128,8 @@ function FriendRequestsPopup({ onClose, setFriendsListState }, props) {
     console.log('Accepting: ' + request);
 
     // Gets username and token
-    const username = await GetUsername();
-    const token = await GetToken();
+    const username = Cookies.get('Username');
+    const token = Cookies.get('Token');
 
     fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/accept_friend_request/${username}/${token}/${request}`)
     .then(response => {
@@ -158,8 +159,8 @@ function FriendRequestsPopup({ onClose, setFriendsListState }, props) {
     console.log("Denied friend request: " + request);
     
     // Gets username and token
-    const username = await GetUsername();
-    const token = await GetToken();
+    const username = Cookies.get('Username');
+    const token = Cookies.get('Token');
 
     fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/deny_friend_request/${username}/${token}/${request}`)
     .then(response => {
@@ -235,8 +236,8 @@ function FriendsList({friendsListState, setFriendsListState, switchConversation}
   useEffect(() => {
     async function get_friends() {
       // Gets username and token
-      const username = await GetUsername();
-      const token = await GetToken();
+      const username = Cookies.get('Username');
+    const token = Cookies.get('Token');
 
       console.log("Request Username: " + username);
       console.log("Request Token: " + token);
@@ -367,7 +368,7 @@ function UserProfile() {
 
   useEffect(() => {
     async function fetchData() {
-      const username = await GetUsername();
+      const username = Cookies.get('Username');
       setUsername(username);
     }
     fetchData();
@@ -395,8 +396,8 @@ function UnfriendUser({ unfriendState, setUnfriendState, selectedConversation })
     setUnfriendState('loading');
 
     // Get client auth info
-    const username = await GetUsername();
-    const token = await GetToken();
+    const username = Cookies.get('Username');
+    const token = Cookies.get('Token');
 
     fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/remove_conversation/${selectedConversation.Id}/${username}/${token}/`)
       .then(response => {
@@ -489,8 +490,8 @@ function Messages({ selectedConversation }) {
   useEffect(() => {
     async function handle_message_load() {
       // Get auth data
-      const username = await GetUsername();
-      const token = await GetToken();
+      const username = Cookies.get('Username');
+      const token = Cookies.get('Token');
 
       // Change the message container to loading
       setMessages('loading');
@@ -563,8 +564,8 @@ function MessageSender({conversationId}) {
       document.getElementById('message-box').value = "Sending..."; 
       document.getElementById('message-box').disabled = true; 
 
-      const username = await GetUsername();
-      const token = await GetToken();
+      const username = Cookies.get('Username');
+      const token = Cookies.get('Token');
 
       // Create request body
       const message_data = {
@@ -628,7 +629,7 @@ function MainPage() {
 
   useEffect(() => {
     async function getToken() {
-      const token = await GetToken();
+      const token = Cookies.get('Token');
       console.log("Token: " + token);
     }
 

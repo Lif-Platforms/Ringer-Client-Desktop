@@ -1,8 +1,7 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, ipcMain} = require('electron');
+const {app, BrowserWindow, session, protocol} = require('electron');
 const path = require('path');
 require('dotenv').config();
-const { session } = require('electron');
 const Store = require('electron-store');
 
 // Create new local storage for browser cookies
@@ -31,11 +30,15 @@ function createWindow () {
     enableRemoteModule: true,
     icon: path.join(__dirname, 'favicon.ico'),
     webPreferences: {
-      devTools: true // Dynamically enables/disables the dev tools based on environment
+      devTools: true, // Dynamically enables/disables the dev tools based on environment
+      webSecurity: false
     }
   })
 
   mainWindow.webContents.openDevTools();
+
+  const unhandled = require('electron-unhandled');
+  unhandled();
 
   //removes the menu bar from the main window
   mainWindow.setMenuBarVisibility(false);
@@ -44,15 +47,17 @@ function createWindow () {
   if (isDev) {
     mainWindow.loadURL('http://localhost:3000');
   } else {
+    const url = require('url');
+
     mainWindow.loadURL(url.format({
-      pathname: path.join(__dirname, 'build/index.html'),
+      pathname: path.join(__dirname, '/build/index.html'),
       protocol: 'file:',
       slashes: true
     }));
   }
 
   // Set the icon path based on the environment
-  const iconPath = isDev ? '/public/Ringer-Icon-Dev.png' : '/public/Ringer-Icon-Production.png';
+  const iconPath = isDev ? '/public/Ringer-Icon-Dev.png' : '/build/Ringer-Icon-Production.png';
 
   // Sets the icon for the app
   mainWindow.setIcon(path.join(__dirname, iconPath));
@@ -98,7 +103,7 @@ app.whenReady().then( async() => {
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
   })
 })
 
@@ -132,7 +137,7 @@ app.on('before-quit', async () => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') app.quit()
+  if (process.platform !== 'darwin') app.quit();
 })
 
 // In this file you can include the rest of your app's specific main process

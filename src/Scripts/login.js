@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 export function logIn(navigate) {
     // Gets the username and password from the page
     const username = document.getElementById('username').value;
@@ -15,9 +17,8 @@ export function logIn(navigate) {
     // Work with the data
 
     if (data.Status === "Successful") {
-        document.cookie = "Token=" + data.Token;
-        document.cookie = "Username=" + username;
-
+        Cookies.set("Token", data.Token, {path: '/'});
+        Cookies.set('Username', username, {path: '/'});
         navigate('/pages/main');
     } else {
         document.getElementById('loginStatus').innerHTML = "Username or Password is Incorrect!";
