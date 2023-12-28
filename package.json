@@ -1,5 +1,6 @@
 {
   "name": "ringer",
+  "productName": "Ringer",
   "version": "4.0.0",
   "private": true,
   "main": "main.js",
@@ -53,8 +54,7 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "public/app-icon.png",
-      "name": "Ringer"
+      "icon": "public/app-icon.png"
     }
   },
   "scripts": {
