@@ -17,8 +17,11 @@ export function logIn(navigate) {
     // Work with the data
 
     if (data.Status === "Successful") {
-        Cookies.set("Token", data.Token, {path: '/'});
-        Cookies.set('Username', username, {path: '/'});
+        // Set username and token in local storage
+        localStorage.setItem("username", username);
+        localStorage.setItem("token", data.Token);
+
+        // Navigate to main page
         navigate('/pages/main');
     } else {
         document.getElementById('loginStatus').innerHTML = "Username or Password is Incorrect!";

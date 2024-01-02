@@ -1,12 +1,7 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, session, protocol} = require('electron');
+const {app, BrowserWindow, session} = require('electron');
 const path = require('path');
 require('dotenv').config();
-const Store = require('electron-store');
-
-// Create new local storage for browser cookies
-// Will be loaded into storage before app quit
-const store = new Store();
 
 // Determine the environment
 const isDev = require('electron-is-dev');
@@ -30,12 +25,15 @@ function createWindow () {
     enableRemoteModule: true,
     icon: path.join(__dirname, 'favicon.ico'),
     webPreferences: {
-      devTools: true, // Dynamically enables/disables the dev tools based on environment
+      devTools: isDev, // Dynamically enables/disables the dev tools based on environment
       webSecurity: false
     }
   })
 
-  mainWindow.webContents.openDevTools();
+  // Open dev tools based on environment
+  if (isDev) {
+    mainWindow.webContents.openDevTools();
+  }
 
   const unhandled = require('electron-unhandled');
   unhandled();
@@ -68,37 +66,7 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then( async() => {
-  createWindow()
-
-  // Grab cookies from electron storage and save them as browser cookies
-  // This is so they can be easily accessed from the render process
-  const credentials = store.get('credentials');
-
-  if (credentials) {
-    try {
-      const { username, token } = credentials;
-
-      // Specify the URL for your app (change this to your actual app URL)
-      const appUrl = 'http://localhost:3000';
-
-      // Set cookies in the session with the 'url' option
-      await session.defaultSession.cookies.set({
-        url: appUrl,
-        name: 'Token',
-        value: token,
-      });
-
-      await session.defaultSession.cookies.set({
-        url: appUrl,
-        name: 'Username',
-        value: username,
-      });
-
-      console.log('Set cookies for Token and Username');
-    } catch (error) {
-      console.error('Error setting cookies:', error);
-    }
-  }
+  createWindow();
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
@@ -106,32 +74,6 @@ app.whenReady().then( async() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   })
 })
-
-// Before app quits, save all browser cookies (Username and Token) for next session use
-// They will be loaded up on app start
-app.on('before-quit', async () => {
-  console.log('Saving Cookies...');
-
-  const tokenCookies = await session.defaultSession.cookies.get({ name: 'Token' });
-  const usernameCookies = await session.defaultSession.cookies.get({ name: 'Username' });
-
-  if (tokenCookies.length > 0 && usernameCookies.length > 0) {
-    const tokenValue = tokenCookies[0].value;
-    const usernameValue = usernameCookies[0].value;
-
-    console.log('Auth Info:', tokenValue, usernameValue);
-
-    // Store credentials securely using electron-store
-    store.set('credentials', {
-      username: usernameValue,
-      token: tokenValue,
-    });
-
-    console.log('Saved Credentials!');
-  } else {
-    store.delete('credentials');
-  }
-});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

@@ -9,8 +9,8 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
     const maxReconnectInterval = 30000; // Maximum reconnect interval in milliseconds
 
     // Get client auth info
-    const username = await GetUsername();
-    const token = await GetToken();
+    const username = localStorage.getItem('username');
+    const token = localStorage.getItem('token');
 
     const connect = () => {
         console.log("Connecting to service...");

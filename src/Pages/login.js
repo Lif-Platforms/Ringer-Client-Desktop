@@ -60,8 +60,8 @@ function LoginPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = Cookies.get('Token');
-    const username = Cookies.get('Username');
+    const token = localStorage.getItem('token');
+    const username = localStorage.getItem('username');
 
     // Check if the user is already logged in
     if (token && username) {
