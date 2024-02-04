@@ -8,8 +8,13 @@
     "name": "Lif Platforms",
     "email": "lif.platforms@gmail.com"
   },
+  "publish": {
+    "provider": "github",
+    "releaseType": "release"
+  },
   "homepage": "./",
   "description": "Say hello with Ringer!",
+  "repository": "https://github.com/Lif-Platforms/Ringer-Client-Desktop",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -18,10 +23,11 @@
     "cross-env": "^7.0.3",
     "debug": "^4.3.4",
     "dotenv": "^16.3.1",
+    "electron-log": "^5.1.1",
     "electron-notification": "^1.0.0",
-    "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0",
     "electron-unhandled": "^4.0.1",
+    "electron-updater": "^6.1.7",
     "js-cookie": "^3.0.5",
     "net": "^1.0.2",
     "react": "^18.2.0",
@@ -35,6 +41,7 @@
   "build": {
     "appId": "com.lifplatforms.ringer",
     "extends": null,
+    "publish": "github",
     "directories": {
       "buildResources": "public",
       "output": "dist"
@@ -59,6 +66,7 @@
   },
   "scripts": {
     "build": "react-scripts build && electron-builder",
+    "deploy": "react-scripts build && electron-builder --publish=always",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "ringer-start": "concurrently \"cross-env BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron . --node-version=20.9.0\"",
@@ -89,7 +97,7 @@
     "@electron-forge/maker-squirrel": "^6.4.2",
     "@electron-forge/maker-zip": "^6.4.2",
     "@electron-forge/plugin-auto-unpack-natives": "^6.4.2",
-    "electron": "^27.1.0",
+    "electron": "^28.2.1",
     "electron-builder": "^24.6.4",
     "electron-prebuilt-compile": "4.0.0"
   },

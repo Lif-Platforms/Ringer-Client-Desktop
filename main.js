@@ -1,7 +1,13 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow, session} = require('electron');
 const path = require('path');
+const { autoUpdater } = require('electron-updater');
 require('dotenv').config();
+
+autoUpdater.logger = require("electron-log")
+autoUpdater.logger.transports.file.level = "info"
+autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = true;
 
 // Determine the environment
 const isDev = require('electron-is-dev');
@@ -44,6 +50,7 @@ function createWindow () {
   // Load app based on environment
   if (isDev) {
     mainWindow.loadURL('http://localhost:3000');
+    
   } else {
     const url = require('url');
 
@@ -66,12 +73,14 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then( async() => {
+  autoUpdater.checkForUpdatesAndNotify();
   createWindow();
-
+  
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
+
   })
 })
 
