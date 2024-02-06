@@ -57,11 +57,11 @@
     ],
     "mac": {
       "category": "public.app-category.developer-tools",
-      "icon": "public/app-icon.png"
+      "icon": "public/app-icon.ico"
     },
     "win": {
       "target": "nsis",
-      "icon": "public/app-icon.png"
+      "icon": "public/app-icon.ico"
     }
   },
   "scripts": {
