@@ -483,6 +483,10 @@ function Messages({ selectedConversation }) {
   // Start websocket connection to notification server
   useEffect(() => {
     connectSocket(conversationIdRef, messagesRef, setMessages);
+    
+    return () => {
+      connectSocket.close_conn();
+    }
   }, []);
    
   // Load messages

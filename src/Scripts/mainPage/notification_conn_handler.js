@@ -1,6 +1,3 @@
-import { GetToken } from './getToken';
-import { GetUsername } from './getUsername';
-
 async function connectSocket(conversationIdRef, messagesRef, update_messages) {
     console.log("Conversation Id: " + conversationIdRef.current);
 
@@ -53,6 +50,7 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
 
             // Reconnect only if the connection was not closed intentionally
             if (event.code !== 1000) {
+                console.log("Trying to reconnect...")
                 setTimeout(() => {
                     reconnectInterval = Math.min(reconnectInterval * 2, maxReconnectInterval);
                     document.getElementById("ReconnectBar").classList.remove('reconnectBarHide');
@@ -61,15 +59,20 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
                 }, reconnectInterval);
             }
         };
+
+
     };
 
-    // Close the WebSocket connection before leaving the page
-    window.onbeforeunload = function(event) {
-        if (socket !== null) {
-            socket.close();
-            console.log("Connection Closed!")
-        }
+    const close_conn = () => {
+        console.log("Closing conn...")
+        socket.onclose = null;
+        socket.close();
+        socket = null;
+        console.log("Conn closed!");
     }
+
+    // Allow "close_conn" to be run by main page
+    connectSocket.close_conn = close_conn;
 
     connect();
 }
