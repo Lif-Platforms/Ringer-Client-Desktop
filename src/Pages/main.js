@@ -1,13 +1,11 @@
 // Import Files
 import '../App.css';
 import '../css/main.css';
-import notification from '../Images/Notification.png';
-import { GetToken } from '../Scripts/mainPage/getToken';
-import { GetUsername } from '../Scripts/mainPage/getUsername';
+import notification from '../assets/home/Notification.png';
 import '../css/Animations/checkmark.css';
-import Error_Image from "../Images/Error.png";
+import Error_Image from "../assets/global/Error.png";
 import connectSocket from "../Scripts/mainPage/notification_conn_handler";
-import MoreIcon from "../Images/More-Icon.png";
+import MoreIcon from "../assets/home/More-Icon.png";
 import { log_out } from '../Scripts/utils/user-log-out';
 // Import Modules
 import React, { useState, useEffect, useRef } from 'react';
