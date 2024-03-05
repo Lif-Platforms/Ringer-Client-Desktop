@@ -570,7 +570,8 @@ function MessageSender({conversationId}) {
 
       if (message_status === "message_sent") {
         document.getElementById('message-box').value = null; 
-        document.getElementById('message-box').disabled = false; 
+        document.getElementById('message-box').disabled = false;
+        document.getElementById('message-box').focus();
       }
     }
   }
