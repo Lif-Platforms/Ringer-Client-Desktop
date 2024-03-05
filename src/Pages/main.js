@@ -565,44 +565,14 @@ function MessageSender({conversationId}) {
       document.getElementById('message-box').value = "Sending..."; 
       document.getElementById('message-box').disabled = true; 
 
-      const username = localStorage.getItem('username');
-      const token = localStorage.getItem('token');
+      // Send message
+      const message_status = await connectSocket.send_message(message, conversationId.Id);
 
-      // Create request body
-      const message_data = {
-        username: username,
-        token: token,
-        message: message,
-        conversation_id: conversationId.Id
+      if (message_status === "message_sent") {
+        document.getElementById('message-box').value = null; 
+        document.getElementById('message-box').disabled = false;
+        document.getElementById('message-box').focus();
       }
-
-      fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/send_message`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(message_data),
-      })
-      .then(response => {
-        if (response.ok) {
-          return response.json(); // Convert response to JSON
-        } else {
-          throw new Error('Request failed with status code: ' + response.status);
-        }
-      })
-      .then(data => {
-        // Work with the data
-        console.log(data);
-        if (data.Status === "Ok") {
-          document.getElementById('message-box').value = null; 
-          document.getElementById('message-box').disabled = false; 
-        }
-      })
-      .catch(error => {
-        // Handle any errors
-        console.error(error);
-      });
-
     }
   }
 

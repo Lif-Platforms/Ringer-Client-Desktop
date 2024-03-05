@@ -63,6 +63,45 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
 
     };
 
+    const send_message = async (message, conversation_id) => {
+        // Check if the socket is open
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ MessageType: "SEND_MESSAGE", ConversationId: conversation_id, Message: message }));
+    
+            console.log("Message sent to server");
+    
+            // Create a promise that resolves when the server acknowledges the message
+            const messageSentPromise = new Promise((resolve) => {
+                const handleMessage = (event) => {
+                    const data = event.data;
+                    const parsedData = JSON.parse(data);
+    
+                    if ("ResponseType" in parsedData && parsedData["ResponseType"] === "MESSAGE_SENT") {
+                        console.log("Message sent!");
+                        resolve("message_sent");
+                        // Remove the event listener to avoid further processing
+                        socket.removeEventListener("message", handleMessage);
+                    }
+                };
+    
+                // Attach the event listener
+                socket.addEventListener("message", handleMessage);
+            });
+    
+            // Wait for the acknowledgment or other responses
+            try {
+                const response = await messageSentPromise;
+                return response; // Return the processed value
+            } catch (error) {
+                console.error("Error while waiting for server response:", error);
+                return null; // Handle any errors during communication
+            }
+        } else {
+            console.warn("WebSocket is not open. Cannot send message.");
+            return null; // Handle the case when the socket is not open
+        }
+    };    
+
     const close_conn = () => {
         console.log("Closing conn...")
         socket.onclose = null;
@@ -73,6 +112,7 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
 
     // Allow "close_conn" to be run by main page
     connectSocket.close_conn = close_conn;
+    connectSocket.send_message = send_message;
 
     connect();
 }
