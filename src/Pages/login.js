@@ -7,6 +7,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useEffect } from "react";
+const { shell } = require('electron');
 
 // Component for the login form
 class LoginForm extends React.Component {
