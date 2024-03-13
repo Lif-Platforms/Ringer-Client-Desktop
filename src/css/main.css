@@ -2,6 +2,7 @@
     display: grid;
     grid-template-columns: 200px auto;
     height: 100vh;
+    overflow: auto;
 }
 
 /* width */
@@ -146,8 +147,11 @@
 }
 
 .avatar img {
-    width: 30px;
-    height: 30px;
+    min-width: 30px;
+    max-width: 30px;
+    min-height: 30px;
+    max-height: 30px;
+    object-fit: cover;
     border-radius: 50%;
     padding: 5px;
     vertical-align: middle;
@@ -187,12 +191,15 @@
 }
 
 .message img {
-    width: 50px; /* Adjust the size of the profile picture */
-    height: 50px; /* Adjust the size of the profile picture */
+    min-width: 50px;
+    max-width: 50px;
+    min-height: 50px;
+    max-height: 50px;
     border-radius: 50%;
-    margin-right: 10px; /* Add spacing between profile picture and content */
+    margin-right: 10px;
     -webkit-user-drag: none;
     user-select: none;
+    object-fit: cover;
 }
 
 .message div {
@@ -481,8 +488,12 @@
 }
 
 .friends img {
-    width: 30px;
-    border-radius: 1em;
+    min-width: 30px;
+    max-width: 30px;
+    min-height: 30px;
+    max-height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .friends button{
@@ -508,6 +519,7 @@
     height: 50px; /* Adjust height if needed */
     border-radius: 2em;
     margin-right: 10px; /* Add margin between image and h1 */
+    object-fit: cover;
 }
 
 .conversationHeader h1 {
