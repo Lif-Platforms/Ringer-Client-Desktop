@@ -42,7 +42,7 @@ class LoginFooter extends React.Component {
   render() {
     return(
       <div className='loginFooter'>
-        <Link to="/Pages/passwordReset">Forgot Password</Link>
+        <Link onClick={() => window.electronAPI.openURL("https://my.lifplatforms.com/#/account_recovery")}>Forgot Password</Link>
         <p id="loginStatus" style={{"color": "red"}}></p>
       </div>
     );
