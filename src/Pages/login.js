@@ -29,13 +29,10 @@ class LoginForm extends React.Component {
 // Component for sign-up form
 class SignUpForm extends React.Component {
   render () {
-    // Defines Navigate for Navigating to Sign Up Page
-    const navigate = this.props.navigate;
-
     return(
       <div className='signUp'>
         <h1 className='signUpHeader'>New Here?</h1>
-        <button onClick={() => navigate("../Pages/createAccount")} type='button'>Sign Up</button>
+        <button onClick={() => window.electronAPI.openURL("https://my.lifplatforms.com/#/create_account")} type='button'>Sign Up</button>
       </div>
     );
   }
@@ -79,7 +76,7 @@ function LoginPage() {
           <LoginForm navigate={navigate} />
           <LoginFooter />
         </section>
-        <SignUpForm navigate={navigate} />
+        <SignUpForm />
       </div>
     </div>
   );
