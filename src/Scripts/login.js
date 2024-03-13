@@ -1,36 +1,44 @@
-import Cookies from "js-cookie";
-
-export function logIn(navigate) {
+export function logIn(navigate, formRef, errorRef, loginButtonRef) {
     // Gets the username and password from the page
-    const username = document.getElementById('username').value;
-    const password  = document.getElementById('password').value; 
+    const formData = new FormData(formRef);
 
-    fetch(`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/login/${username}/${password}`)
+    // Update login button
+    loginButtonRef.innerHTML = "Logging In..."
+
+    fetch(`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/auth/login`, {
+        method: "POST",
+        body: formData
+    })
     .then(response => {
     if (response.ok) {
         return response.json(); // Convert response to JSON
+
+    } else if (response.status === 401) {
+        throw new Error("Incorrect Username or Password");
+
+    } else if (response.status === 403) {
+        throw new Error("Account Suspended");
+
     } else {
-        throw new Error('Request failed with status code: ' + response.status);
+        throw new Error("Something Went Wrong");
     }
     })
     .then(data => {
-    // Work with the data
-
-    if (data.Status === "Successful") {
         // Set username and token in local storage
-        localStorage.setItem("username", username);
+        localStorage.setItem("username", formData.get("username"));
         localStorage.setItem("token", data.Token);
 
         // Navigate to main page
         navigate('/pages/main');
-    } else {
-        document.getElementById('loginStatus').innerHTML = "Username or Password is Incorrect!";
-    }
+
     })
     .catch(error => {
         // Handle any errors
         console.error(error);
-        document.getElementById('loginStatus').innerHTML = "Something Went Wrong!";
+        errorRef.innerHTML = error.message;
+
+        // Update login button
+        loginButtonRef.innerHTML = "Login"
     });
 }
 
