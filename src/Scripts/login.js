@@ -26,7 +26,7 @@ export function logIn(navigate, formRef, errorRef, loginButtonRef) {
     .then(data => {
         // Set username and token in local storage
         localStorage.setItem("username", formData.get("username"));
-        localStorage.setItem("token", data.Token);
+        localStorage.setItem("token", data.token);
 
         // Navigate to main page
         navigate('/pages/main');
