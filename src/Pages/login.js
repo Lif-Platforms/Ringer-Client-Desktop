@@ -3,7 +3,7 @@ import '../App.css';
 import '../css/login.css';
 import { logIn } from '../Scripts/login.js';
 // Import modules 
-import React from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useEffect } from "react";
@@ -11,16 +11,26 @@ import { useEffect } from "react";
 // Component for the login form
 class LoginForm extends React.Component {
   render () {
-
     return(
-      <form className='loginForm'>
-        <input type="text" placeholder="Username" id="username" />
+      <form className='loginForm' ref={this.props.loginRef}>
+        <input name="username" type="text" placeholder="Username" id="username" />
         <br />
         <br />
-        <input type="password" placeholder='Password' id='password'/>
+        <input name="password" type="password" placeholder='Password' id='password'/>
         <br />
         <br />
-        <button className='loginButton' onClick={() => logIn(this.props.navigate)} type="button">Login</button>
+        <button 
+          className='loginButton' 
+          ref={this.props.loginButtonRef}
+          onClick={() => logIn(
+                            this.props.navigate, 
+                            this.props.loginRef.current,
+                            this.props.errorRef.current,
+                            this.props.loginButtonRef.current
+                          )} 
+          type="button">
+            Login
+        </button>
       </form>
     );
   }
@@ -43,7 +53,7 @@ class LoginFooter extends React.Component {
     return(
       <div className='loginFooter'>
         <Link onClick={() => window.electronAPI.openURL("https://my.lifplatforms.com/#/account_recovery")}>Forgot Password</Link>
-        <p id="loginStatus" style={{"color": "red"}}></p>
+        <p ref={this.props.errorRef} style={{"color": "red"}}></p>
       </div>
     );
   }
@@ -51,6 +61,9 @@ class LoginFooter extends React.Component {
 
 // Main Function For Login Page
 function LoginPage() {
+  const loginFormRef = useRef();
+  const errorRef = useRef();
+  const loginButtonRef = useRef();
 
   // Define the navigation
   const navigate = useNavigate();
@@ -73,8 +86,8 @@ function LoginPage() {
       <div className="container">
         <section>
           <h1 className='loginLifHeader'>Login With Lif</h1>
-          <LoginForm navigate={navigate} />
-          <LoginFooter />
+          <LoginForm navigate={navigate} loginRef={loginFormRef} errorRef={errorRef} loginButtonRef={loginButtonRef} />
+          <LoginFooter errorRef={errorRef} />
         </section>
         <SignUpForm />
       </div>
