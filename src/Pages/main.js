@@ -466,10 +466,13 @@ function Messages({ selectedConversation }) {
     if (messages !== "loading" && messages !== false) {
       messagesRef.current = messages;
       console.log("Updated Messages: ", messagesRef.current);
+      console.log(typeof messages)
 
       // Scroll to the bottom of the message
       let messages_div = document.getElementById("message-container");
-      messages_div.scrollTop = messages_div.scrollHeight;
+      if (messages_div) {
+        messages_div.scrollTop = messages_div.scrollHeight;
+      }
     }
   }, [messages]);
 
