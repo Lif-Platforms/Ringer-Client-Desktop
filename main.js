@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, session} = require('electron');
+const {app, BrowserWindow, shell, ipcMain} = require('electron');
 const path = require('path');
 const { autoUpdater } = require('electron-updater');
 require('dotenv').config();
@@ -32,7 +32,8 @@ function createWindow () {
     icon: path.join(__dirname, 'favicon.ico'),
     webPreferences: {
       devTools: isDev, // Dynamically enables/disables the dev tools based on environment
-      webSecurity: false
+      webSecurity: false,
+      preload: path.join(__dirname, 'preload.js')
     }
   })
 
@@ -44,7 +45,12 @@ function createWindow () {
   const unhandled = require('electron-unhandled');
   unhandled();
 
-  //removes the menu bar from the main window
+  // Listen for open browser event
+  ipcMain.on('open-url', (event, url) => {
+    shell.openExternal(url);
+  })
+
+  // Remove the menu bar from the main window
   mainWindow.setMenuBarVisibility(false);
 
   // Load app based on environment

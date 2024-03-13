@@ -22,6 +22,7 @@ module.exports = {
     "path": false,
   },
   devtool: 'source-map',
+  externals: ['fs'],
   module: {
     rules: [
       {

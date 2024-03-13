@@ -7,7 +7,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useEffect } from "react";
-const { shell } = require('electron');
 
 // Component for the login form
 class LoginForm extends React.Component {
@@ -30,13 +29,10 @@ class LoginForm extends React.Component {
 // Component for sign-up form
 class SignUpForm extends React.Component {
   render () {
-    // Defines Navigate for Navigating to Sign Up Page
-    const navigate = this.props.navigate;
-
     return(
       <div className='signUp'>
         <h1 className='signUpHeader'>New Here?</h1>
-        <button onClick={() => navigate("../Pages/createAccount")} type='button'>Sign Up</button>
+        <button onClick={() => window.electronAPI.openURL("https://my.lifplatforms.com/#/create_account")} type='button'>Sign Up</button>
       </div>
     );
   }
@@ -80,7 +76,7 @@ function LoginPage() {
           <LoginForm navigate={navigate} />
           <LoginFooter />
         </section>
-        <SignUpForm navigate={navigate} />
+        <SignUpForm />
       </div>
     </div>
   );
