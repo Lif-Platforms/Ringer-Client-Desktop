@@ -228,12 +228,9 @@ function FriendRequestsPopup({ onClose, setFriendsListState }, props) {
   }
 }
 
-function FriendsList({friendsListState, setFriendsListState, switchConversation}) {
+function FriendsList({friendsListState, setFriendsListState, switchConversation, selectedConversation, setSelectedConversation}) {
 
   function handle_friend_request_accept(data) {
-    console.log(data);
-    console.log(typeof friendsListState)
-    console.log(friendsListState);
     if (friendsListState !== "loading" && typeof friendsListState === "object") {
       // Create clone of friends list
       let friends_list = [...friendsListState];
@@ -250,7 +247,6 @@ function FriendsList({friendsListState, setFriendsListState, switchConversation}
 
       if (!user_found) {
         friends_list.push({Username: data.detail.username, Id: data.detail.id});
-        console.log("added user")
 
         // Update friends list
         setFriendsListState(friends_list);
@@ -258,17 +254,44 @@ function FriendsList({friendsListState, setFriendsListState, switchConversation}
     } else if (friendsListState !== "loading" && typeof friendsListState !== "object") {
       // Set new friends list
       setFriendsListState([{Username: data.detail.username, Id: data.detail.id}]);
+    }
+  }
 
-      console.log("added user")
+  function handle_conversation_removal(data) {
+    // Create clone of friends list
+    let friends_list = [...friendsListState];
+
+    // Keep track of conversation index
+    let index = 0;
+
+    // Check if conversation exists
+    friends_list.forEach((conversation) => {
+      if (conversation.Id === data.detail.id) {
+        console.log("found conversation")
+        friends_list.splice(index, 1);
+
+      } else {
+        index += 1;
+      }
+    })
+
+    // Update friends list
+    setFriendsListState(friends_list);
+
+    // Check if removed conversation is currently selected
+    if (data.detail.id === selectedConversation.Id) {
+      setSelectedConversation("");
     }
   }
 
   document.addEventListener("Friend_Request_Accept", handle_friend_request_accept);
+  document.addEventListener("Conversation_Removal", handle_conversation_removal);
   
   useEffect(() => {
     // Remove event listener on component unmount
     return () => {
       document.removeEventListener("Friend_Request_Accept", handle_friend_request_accept);
+      document.removeEventListener("Conversation_Removal", handle_conversation_removal);
     }
   }, []);
 
@@ -338,7 +361,7 @@ function FriendsList({friendsListState, setFriendsListState, switchConversation}
 }
 
 // Sidebar component
-function SideBar({switchConversation, friendsListState, setFriendsListState}) {
+function SideBar({switchConversation, friendsListState, setFriendsListState, selectedConversation, setSelectedConversation}) {
   const [showPopup, setShowPopup] = useState(false);
   const [showNotificationPopup, setShowNotificationPopup] = useState(false);
 
@@ -369,7 +392,13 @@ function SideBar({switchConversation, friendsListState, setFriendsListState}) {
         {showPopup && <AddNewConversationMenu onClose={handleClosePopup} />}
         {showNotificationPopup && <FriendRequestsPopup onClose={handleCloseNotificationPopup} setFriendsListState={setFriendsListState} />}
       </div>
-      <FriendsList friendsListState={friendsListState} setFriendsListState={setFriendsListState} switchConversation={switchConversation} />
+      <FriendsList 
+        friendsListState={friendsListState} 
+        setFriendsListState={setFriendsListState} 
+        switchConversation={switchConversation}
+        selectedConversation={selectedConversation}
+        setSelectedConversation={setSelectedConversation}
+      />
     </div>
   );   
 }
@@ -428,7 +457,7 @@ function UserProfile() {
 }
 
 // Component for unfriending someone 
-function UnfriendUser({ unfriendState, setUnfriendState, selectedConversation }) {
+function UnfriendUser({ unfriendState, setUnfriendState, selectedConversation, friendsListState, setFriendsListState, setSelectedConversation }) {
   // Handle the unfriending process
   async function handle_unfriend() {
     // Set popup state
@@ -450,6 +479,28 @@ function UnfriendUser({ unfriendState, setUnfriendState, selectedConversation })
         // Work with the data
         console.log(data);
         if (data.Status === "Ok") {
+          // Make clone of friends list
+          let friends_list = [...friendsListState];
+
+          // Keep track of array index
+          let index = 0;
+
+          // Remove conversation from friends list
+          friends_list.forEach((conversation) => {
+            if (conversation.Id === selectedConversation.Id) {
+              friends_list.splice(index, 1);
+
+            } else {
+              index += 1;
+            }
+          });
+
+          // Update friends list
+          setFriendsListState(friends_list);
+
+          // Set elected conversation
+          setSelectedConversation("");
+
           setUnfriendState("completed");
         }
       })
@@ -493,7 +544,7 @@ function UnfriendUser({ unfriendState, setUnfriendState, selectedConversation })
 }
 
 // Component for messages
-function Messages({ selectedConversation }) {
+function Messages({ selectedConversation, friendsListState, setFriendsListState, setSelectedConversation }) {
   const [messages, setMessages] = useState('loading');
   const [unfriendState, setUnfriendState] = useState('hide');
 
@@ -593,7 +644,14 @@ function Messages({ selectedConversation }) {
           <h1>Nothing to see here...</h1>
         )
       )}
-      <UnfriendUser unfriendState={unfriendState} setUnfriendState={setUnfriendState} selectedConversation={selectedConversation} />
+      <UnfriendUser 
+        unfriendState={unfriendState}
+        setUnfriendState={setUnfriendState}
+        selectedConversation={selectedConversation}
+        friendsListState={friendsListState} 
+        setFriendsListState={setFriendsListState}
+        setSelectedConversation={setSelectedConversation}
+      />
     </div>
   );
 }
@@ -669,12 +727,19 @@ function MainPage() {
           setFriendsListState={setFriendsListState} 
           friends={friends} 
           setFriends={setFriends} 
-          switchConversation={switchConversation} 
+          switchConversation={switchConversation}
+          selectedConversation={selectedConversation}
+          setSelectedConversation={setSelectedConversation}
         />
         <UserProfile />
       </div>
       <div className="messagesContainer">
-        <Messages selectedConversation={selectedConversation} />
+        <Messages 
+          selectedConversation={selectedConversation}
+          friendsListState={friendsListState}
+          setFriendsListState={setFriendsListState}
+          setSelectedConversation={setSelectedConversation}
+        />
         <MessageSender conversationId={selectedConversation} />
       </div>
       <ReconnectingBar />
