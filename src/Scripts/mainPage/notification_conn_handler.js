@@ -42,6 +42,16 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
                 } else {
                     console.log("Received message! Conversation Not Selected");
                 }
+            } else if (server_data.Type === "FRIEND_REQUEST_ACCEPT") {
+                // Create accept friend request event
+                const friend_request_accept_event = new CustomEvent("Friend_Request_Accept", {
+                    detail: {
+                        username: server_data.User,
+                        id: server_data.Id
+                    }
+                });
+
+                document.dispatchEvent(friend_request_accept_event);
             }
         };
 

@@ -229,12 +229,55 @@ function FriendRequestsPopup({ onClose, setFriendsListState }, props) {
 }
 
 function FriendsList({friendsListState, setFriendsListState, switchConversation}) {
+
+  function handle_friend_request_accept(data) {
+    console.log(data);
+    console.log(typeof friendsListState)
+    console.log(friendsListState);
+    if (friendsListState !== "loading" && typeof friendsListState === "object") {
+      // Create clone of friends list
+      let friends_list = [...friendsListState];
+
+      let user_found = false;
+
+      // Check if user is already in list
+      friends_list.forEach((user) => {
+        if (user.Username === data.detail.username) {
+          user_found = true;
+          console.log("found user");
+        }
+      });
+
+      if (!user_found) {
+        friends_list.push({Username: data.detail.username, Id: data.detail.id});
+        console.log("added user")
+
+        // Update friends list
+        setFriendsListState(friends_list);
+      }
+    } else if (friendsListState !== "loading" && typeof friendsListState !== "object") {
+      // Set new friends list
+      setFriendsListState([{Username: data.detail.username, Id: data.detail.id}]);
+
+      console.log("added user")
+    }
+  }
+
+  document.addEventListener("Friend_Request_Accept", handle_friend_request_accept);
+  
+  useEffect(() => {
+    // Remove event listener on component unmount
+    return () => {
+      document.removeEventListener("Friend_Request_Accept", handle_friend_request_accept);
+    }
+  }, []);
+
   // Fetch friends list from server
   useEffect(() => {
     async function get_friends() {
       // Gets username and token
       const username = localStorage.getItem('username');
-    const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token');
 
       console.log("Request Username: " + username);
       console.log("Request Token: " + token);
@@ -295,10 +338,9 @@ function FriendsList({friendsListState, setFriendsListState, switchConversation}
 }
 
 // Sidebar component
-function SideBar({switchConversation}) {
+function SideBar({switchConversation, friendsListState, setFriendsListState}) {
   const [showPopup, setShowPopup] = useState(false);
   const [showNotificationPopup, setShowNotificationPopup] = useState(false);
-  const [friendsListState, setFriendsListState] = useState('loading');
 
   const handleButtonClick = () => {
     setShowPopup(true);
@@ -599,7 +641,7 @@ function MessageSender({conversationId}) {
 function MainPage() {
   const [friends, setFriends] = useState({});
   const [selectedConversation, setSelectedConversation] = useState('');
-
+  const [friendsListState, setFriendsListState] = useState('loading');
 
   useEffect(() => {
     async function getToken() {
@@ -622,7 +664,13 @@ function MainPage() {
   return (
     <div className="appContainer">
       <div>
-        <SideBar friends={friends} setFriends={setFriends} switchConversation={switchConversation} />
+        <SideBar 
+          friendsListState={friendsListState} 
+          setFriendsListState={setFriendsListState} 
+          friends={friends} 
+          setFriends={setFriends} 
+          switchConversation={switchConversation} 
+        />
         <UserProfile />
       </div>
       <div className="messagesContainer">
