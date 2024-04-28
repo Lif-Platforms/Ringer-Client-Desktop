@@ -29,7 +29,7 @@ function createWindow () {
     title: "Ringer",
     contextIsolation: false,
     enableRemoteModule: true,
-    icon: path.join(__dirname, 'favicon.ico'),
+    icon: path.join(__dirname, 'public/favicon.ico'),
     webPreferences: {
       devTools: isDev, // Dynamically enables/disables the dev tools based on environment
       webSecurity: false,
