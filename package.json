@@ -1,27 +1,40 @@
 {
   "name": "ringer",
-  "version": "1.0.0",
+  "productName": "Ringer",
+  "version": "4.0.0",
   "private": true,
   "main": "main.js",
   "author": {
     "name": "Lif Platforms",
     "email": "lif.platforms@gmail.com"
   },
+  "publish": {
+    "provider": "github",
+    "releaseType": "release"
+  },
+  "homepage": "./",
   "description": "Say hello with Ringer!",
+  "repository": "https://github.com/Lif-Platforms/Ringer-Client-Desktop",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "concurrently": "^7.6.0",
     "cross-env": "^7.0.3",
+    "debug": "^4.3.4",
     "dotenv": "^16.3.1",
-    "electron": "^27.0.1",
+    "electron-log": "^5.1.1",
     "electron-notification": "^1.0.0",
-    "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0",
+    "electron-unhandled": "^4.0.1",
+    "electron-updater": "^6.1.7",
+    "fs": "^0.0.1-security",
     "js-cookie": "^3.0.5",
     "net": "^1.0.2",
+    "path": "^0.12.7",
+    "path-browserify": "^1.0.1",
     "react": "^18.2.0",
+    "react-app-rewired": "^2.2.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.18.0",
     "react-scripts": "5.0.1",
@@ -31,34 +44,37 @@
   },
   "build": {
     "appId": "com.lifplatforms.ringer",
-    "productName": "Ringer",
-    "files": [
-      "**/*",
-      "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
-      "!node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
-      "!node_modules/*.d.ts",
-      "!node_modules/.bin",
-      "!node_modules/*/{npm,npm.cmd,yarn,yarn.cmd}"
-    ],
-    "asar": true,
+    "extends": null,
+    "publish": "github",
     "directories": {
+      "buildResources": "public",
       "output": "dist"
     },
-    "extraFiles": [
-      {
-        "from": "./main.js",
-        "to": "./main.js"
-      }
-    ]
+    "asarUnpack": [
+      "main.js"
+    ],
+    "files": [
+      "build/**/*",
+      "node_modules/**/*",
+      "electron/**/*",
+      "main.js"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "icon": "public/app-icon.ico"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "public/app-icon.ico"
+    }
   },
   "scripts": {
-    "build": "electron-builder",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "build": "react-app-rewired build && electron-builder",
+    "deploy": "react-app-rewired build && electron-builder --publish=always",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject",
     "ringer-start": "concurrently \"cross-env BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron . --node-version=20.9.0\"",
-    "start": "react-scripts start",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
+    "start": "react-app-rewired start"
   },
   "eslintConfig": {
     "extends": [
@@ -85,6 +101,8 @@
     "@electron-forge/maker-squirrel": "^6.4.2",
     "@electron-forge/maker-zip": "^6.4.2",
     "@electron-forge/plugin-auto-unpack-natives": "^6.4.2",
+    "electron": "^28.3.1",
+    "electron-builder": "^24.6.4",
     "electron-prebuilt-compile": "4.0.0"
   },
   "browser": {

@@ -1,0 +1,10 @@
+{
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Lif-Platforms",
+        "repo": "Ringer-Client-Desktop"
+      }
+    ]
+  }
+  

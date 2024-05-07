@@ -5,7 +5,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 module.exports = {
   mode: 'development',
   entry: './src/index.js',
-  target: 'electron-renderer',
+  fs: false,
+  target: 'web',
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
@@ -15,7 +16,13 @@ module.exports = {
       "path": require.resolve("path-browserify"),
     },
   },
+  browser: {
+    "fs": false,
+    "os": false,
+    "path": false,
+  },
   devtool: 'source-map',
+  externals: ['fs'],
   module: {
     rules: [
       {

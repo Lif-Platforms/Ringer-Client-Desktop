@@ -16,7 +16,7 @@ section {
 
 .signUp {
     text-align: center;
-    background-image: url("../Images/login_bg.png");
+    background-image: url("../assets/login/login_bg.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
