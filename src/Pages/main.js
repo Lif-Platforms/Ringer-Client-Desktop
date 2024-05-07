@@ -585,6 +585,7 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
    
   // Load messages
   useEffect(() => {
+    console.log("Selected Conversation: " + selectedConversation.Id)
     async function handle_message_load() {
       // Get auth data
       const username = localStorage.getItem('username');
@@ -611,7 +612,12 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
         console.error(error);
       });
     }
-    handle_message_load()
+    // Only load messages if there is a conversation selected
+    if (selectedConversation.Id !== undefined) {
+      handle_message_load();
+    } else {
+      setMessages(null);
+    }
   }, [selectedConversation])
 
   return (
