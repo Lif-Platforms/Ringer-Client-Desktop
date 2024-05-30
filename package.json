@@ -1,7 +1,7 @@
 {
   "name": "ringer",
   "productName": "Ringer",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "private": true,
   "main": "main.js",
   "author": {
@@ -69,7 +69,7 @@
     }
   },
   "scripts": {
-    "build": "react-app-rewired build && electron-builder",
+    "build": "react-app-rewired build && electron-builder --win --mac",
     "deploy": "react-app-rewired build && electron-builder --publish=always",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
