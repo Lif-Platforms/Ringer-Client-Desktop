@@ -10,7 +10,7 @@
 </div>
 
 # 💬 Ringer-Client
-Ringer is a new cross platform messaging app for Windows, mac, and linux. It's currently in beta so bugs and querks are expected.  To get the latest stable build please download the installer. 
+Ringer is a new cross-platform messaging app for Windows, Mac, and Linux. It's currently in beta so bugs and quirks are expected. To get the latest stable build please download the [installer]("https://github.com/Lif-Platforms/Ringer-Client-Desktop/releases/latest/").
 
 <img src="https://github.com/Lif-Platforms/Ringer-Client-Desktop/blob/master/.github/Ringer-Mockup-1.png" alt="Ringer Mockup" style="width: 100%" /> 
 
@@ -36,8 +36,8 @@ And these frameworks:
  - Electron
  - React 
 
-# 🤔 Whats The Diffrence Between Ringer Windows and Ringer Desktop?
-Ringer Client Windows is a Ringer Client made entirely in python. Ringer Client Desktop is a complete rewrite of the Ringer python client using React and Electron. 
+# 🤔 What's The Difference Between Ringer Windows and Ringer Desktop?
+Ringer Client Windows is a Ringer Client made entirely in Python. Ringer Client Desktop is a complete rewrite of the Ringer Python client using React and Electron. 
 
 # 💾 Server Code
 Ringers server code is located in another repository: https://github.com/Lif-Platforms/New-Ringer-Server
@@ -49,4 +49,4 @@ Ringers server code is located in another repository: https://github.com/Lif-Pla
 
  
  # 🛠️ How To Contribute
- In the projects setion there is a project that has a list of things that need to be worked on and their status. Working on the stuff in the project would be the best way to contribute. See [`CONTRIBUTING`](CONTRIBUTING.md) for details. 
+ Please read our [`CONTRIBUTING`](CONTRIBUTING.md) for details on the best ways to contribute to this project. 
