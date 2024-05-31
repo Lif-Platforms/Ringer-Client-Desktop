@@ -10,7 +10,7 @@
 </div>
 
 # 💬 Ringer-Client
-Ringer is a new cross-platform messaging app for Windows, Mac, and Linux. It's currently in beta so bugs and quirks are expected. To get the latest stable build please download the [installer]("https://github.com/Lif-Platforms/Ringer-Client-Desktop/releases/latest/").
+Ringer is a new cross-platform messaging app for Windows, Mac, and Linux. It's currently in beta so bugs and quirks are expected. To get the latest stable build please download the [installer](https://github.com/Lif-Platforms/Ringer-Client-Desktop/releases/latest/).
 
 <img src="https://github.com/Lif-Platforms/Ringer-Client-Desktop/blob/master/.github/Ringer-Mockup-1.png" alt="Ringer Mockup" style="width: 100%" /> 
 
