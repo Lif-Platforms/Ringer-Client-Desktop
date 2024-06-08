@@ -27,11 +27,11 @@ function createWindow () {
     minHeight: 600,
     frame: true,
     title: "Ringer",
-    contextIsolation: false,
+    contextIsolation: true,
     enableRemoteModule: true,
     icon: path.join(__dirname, 'public/favicon.ico'),
     webPreferences: {
-      devTools: isDev, // Dynamically enables/disables the dev tools based on environment
+      devTools: true, // Dynamically enables/disables the dev tools based on environment
       webSecurity: false,
       preload: path.join(__dirname, 'preload.js')
     }

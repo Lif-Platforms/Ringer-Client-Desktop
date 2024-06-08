@@ -57,7 +57,8 @@
       "build/**/*",
       "node_modules/**/*",
       "electron/**/*",
-      "main.js"
+      "main.js",
+      "preload.js"
     ],
     "mac": {
       "category": "public.app-category.developer-tools",
