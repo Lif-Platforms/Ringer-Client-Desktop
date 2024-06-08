@@ -7,6 +7,7 @@ import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useEffect } from "react";
+const { ipcRenderer } = require('electron');
 
 // Component for the login form
 class LoginForm extends React.Component {
@@ -42,7 +43,7 @@ class SignUpForm extends React.Component {
     return(
       <div className='signUp'>
         <h1 className='signUpHeader'>New Here?</h1>
-        <button onClick={() => window.electronAPI.openURL("https://my.lifplatforms.com/#/create_account")} type='button'>Sign Up</button>
+        <button onClick={() => ipcRenderer.send('open-url', 'https://my.lifplatforms.com/#/create_account')} type='button'>Sign Up</button>
       </div>
     );
   }
@@ -52,7 +53,7 @@ class LoginFooter extends React.Component {
   render() {
     return(
       <div className='loginFooter'>
-        <Link onClick={() => window.electronAPI.openURL("https://my.lifplatforms.com/#/account_recovery")}>Forgot Password</Link>
+        <Link onClick={() => ipcRenderer.send('open-url', 'https://my.lifplatforms.com/#/account_recovery')}>Forgot Password</Link>
         <p ref={this.props.errorRef} style={{"color": "red"}}></p>
       </div>
     );
