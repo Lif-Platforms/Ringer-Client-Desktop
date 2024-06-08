@@ -69,7 +69,9 @@
     }
   },
   "scripts": {
-    "build": "react-app-rewired build && electron-builder --win --mac",
+    "build-": "react-app-rewired build && electron-builder --win --mac",
+    "build-win": "react-app-rewired build && electron-builder --win",
+    "build-mac": "react-app-rewired build && electron-builder --mac",
     "deploy": "react-app-rewired build && electron-builder --publish=always",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
