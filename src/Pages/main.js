@@ -35,18 +35,24 @@ function AddNewConversationMenu(props) {
       const token = localStorage.getItem('token');
       const username = localStorage.getItem('username');
 
-      fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/add_friend/${username}/${token}/${add_user}`)
+      // Create new formdata for request
+      const formData = new FormData();
+      formData.append("user", add_user);
+
+      fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/add_friend`, {
+          headers: {
+            username: username,
+            token: token
+          },
+          method: "POST",
+          body: formData
+        }
+      )
       .then(response => {
         if (response.ok) {
-          return response.json(); // Convert response to JSON
+          setConversationAdded(true);
         } else {
           throw new Error('Request failed with status code: ' + response.status);
-        }
-      })
-      .then(data => {
-        // Work with the data
-        if (data.Status === "Ok") {
-          setConversationAdded(true);
         }
       })
       .catch(error => {
@@ -85,9 +91,8 @@ function AddNewConversationMenu(props) {
 
 
 // Popup for showing all incoming friend requests
-function FriendRequestsPopup({ onClose, setFriendsListState }, props) {
+function FriendRequestsPopup({ onClose, setFriendsListState }) {
   const [notificationData, setNotificationData] = useState('loading');
-  const [reload, setReload] = useState(false); // Initialize reload state variable to false
 
   useEffect(() => {
     async function fetchData() {
@@ -95,7 +100,12 @@ function FriendRequestsPopup({ onClose, setFriendsListState }, props) {
       const username = localStorage.getItem('username');
       const token = localStorage.getItem('token');
 
-      fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/get_friend_requests/${username}/${token}`)
+      fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/get_friend_requests`, {
+        headers: {
+          username: username,
+          token: token
+        }
+      })
       .then(response => {
         if (response.ok) {
           return response.json(); // Convert response to JSON
@@ -108,7 +118,7 @@ function FriendRequestsPopup({ onClose, setFriendsListState }, props) {
         console.log(data);
         console.log(typeof data);
 
-        setNotificationData(JSON.parse(data));
+        setNotificationData(data);
 
       })
       .catch(error => {
@@ -124,29 +134,30 @@ function FriendRequestsPopup({ onClose, setFriendsListState }, props) {
   }
 
   async function handleAccept(request) {
-    console.log('Accepting: ' + request);
-
     // Gets username and token
     const username = localStorage.getItem('username');
     const token = localStorage.getItem('token');
 
-    fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/accept_friend_request/${username}/${token}/${request}`)
+    // Create new formdata
+    const formData = new FormData();
+    formData.append("user", request);
+
+    fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/accept_friend_request`, {
+      headers: {
+        username: username,
+        token: token
+      },
+      method: "POST",
+      body: formData
+    })
     .then(response => {
       if (response.ok) {
-        return response.json(); // Convert response to JSON
+        // Reset popup status and close popup
+        setFriendsListState("loading")
+        onClose();
       } else {
         throw new Error('Request failed with status code: ' + response.status);
       }
-    })
-    .then(data => {
-      // Work with the data
-      console.log(data);
-
-      if (data.Status === "Ok") {
-        setFriendsListState("loading")
-        onClose();
-      }
-
     })
     .catch(error => {
       // Handle any errors
@@ -155,29 +166,28 @@ function FriendRequestsPopup({ onClose, setFriendsListState }, props) {
   }
 
   async function handleDeny(request) {
-    console.log("Denied friend request: " + request);
-    
     // Gets username and token
     const username = localStorage.getItem('username');
     const token = localStorage.getItem('token');
 
-    fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/deny_friend_request/${username}/${token}/${request}`)
+    // Create new form data
+    const formData = new FormData();
+    formData.append("user", request);
+
+    fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/deny_friend_request`, {
+      headers: {
+        username: username,
+        token: token
+      },
+      method: "POST",
+      body: formData
+    })
     .then(response => {
       if (response.ok) {
-        return response.json(); // Convert response to JSON
+        onClose();
       } else {
         throw new Error('Request failed with status code: ' + response.status);
       }
-    })
-    .then(data => {
-      // Work with the data
-      console.log(data);
-
-      if (data.Status === "Ok") {
-        console.log(notificationData);
-        console.log("Operation Successful");
-      }
-
     })
     .catch(error => {
       // Handle any errors
@@ -307,7 +317,12 @@ function FriendsList({friendsListState, setFriendsListState, switchConversation,
       console.log("Request Username: " + username);
       console.log("Request Token: " + token);
 
-      fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/get_friends_list/${username}/${token}`)
+      fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/get_friends`, {
+        headers: {
+          username: username,
+          token: token
+        }
+      })
       .then(response => {
         if (response.ok) {
           return response.json(); // Convert response to JSON
@@ -469,18 +484,15 @@ function UnfriendUser({ unfriendState, setUnfriendState, selectedConversation, f
     const username = localStorage.getItem('username');
     const token = localStorage.getItem('token');
 
-    fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/remove_conversation/${selectedConversation.Id}/${username}/${token}/`)
+    fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/remove_conversation/${selectedConversation.Id}`, {
+      headers: {
+        username: username,
+        token: token
+      },
+      method: "DELETE"
+    })
       .then(response => {
         if (response.ok) {
-          return response.json(); // Convert response to JSON
-        } else {
-          throw new Error('Request failed with status code: ' + response.status);
-        }
-      })
-      .then(data => {
-        // Work with the data
-        console.log(data);
-        if (data.Status === "Ok") {
           // Make clone of friends list
           let friends_list = [...friendsListState];
 
@@ -504,6 +516,8 @@ function UnfriendUser({ unfriendState, setUnfriendState, selectedConversation, f
           setSelectedConversation("");
 
           setUnfriendState("completed");
+        } else {
+          throw new Error('Request failed with status code: ' + response.status);
         }
       })
       .catch(error => {
@@ -686,7 +700,12 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
       // Change the message container to loading
       setMessages('loading');
 
-      fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/load_messages/${username}/${token}/${selectedConversation.Id}`)
+      fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/load_messages/${selectedConversation.Id}`, {
+        headers: {
+          username: username,
+          token: token
+        }
+      })
       .then(response => {
         if (response.ok) {
           return response.json(); // Convert response to JSON
