@@ -168,6 +168,7 @@
     justify-content: flex-start;
     align-items: center;
     overflow: hidden; /* Hide any overflowing content */
+    color: white;
 }
 
 .message-container {
