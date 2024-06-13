@@ -7,6 +7,8 @@ import Error_Image from "../assets/global/Error.png";
 import connectSocket from "../Scripts/mainPage/notification_conn_handler";
 import MoreIcon from "../assets/home/More-Icon.png";
 import { log_out } from '../Scripts/utils/user-log-out';
+import Loader_1 from '../assets/global/loaders/loader-1.svg';
+import Close_Icon from '../assets/global/Close_Button.png';
 // Import Modules
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
@@ -543,10 +545,100 @@ function UnfriendUser({ unfriendState, setUnfriendState, selectedConversation, f
   }
 }
 
+// User info popup
+function ProfilePopUp({ showPopup, popupUsername, setShowPopup }) {
+  const [popupState, setPopupState] = useState('loading');
+
+  // Fetch profile information
+  useEffect(() => {
+    console.log("Popup is " + showPopup)
+    // Check if popup is open
+    if (showPopup) {
+      // Set popup state to loading
+      if (popupState !== 'loading') {
+        setPopupState('loading');
+      }
+      // Save profile info to be updated in the useState var later
+      let profileInfo = {};
+
+      // Get user pronouns
+      const fetchPronouns = fetch(`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/profile/get_pronouns/${popupUsername}`)
+        .then(response => {
+          if (response.ok) {
+            return response.text();
+          } else {
+            throw new Error("Failed to load pronouns!");
+          }
+        })
+        .then(pronouns => {
+          profileInfo.pronouns = pronouns.slice(1, -1);
+        })
+        .catch(err => {
+          profileInfo.pronouns = err;
+        });
+
+      // Get user bio
+      const fetchBio = fetch(`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/profile/get_bio/${popupUsername}`)
+        .then(response => {
+          if (response.ok) {
+            return response.text();
+          } else {
+            throw new Error("Failed to load bio!");
+          }
+        })
+        .then(bio => {
+          profileInfo.bio = bio.slice(1, -1);
+        })
+        .catch(err => {
+          profileInfo.bio = err;
+        });
+
+      // Wait for both fetch requests to complete
+      Promise.all([fetchPronouns, fetchBio]).then(() => {
+        console.log("profile info: " + JSON.stringify(profileInfo));
+
+        // Update popup state
+        setPopupState(profileInfo);
+      });
+    }
+  }, [showPopup, popupUsername]);
+
+  useEffect(() => {
+    console.log("popup state: " + popupState)
+  }, [popupState])
+
+  if (showPopup) {
+    return (
+      <div className='profile-popup'>
+        <button onClick={() => setShowPopup(false)} className='close-button'>
+          <img src={Close_Icon} alt='' />
+        </button>
+        <div className='header'>
+          <img draggable="false" src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/profile/get_avatar/${popupUsername}.png`} alt='' />
+          <h1>{popupUsername}</h1>
+        </div>
+        {popupState === 'loading' ? (
+          <img src={Loader_1} alt='' />
+        ) : (
+          <div>
+            <h2>Pronouns</h2>
+            <p>{popupState.pronouns}</p>
+            <h2>Bio</h2>
+            <p>{popupState.bio}</p>
+          </div>
+        )}
+      </div>
+    );
+  }
+  
+}
+
 // Component for messages
 function Messages({ selectedConversation, friendsListState, setFriendsListState, setSelectedConversation }) {
   const [messages, setMessages] = useState('loading');
   const [unfriendState, setUnfriendState] = useState('hide');
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupUsername, setPopupUsername] = useState();
 
   // Allow messages to be changed during the runtime of the socket function
   const messagesRef = useRef(messages);
@@ -620,6 +712,14 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
     }
   }, [selectedConversation])
 
+  function handle_open_popup(username) {
+    // Set popup username
+    setPopupUsername(username);
+
+    // Open popup
+    setShowPopup(true);
+  }
+
   return (
     <div className="messages">
       {selectedConversation && (
@@ -638,13 +738,19 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
           <div className='message-container' id='message-container'>
             {messages.map((message, index) => (
               <div key={index} className='message'>
-                <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${message.Author}.png`} alt='' />
+                <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${message.Author}.png`} alt='' onClick={() => handle_open_popup(message.Author)} />
                 <div>
                   <h1>{message.Author}</h1>
                   <p>{message.Message}</p>
                 </div>
               </div>
             ))}
+          <ProfilePopUp 
+            showPopup={showPopup} 
+            profileInfo={popupUsername} 
+            setShowPopup={setShowPopup}
+            popupUsername={popupUsername}
+          />
           </div>
         ) : (
           <h1>Nothing to see here...</h1>
