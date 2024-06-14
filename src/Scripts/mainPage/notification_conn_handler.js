@@ -62,6 +62,17 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
                 });
 
                 document.dispatchEvent(conversation_removal_event);
+
+            } else if (server_data.Type === "USER_STATUS_UPDATE") {
+                // Create accept status update event
+                const user_status_update_event = new CustomEvent("User_Status_Update", {
+                    detail: {
+                        user: server_data.User,
+                        status: server_data.Online
+                    }
+                });
+
+                document.dispatchEvent(user_status_update_event);
             }
         };
 

@@ -296,14 +296,33 @@ function FriendsList({friendsListState, setFriendsListState, switchConversation,
     }
   }
 
+  function handle_user_status_update(data) {
+    console.log(data.detail.user + " is now " + data.detail.status);
+
+    // Make a copy of the friends list to modify
+    let friends_list = [...friendsListState];
+
+    // Cycle through the list and update the users online status
+    friends_list.forEach(friend => {
+      if (friend.Username === data.detail.user) {
+        friend.Online = data.detail.status;
+      }
+    })
+
+    // Update friends list state with new friends list
+    setFriendsListState(friends_list);
+  }
+
   document.addEventListener("Friend_Request_Accept", handle_friend_request_accept);
   document.addEventListener("Conversation_Removal", handle_conversation_removal);
+  document.addEventListener("User_Status_Update", handle_user_status_update);
   
   useEffect(() => {
     // Remove event listener on component unmount
     return () => {
       document.removeEventListener("Friend_Request_Accept", handle_friend_request_accept);
       document.removeEventListener("Conversation_Removal", handle_conversation_removal);
+      document.removeEventListener("User_Status_Update", handle_user_status_update);
     }
   }, []);
 
@@ -370,6 +389,7 @@ function FriendsList({friendsListState, setFriendsListState, switchConversation,
           <div className="friends">
             <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${item.Username}.png`} alt="Profile" />
             <button onClick={() => switchConversation(item.Username, item.Id)}>{item.Username}</button>
+            <div className={`user-online-status ${item.Online ? 'online' : ''}`} />
           </div>
         ))}
       </div> 
