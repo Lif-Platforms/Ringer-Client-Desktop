@@ -229,6 +229,7 @@
     font-size: 14px; /* Adjust font size for message */
     max-width: 100%; /* Message width limited to the container's width */
     word-break: break-word; /* Allow long words to break */
+    white-space: pre-wrap;
 }
 
 .messagesContainer {
@@ -240,22 +241,25 @@
 }
 
 .messageSender {
-    margin-right: 17px;
+    box-sizing: border-box;
+    margin-top: 15px;
 }
 
-.messageSender input {
+.messageSender textarea {
     width: 100%;
+    box-sizing: border-box;
     border-radius: 0.5em;
-    margin-top: 15px;
-    height: 32px;
-    padding-left: 10px;
+    height: 100%;
+    padding: 10px;
     background-color: rgb(39, 39, 39);
     color: white;
     border: solid;
     border-color: transparent;
+    resize: none;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-.messageSender input:focus {
+.messageSender textarea:focus {
     outline: none;
 }
 
