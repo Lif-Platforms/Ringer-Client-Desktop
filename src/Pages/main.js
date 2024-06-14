@@ -811,24 +811,24 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
 function MessageSender({conversationId}) {
 
   async function handle_send(event) {
-    // Checks if the enter key was pressed
-    if (event.key === 'Enter') {
-      console.log('enter was pressed!');
-
-      const message = document.getElementById('message-box').value; 
-      document.getElementById('message-box').value = "Sending..."; 
-      document.getElementById('message-box').disabled = true; 
-
+    // Checks if the enter key was pressed without the shift key
+    if (event.key === 'Enter' && !event.shiftKey) {
+      console.log('Enter was pressed without Shift!');
+  
+      const message = document.getElementById('message-box').value;
+      document.getElementById('message-box').value = "Sending...";
+      document.getElementById('message-box').disabled = true;
+  
       // Send message
       const message_status = await connectSocket.send_message(message, conversationId.Id);
-
+  
       if (message_status === "message_sent") {
-        document.getElementById('message-box').value = null; 
+        document.getElementById('message-box').value = null;
         document.getElementById('message-box').disabled = false;
         document.getElementById('message-box').focus();
       }
     }
-  }
+  }  
 
   useEffect(() => {
     // Only allows input if a conversation is selected
@@ -841,7 +841,7 @@ function MessageSender({conversationId}) {
   
   return (
     <div className="messageSender">
-      <input placeholder="Send a Message" onKeyDown={handle_send} id='message-box' />
+      <textarea placeholder="Send a Message" onKeyDown={handle_send} id='message-box'rows="1" />
     </div>
   );
 }
