@@ -1,9 +1,13 @@
-import "../css/splash.css";
-import RingerIcon from "../assets/global/Ringer-Icon.png";
-import Loader from "../assets/global/loaders/loader-1.svg";
+import "src/css/splash.css";
+import RingerIcon from "src/assets/global/Ringer-Icon.png";
+import Loader from "src/assets/global/loaders/loader-1.svg";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import React from "react";
 
+/*
+* Component for Ringer splash screen. It is in charge of authenticating the user before proceeding to the login or main page.
+*/
 function SplashScreen() {
 
     const navigate = useNavigate();
@@ -23,7 +27,7 @@ function SplashScreen() {
             method: "POST",
             body: formdata
         })
-        .then(response => {
+        .then((response) => {
             if (response.ok) {
                 navigate("/Pages/main");
 
@@ -31,13 +35,13 @@ function SplashScreen() {
                 throw new Error("Request failed! Status code: " + response.status);
             }
         })
-        .catch(err => {
+        .catch((err) => {
             console.error(err);
             navigate("/login");
         })
-    }, [])
+    }, [navigate]);
 
-    return(
+    return (
        <div className="splash-screen">
             <img className="logo" src={RingerIcon} alt="" />
             <h1>Preparing Ringer</h1>
