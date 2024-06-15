@@ -7,6 +7,7 @@
   <img src="https://img.shields.io/github/issues/Lif-Platforms/Ringer-Client-Desktop?style=for-the-badge" alt="Badge">
   <img src="https://img.shields.io/github/contributors/Lif-Platforms/Ringer-Client-Desktop?style=for-the-badge" alt="Badge">
   <img src="https://img.shields.io/github/downloads/Lif-Platforms/Ringer-Client-Desktop/total?style=for-the-badge" alt="Badge">
+  <img alt="Codacy grade" src="https://img.shields.io/codacy/grade/cf5c1adb179647c09a35b1993ed1eb3a?style=for-the-badge">
 </div>
 
 # 💬 Ringer-Client
