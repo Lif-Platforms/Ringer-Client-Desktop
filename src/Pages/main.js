@@ -448,7 +448,7 @@ function UserOptionMenu({ optionMenuState, setOptionMenuState }) {
     const status = await log_out();
 
     if (status === "OK") {
-      navigate("/");
+      navigate("/login");
     }
   }
 
