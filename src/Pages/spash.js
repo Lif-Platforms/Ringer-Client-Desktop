@@ -1,9 +1,9 @@
 import "src/css/splash.css";
 import RingerIcon from "src/assets/global/Ringer-Icon.png";
 import Loader from "src/assets/global/loaders/loader-1.svg";
+import React from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import React from "react";
 
 /*
 * Component for Ringer splash screen. It is in charge of authenticating the user before proceeding to the login or main page.
