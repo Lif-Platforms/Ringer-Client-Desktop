@@ -27,7 +27,7 @@
     "electron-notification": "^1.0.0",
     "electron-store": "^8.1.0",
     "electron-unhandled": "^4.0.1",
-    "electron-updater": "^6.1.7",
+    "electron-updater": "^6.3.0",
     "fs": "^0.0.1-security",
     "js-cookie": "^3.0.5",
     "net": "^1.0.2",
