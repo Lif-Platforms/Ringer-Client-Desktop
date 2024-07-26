@@ -6,7 +6,6 @@ import { logIn } from '../Scripts/login.js';
 import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { useEffect } from "react";
 
 // Component for the login form
 class LoginForm extends React.Component {
@@ -67,19 +66,6 @@ function LoginPage() {
 
   // Define the navigation
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const username = localStorage.getItem('username');
-
-    // Check if the user is already logged in
-    if (token && username) {
-      console.log('User is logged in.');
-      navigate('/Pages/main');
-    } else {
-      console.log('User is not logged in.');
-    }
-  }, []);
 
   return (
     <div className="App">
