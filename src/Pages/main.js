@@ -387,9 +387,11 @@ function FriendsList({friendsListState, setFriendsListState, switchConversation,
       <div className='friends_list'>
         {friendsListState.map(item => (
           <div className="friends">
-            <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${item.Username}.png`} alt="Profile" />
+            <div style={{position: 'relative'}}>
+              <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${item.Username}.png`} alt="Profile" />
+              <div className={`user-online-status ${item.Online ? 'online' : ''}`} />
+            </div>
             <button onClick={() => switchConversation(item.Username, item.Id)}>{item.Username}</button>
-            <div className={`user-online-status ${item.Online ? 'online' : ''}`} />
           </div>
         ))}
       </div> 

@@ -499,6 +499,12 @@
     transition: 0.3s;
 }
 
+.friends:hover {
+    .user-online-status {
+        border-color: rgb(80, 80, 80);
+    }
+}
+
 .friends img {
     min-width: 30px;
     max-width: 30px;
@@ -517,11 +523,14 @@
 
 .friends .user-online-status {
     background-color: gray;
-    width: 8px;
-    height: 8px;
+    border: 2px solid rgb(39, 39, 39);
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    margin: auto;
     transition: 0.2s ease-in-out;
+    position: absolute;
+    bottom: 0;
+    right: 0;
 }
 
 .online {
