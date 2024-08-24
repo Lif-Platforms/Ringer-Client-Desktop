@@ -9,6 +9,10 @@ import MoreIcon from "../assets/home/More-Icon.png";
 import { log_out } from '../Scripts/utils/user-log-out';
 import Loader_1 from '../assets/global/loaders/loader-1.svg';
 import Close_Icon from '../assets/global/Close_Button.png';
+import Shield_1 from '../assets/home/Shield_1.png';
+import Shield_2 from '../assets/home/Shield_2.png';
+import Blocked_Icon from '../assets/home/Blocked_Icon.png';
+import Shield_3 from '../assets/home/Shield_3.png';
 // Import Modules
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
@@ -669,12 +673,100 @@ function ProfilePopUp({ showPopup, popupUsername, setShowPopup }) {
   
 }
 
+function CheckLinkPopup({ checkLinkPopup, setCheckLinkPopup, selectedConversation }) {
+  const [linkStatus, setLinkStatus] = useState('checking');
+
+  useEffect(() => {
+    if (checkLinkPopup !== false) {
+      // Reset link check state
+      setLinkStatus('checking');
+
+      // Contact Ringer Server to check link
+      fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/link_safety_check`, {
+        method: 'POST',
+        body: JSON.stringify({
+          url: checkLinkPopup
+        })
+      })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Link Request Failed. Status code: " + response.status);
+        }
+      })
+      .then((data) => {
+        if (data.safe) {
+          setLinkStatus('safe');
+        } else {
+          setLinkStatus('unsafe');
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        setLinkStatus('error');
+      })
+    }
+  }, [checkLinkPopup]);
+
+  useEffect(() => {
+    setCheckLinkPopup(false);
+  }, [selectedConversation]);
+
+  function handle_link_open() {
+    window.electronAPI.openURL(checkLinkPopup);
+    setCheckLinkPopup(false);
+  }
+
+  if (checkLinkPopup) {
+    if (linkStatus === 'checking') {
+      return (
+        <div className='check-link-popup'>
+          <img className='shield' src={Shield_1} />
+          <p>Hang tight! We are checking this link for malicious activity.</p>
+          <img className='loader' src={Loader_1} />
+        </div>
+      )
+    } else if (linkStatus === 'safe') {
+      return (
+        <div className='check-link-popup'>
+          <img className='shield' src={Shield_2} />
+          <p>Go to <i>{checkLinkPopup}</i>?</p>
+          <button onClick={() => setCheckLinkPopup(false)}>Go Back</button>
+          <button onClick={handle_link_open} className='go-button'>Take Me There</button>
+        </div>
+      )
+    } else if (linkStatus === 'unsafe') {
+      return (
+        <div className='check-link-popup'>
+          <img className='shield' src={Blocked_Icon} />
+          <h1>Ringer Protected You</h1>
+          <p>We detected that the link you tried to open may not be safe and could contain malware.</p>
+          <button onClick={() => setCheckLinkPopup(false)}>Back To Safety</button>
+          <button onClick={handle_link_open} className='proceed-button'>Proceed Anyway</button>
+        </div>
+      )
+    } else if (linkStatus === 'error') {
+      return (
+        <div className='check-link-popup'>
+          <img src={Shield_3} className='shield' />
+          <h1>Failed To Check Link</h1>
+          <p>We were unable to check if the link you tried to open is safe.</p>
+          <button onClick={() => setCheckLinkPopup(false)}>Go Back</button>
+          <button onClick={handle_link_open} className='go-button'>Take Me Anyway</button>
+        </div>
+      )
+    }
+  }
+}
+
 // Component for messages
 function Messages({ selectedConversation, friendsListState, setFriendsListState, setSelectedConversation }) {
   const [messages, setMessages] = useState('loading');
   const [unfriendState, setUnfriendState] = useState('hide');
   const [showPopup, setShowPopup] = useState(false);
   const [popupUsername, setPopupUsername] = useState();
+  const [checkLinkPopup, setCheckLinkPopup] = useState(false);
 
   // Allow messages to be changed during the runtime of the socket function
   const messagesRef = useRef(messages);
@@ -761,6 +853,29 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
     setShowPopup(true);
   }
 
+  function handle_link_click(url) {
+    setCheckLinkPopup(url);
+  }
+
+  const renderMessageContent = (message) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = message.split(urlRegex);
+
+    return parts.map((part, index) => {
+      if (urlRegex.test(part)) {
+        // If part is a URL, wrap it in an anchor tag
+        return (
+          <a key={index} onClick={() => handle_link_click(part)}>
+            {part}
+          </a>
+        );
+      } else {
+        // Otherwise, render plain text
+        return <span key={index}>{part}</span>;
+      }
+    });
+  };
+
   return (
     <div className="messages">
       {selectedConversation && (
@@ -782,16 +897,21 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
                 <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${message.Author}.png`} alt='' onClick={() => handle_open_popup(message.Author)} />
                 <div>
                   <h1>{message.Author}</h1>
-                  <p>{message.Message}</p>
+                  <p>{renderMessageContent(message.Message)}</p>
                 </div>
               </div>
             ))}
-          <ProfilePopUp 
-            showPopup={showPopup} 
-            profileInfo={popupUsername} 
-            setShowPopup={setShowPopup}
-            popupUsername={popupUsername}
-          />
+            <ProfilePopUp
+              showPopup={showPopup}
+              profileInfo={popupUsername}
+              setShowPopup={setShowPopup}
+              popupUsername={popupUsername}
+            />
+            <CheckLinkPopup 
+              checkLinkPopup={checkLinkPopup}
+              setCheckLinkPopup={setCheckLinkPopup}
+              selectedConversation={selectedConversation}
+            />
           </div>
         ) : (
           <h1>Nothing to see here...</h1>
