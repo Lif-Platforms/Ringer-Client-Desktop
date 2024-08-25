@@ -27,8 +27,6 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
             console.log("Received:", event.data);
             let server_data = JSON.parse(event.data);
 
-            console.log(conversationIdRef.current);
-
             if (server_data.Type === "MESSAGE_UPDATE") {
                 if (server_data.Id === conversationIdRef.current) {
                     console.log("Type of messagesRef.current:", typeof messagesRef.current);
@@ -73,6 +71,17 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
                 });
 
                 document.dispatchEvent(user_status_update_event);
+
+            } else if (server_data.Type === "USER_TYPING") {
+                const user_typing_update_event = new CustomEvent("User_Typing_Update", {
+                    detail: {
+                        user: server_data.User,
+                        id: server_data.Id,
+                        typing: server_data.Typing
+                    }
+                });
+
+                document.dispatchEvent(user_typing_update_event);
             }
         };
 
@@ -141,9 +150,16 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
         console.log("Conn closed!");
     }
 
+    const update_typing_status = (conversation_id, status) => {
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({MessageType: "USER_TYPING", ConversationId: conversation_id, Typing: status}));
+        }
+    }
+
     // Allow "close_conn" to be run by main page
     connectSocket.close_conn = close_conn;
     connectSocket.send_message = send_message;
+    connectSocket.update_typing_status = update_typing_status;
 
     connect();
 }

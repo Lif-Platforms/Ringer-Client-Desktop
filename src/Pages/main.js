@@ -16,6 +16,7 @@ import Shield_3 from '../assets/home/Shield_3.png';
 // Import Modules
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
+import GetUsername from 'src/Scripts/mainPage/getUsername';
 
 // Component for showing if the client is reconnecting
 function ReconnectingBar() {
@@ -760,6 +761,38 @@ function CheckLinkPopup({ checkLinkPopup, setCheckLinkPopup, selectedConversatio
   }
 }
 
+function TypingIndicator({ conversationId }) {
+  const [userTyping, setUserTyping] = useState();
+  const [isTyping, setIsTyping] = useState();
+
+  async function handle_typing_update(event) {
+    const username = localStorage.getItem("username");
+
+    console.log(conversationId);
+    console.log(event.detail.id);
+
+    if (event.detail.user !== username && conversationId === event.detail.id) {
+      setIsTyping(event.detail.typing);
+      setUserTyping(event.detail.user);
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("User_Typing_Update", handle_typing_update)
+
+    return () => {
+      document.removeEventListener("User_Typing_Update", handle_typing_update);
+    }
+
+  }, [])
+
+  return (
+    <div className={isTyping ? 'typing-indicator-open' : 'typing-indicator-closed'}>
+      <p>{userTyping} is typing...</p>
+    </div>
+  )
+}
+
 // Component for messages
 function Messages({ selectedConversation, friendsListState, setFriendsListState, setSelectedConversation }) {
   const [messages, setMessages] = useState('loading');
@@ -912,6 +945,7 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
               setCheckLinkPopup={setCheckLinkPopup}
               selectedConversation={selectedConversation}
             />
+            <TypingIndicator conversationId={selectedConversation.Id} />
           </div>
         ) : (
           <h1>Nothing to see here...</h1>
@@ -931,6 +965,36 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
 
 // Component for text input
 function MessageSender({conversationId}) {
+  const messageBox = useRef();
+  const [typing, setTyping] = useState(false);
+  const [typingTimer, setTypingTimer] = useState(null);
+
+  const handleKeyPress = () => {
+    clearTimeout(typingTimer);
+    setTyping(true);
+  };
+
+  const handleKeyUp = () => {
+      clearTimeout(typingTimer);
+      setTypingTimer(setTimeout(() => {
+          setTyping(false);
+      }, 3000)); // 1 second delay
+  };
+
+  useEffect(() => {
+    connectSocket.update_typing_status(conversationId.Id, typing);
+  }, [typing]);
+
+  useEffect(() => {
+    const textarea = messageBox.current;
+    textarea.addEventListener('keypress', handleKeyPress);
+    textarea.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+        textarea.removeEventListener('keypress', handleKeyPress);
+        textarea.removeEventListener('keyup', handleKeyUp);
+    };
+}, [typingTimer]);
 
   async function handle_send(event) {
     // Checks if the enter key was pressed without the shift key
@@ -945,6 +1009,8 @@ function MessageSender({conversationId}) {
       const message_status = await connectSocket.send_message(message, conversationId.Id);
   
       if (message_status === "message_sent") {
+        // Tell the server the user is no longer typing
+        connectSocket.update_typing_status(conversationId.Id, false);
         document.getElementById('message-box').value = null;
         document.getElementById('message-box').disabled = false;
         document.getElementById('message-box').focus();
@@ -963,7 +1029,7 @@ function MessageSender({conversationId}) {
   
   return (
     <div className="messageSender">
-      <textarea placeholder="Send a Message" onKeyDown={handle_send} id='message-box'rows="1" />
+      <textarea ref={messageBox} placeholder="Send a Message" onKeyDown={handle_send} id='message-box'rows="1" />
     </div>
   );
 }
