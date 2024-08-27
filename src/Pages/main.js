@@ -15,7 +15,7 @@ import Blocked_Icon from '../assets/home/Blocked_Icon.png';
 import Shield_3 from '../assets/home/Shield_3.png';
 // Import Modules
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import GetUsername from 'src/Scripts/mainPage/getUsername';
 
 // Component for showing if the client is reconnecting
@@ -761,17 +761,16 @@ function CheckLinkPopup({ checkLinkPopup, setCheckLinkPopup, selectedConversatio
   }
 }
 
-function TypingIndicator({ conversationId }) {
+function TypingIndicator() {
   const [userTyping, setUserTyping] = useState();
   const [isTyping, setIsTyping] = useState();
+
+  const { conversation_id } = useParams();
 
   async function handle_typing_update(event) {
     const username = localStorage.getItem("username");
 
-    console.log(conversationId);
-    console.log(event.detail.id);
-
-    if (event.detail.user !== username && conversationId === event.detail.id) {
+    if (event.detail.user !== username && conversation_id === event.detail.id) {
       setIsTyping(event.detail.typing);
       setUserTyping(event.detail.user);
     }
@@ -964,10 +963,13 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
 }
 
 // Component for text input
-function MessageSender({conversationId}) {
+function MessageSender() {
   const messageBox = useRef();
   const [typing, setTyping] = useState(false);
   const [typingTimer, setTypingTimer] = useState(null);
+
+  // Get conversation id from url
+  const { conversation_id } = useParams();
 
   const handleKeyPress = () => {
     clearTimeout(typingTimer);
@@ -982,7 +984,7 @@ function MessageSender({conversationId}) {
   };
 
   useEffect(() => {
-    connectSocket.update_typing_status(conversationId.Id, typing);
+    connectSocket.update_typing_status(conversation_id, typing);
   }, [typing]);
 
   useEffect(() => {
@@ -1001,31 +1003,31 @@ function MessageSender({conversationId}) {
     if (event.key === 'Enter' && !event.shiftKey) {
       console.log('Enter was pressed without Shift!');
   
-      const message = document.getElementById('message-box').value;
-      document.getElementById('message-box').value = "Sending...";
-      document.getElementById('message-box').disabled = true;
+      const message = messageBox.current.value;
+      messageBox.current.value = "Sending...";
+      messageBox.current.disabled = true;
   
       // Send message
-      const message_status = await connectSocket.send_message(message, conversationId.Id);
+      const message_status = await connectSocket.send_message(message, conversation_id);
   
       if (message_status === "message_sent") {
         // Tell the server the user is no longer typing
-        connectSocket.update_typing_status(conversationId.Id, false);
-        document.getElementById('message-box').value = null;
-        document.getElementById('message-box').disabled = false;
-        document.getElementById('message-box').focus();
+        connectSocket.update_typing_status(conversation_id, false);
+        messageBox.current.value = null;
+        messageBox.current.disabled = false;
+        messageBox.current.focus();
       }
     }
   }  
 
   useEffect(() => {
     // Only allows input if a conversation is selected
-    if (conversationId) {
-      document.getElementById('message-box').disabled = false;
+    if (conversation_id) {
+      messageBox.current.disabled = false;
     } else {
-      document.getElementById('message-box').disabled = true;
+      messageBox.current.disabled = true;
     }
-  }, [conversationId])
+  }, [conversation_id]);
   
   return (
     <div className="messageSender">
