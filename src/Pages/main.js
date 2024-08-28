@@ -245,7 +245,14 @@ function FriendRequestsPopup({ onClose, setFriendsListState }) {
   }
 }
 
-function FriendsList({friendsListState, setFriendsListState, switchConversation, selectedConversation, setSelectedConversation}) {
+function FriendsList({
+  friendsListState,
+  setFriendsListState,
+}) {
+
+  const navigate = useNavigate();
+
+  const { conversation_id } = useParams();
 
   function handle_friend_request_accept(data) {
     if (friendsListState !== "loading" && typeof friendsListState === "object") {
@@ -296,8 +303,8 @@ function FriendsList({friendsListState, setFriendsListState, switchConversation,
     setFriendsListState(friends_list);
 
     // Check if removed conversation is currently selected
-    if (data.detail.id === selectedConversation.Id) {
-      setSelectedConversation("");
+    if (data.detail.id === conversation_id) {
+      navigate("/direct_messages");
     }
   }
 
@@ -396,7 +403,7 @@ function FriendsList({friendsListState, setFriendsListState, switchConversation,
               <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${item.Username}.png`} alt="Profile" />
               <div className={`user-online-status ${item.Online ? 'online' : ''}`} />
             </div>
-            <button onClick={() => switchConversation(item.Username, item.Id)}>{item.Username}</button>
+            <button onClick={() => navigate(`/direct_messages/${item.Id}`)}>{item.Username}</button>
           </div>
         ))}
       </div> 
@@ -405,7 +412,7 @@ function FriendsList({friendsListState, setFriendsListState, switchConversation,
 }
 
 // Sidebar component
-function SideBar({switchConversation, friendsListState, setFriendsListState, selectedConversation, setSelectedConversation}) {
+function SideBar({ friendsListState, setFriendsListState }) {
   const [showPopup, setShowPopup] = useState(false);
   const [showNotificationPopup, setShowNotificationPopup] = useState(false);
 
@@ -439,9 +446,6 @@ function SideBar({switchConversation, friendsListState, setFriendsListState, sel
       <FriendsList 
         friendsListState={friendsListState} 
         setFriendsListState={setFriendsListState} 
-        switchConversation={switchConversation}
-        selectedConversation={selectedConversation}
-        setSelectedConversation={setSelectedConversation}
       />
     </div>
   );   
@@ -501,7 +505,16 @@ function UserProfile() {
 }
 
 // Component for unfriending someone 
-function UnfriendUser({ unfriendState, setUnfriendState, selectedConversation, friendsListState, setFriendsListState, setSelectedConversation }) {
+function UnfriendUser({
+  unfriendState,
+  setUnfriendState,
+  friendsListState,
+  setFriendsListState,
+}) {
+  const { conversation_id } = useParams();
+
+  const navigate = useNavigate();
+
   // Handle the unfriending process
   async function handle_unfriend() {
     // Set popup state
@@ -511,7 +524,7 @@ function UnfriendUser({ unfriendState, setUnfriendState, selectedConversation, f
     const username = localStorage.getItem('username');
     const token = localStorage.getItem('token');
 
-    fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/remove_conversation/${selectedConversation.Id}`, {
+    fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/remove_conversation/${conversation_id}`, {
       headers: {
         username: username,
         token: token
@@ -528,7 +541,7 @@ function UnfriendUser({ unfriendState, setUnfriendState, selectedConversation, f
 
           // Remove conversation from friends list
           friends_list.forEach((conversation) => {
-            if (conversation.Id === selectedConversation.Id) {
+            if (conversation.Id === conversation_id) {
               friends_list.splice(index, 1);
 
             } else {
@@ -540,7 +553,7 @@ function UnfriendUser({ unfriendState, setUnfriendState, selectedConversation, f
           setFriendsListState(friends_list);
 
           // Set elected conversation
-          setSelectedConversation("");
+          navigate('/direct_messages');
 
           setUnfriendState("completed");
         } else {
@@ -674,8 +687,10 @@ function ProfilePopUp({ showPopup, popupUsername, setShowPopup }) {
   
 }
 
-function CheckLinkPopup({ checkLinkPopup, setCheckLinkPopup, selectedConversation }) {
+function CheckLinkPopup({ checkLinkPopup, setCheckLinkPopup }) {
   const [linkStatus, setLinkStatus] = useState('checking');
+
+  const { conversation_id } = useParams();
 
   useEffect(() => {
     if (checkLinkPopup !== false) {
@@ -712,7 +727,7 @@ function CheckLinkPopup({ checkLinkPopup, setCheckLinkPopup, selectedConversatio
 
   useEffect(() => {
     setCheckLinkPopup(false);
-  }, [selectedConversation]);
+  }, [conversation_id]);
 
   function handle_link_open() {
     window.electronAPI.openURL(checkLinkPopup);
@@ -793,18 +808,26 @@ function TypingIndicator() {
 }
 
 // Component for messages
-function Messages({ selectedConversation, friendsListState, setFriendsListState, setSelectedConversation }) {
+function Messages({ friendsListState, setFriendsListState }) {
   const [messages, setMessages] = useState('loading');
   const [unfriendState, setUnfriendState] = useState('hide');
   const [showPopup, setShowPopup] = useState(false);
   const [popupUsername, setPopupUsername] = useState();
   const [checkLinkPopup, setCheckLinkPopup] = useState(false);
+  const [conversationName, setConversationName] = useState();
+
+  const { conversation_id } = useParams();
 
   // Allow messages to be changed during the runtime of the socket function
   const messagesRef = useRef(messages);
 
   // Allow the conversation id to be changed during the runtime of the socket function
-  const conversationIdRef = useRef(selectedConversation.Id);
+  const conversationIdRef = useRef(conversation_id);
+
+  // Reset the conversation name once the id changes
+  useEffect(() => {
+    setConversationName(null);
+  }, [conversation_id])
 
   // Update messages ref when they are changed
   useEffect(() => {
@@ -822,9 +845,9 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
   }, [messages]);
 
   useEffect(() => {
-    conversationIdRef.current = selectedConversation.Id;
+    conversationIdRef.current = conversation_id;
     console.log("Updated conversation id: ", conversationIdRef.current);
-  }, [selectedConversation])
+  }, [conversation_id])
 
   // Start websocket connection to notification server
   useEffect(() => {
@@ -837,7 +860,7 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
    
   // Load messages
   useEffect(() => {
-    console.log("Selected Conversation: " + selectedConversation.Id)
+    console.log("Selected Conversation: " + conversation_id)
     async function handle_message_load() {
       // Get auth data
       const username = localStorage.getItem('username');
@@ -846,10 +869,11 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
       // Change the message container to loading
       setMessages('loading');
 
-      fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/load_messages/${selectedConversation.Id}`, {
+      fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/load_messages/${conversation_id}`, {
         headers: {
           username: username,
-          token: token
+          token: token,
+          version: "2.0"
         }
       })
       .then(response => {
@@ -862,7 +886,8 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
       .then(data => {
         // Work with the data
         console.log(data);
-        setMessages(data);
+        setMessages(data.messages);
+        setConversationName(data.conversation_name);
       })
       .catch(error => {
         // Handle any errors
@@ -870,12 +895,12 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
       });
     }
     // Only load messages if there is a conversation selected
-    if (selectedConversation.Id !== undefined) {
+    if (conversation_id !== undefined) {
       handle_message_load();
     } else {
       setMessages(null);
     }
-  }, [selectedConversation])
+  }, [conversation_id]);
 
   function handle_open_popup(username) {
     // Set popup username
@@ -910,11 +935,11 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
 
   return (
     <div className="messages">
-      {selectedConversation && (
+      {conversationName && (
         <div className='conversationHeader'>
-          <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${selectedConversation.Name}.png`} alt="Avatar" draggable="false" className='selectedConversationAvatar' />
-          <h1>{selectedConversation.Name}</h1>  
-          <button className='unfriend-button' title="Unfriend" onClick={() => setUnfriendState(selectedConversation.Name)}>&#10006;</button>
+          <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${conversationName}.png`} alt="Avatar" draggable="false" className='selectedConversationAvatar' />
+          <h1>{conversationName}</h1>  
+          <button className='unfriend-button' title="Unfriend" onClick={() => setUnfriendState(conversationName)}>&#10006;</button>
         </div>
       )}
       {messages === 'loading' ? (
@@ -942,9 +967,8 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
             <CheckLinkPopup 
               checkLinkPopup={checkLinkPopup}
               setCheckLinkPopup={setCheckLinkPopup}
-              selectedConversation={selectedConversation}
             />
-            <TypingIndicator conversationId={selectedConversation.Id} />
+            <TypingIndicator />
           </div>
         ) : (
           <h1>Nothing to see here...</h1>
@@ -953,10 +977,8 @@ function Messages({ selectedConversation, friendsListState, setFriendsListState,
       <UnfriendUser 
         unfriendState={unfriendState}
         setUnfriendState={setUnfriendState}
-        selectedConversation={selectedConversation}
         friendsListState={friendsListState} 
         setFriendsListState={setFriendsListState}
-        setSelectedConversation={setSelectedConversation}
       />
     </div>
   );
@@ -1039,7 +1061,6 @@ function MessageSender() {
 // Main Component for this page
 function MainPage() {
   const [friends, setFriends] = useState({});
-  const [selectedConversation, setSelectedConversation] = useState('');
   const [friendsListState, setFriendsListState] = useState('loading');
 
   useEffect(() => {
@@ -1051,37 +1072,23 @@ function MainPage() {
     getToken();
   }, []);
 
-  const switchConversation = (conversationName, conversationId) => {
-    const selectedConversation = {
-      Name: conversationName,
-      Id: conversationId
-    };
-    console.log(selectedConversation);
-    setSelectedConversation(selectedConversation);
-  };
-
   return (
     <div className="appContainer">
       <div>
         <SideBar 
-          friendsListState={friendsListState} 
-          setFriendsListState={setFriendsListState} 
-          friends={friends} 
-          setFriends={setFriends} 
-          switchConversation={switchConversation}
-          selectedConversation={selectedConversation}
-          setSelectedConversation={setSelectedConversation}
+          friendsListState={friendsListState}
+          setFriendsListState={setFriendsListState}
+          friends={friends}
+          setFriends={setFriends}
         />
         <UserProfile />
       </div>
       <div className="messagesContainer">
         <Messages 
-          selectedConversation={selectedConversation}
           friendsListState={friendsListState}
           setFriendsListState={setFriendsListState}
-          setSelectedConversation={setSelectedConversation}
         />
-        <MessageSender conversationId={selectedConversation} />
+        <MessageSender />
       </div>
       <ReconnectingBar />
     </div>
