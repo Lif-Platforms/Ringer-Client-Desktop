@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<SplashScreen />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/Pages/main" element={<MainPage />} />
+        <Route path="/direct_messages/:conversation_id?" element={<MainPage />} />
       </Routes>
     </div>
   );

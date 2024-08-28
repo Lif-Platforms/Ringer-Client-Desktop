@@ -29,7 +29,7 @@ export function logIn(navigate, formRef, errorRef, loginButtonRef) {
         localStorage.setItem("token", data.token);
 
         // Navigate to main page
-        navigate('/pages/main');
+        navigate('/direct_messages');
 
     })
     .catch(error => {

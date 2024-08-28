@@ -29,7 +29,7 @@ function SplashScreen() {
         })
         .then((response) => {
             if (response.ok) {
-                navigate("/Pages/main");
+                navigate("/direct_messages");
 
             } else {
                 throw new Error("Request failed! Status code: " + response.status);
