@@ -4,8 +4,6 @@ const path = require('path');
 const { autoUpdater } = require('electron-updater');
 require('dotenv').config();
 
-autoUpdater.logger = require("electron-log")
-autoUpdater.logger.transports.file.level = "info"
 autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
 
@@ -34,7 +32,8 @@ function createWindow () {
     icon: path.join(__dirname, 'public/favicon.ico'),
     webPreferences: {
       devTools: isDev, // Dynamically enables/disables the dev tools based on environment
-      webSecurity: false,
+      webSecurity: true,
+      contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
     }
   })
@@ -87,7 +86,7 @@ autoUpdater.on('update-downloaded', (release) => {
 app.whenReady().then( async() => {
   createWindow();
 
-  autoUpdater.checkForUpdatesAndNotify();
+  autoUpdater.checkForUpdates();
   
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

@@ -66,7 +66,9 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "public/icons/win/icon.ico"
+      "icon": "public/icons/win/icon.ico",
+      "certificateFile": null,
+      "certificatePassword": null
     }
   },
   "scripts": {
@@ -104,9 +106,8 @@
     "@electron-forge/maker-squirrel": "^6.4.2",
     "@electron-forge/maker-zip": "^6.4.2",
     "@electron-forge/plugin-auto-unpack-natives": "^6.4.2",
-    "electron": "^29.4.6",
-    "electron-builder": "^24.6.4",
-    "electron-prebuilt-compile": "4.0.0"
+    "electron": "29.4.6",
+    "electron-builder": "^24.6.4"
   },
   "browser": {
     "fs": false,
