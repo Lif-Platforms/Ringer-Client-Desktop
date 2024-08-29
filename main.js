@@ -4,8 +4,6 @@ const path = require('path');
 const { autoUpdater } = require('electron-updater');
 require('dotenv').config();
 
-autoUpdater.logger = require("electron-log")
-autoUpdater.logger.transports.file.level = "info"
 autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
 
@@ -15,12 +13,14 @@ const isDev = require('electron-is-dev');
 // Allow remote debugging
 //app.commandLine.appendSwitch('remote-debugging-port', '9222');
 
+let mainWindow;
+
 function createWindow () {
   // Dynamically set the window width
   const window_width = isDev ? 1500 : 1000;
 
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: window_width,
     height: 600,
     minWidth:900,
@@ -32,7 +32,8 @@ function createWindow () {
     icon: path.join(__dirname, 'public/favicon.ico'),
     webPreferences: {
       devTools: isDev, // Dynamically enables/disables the dev tools based on environment
-      webSecurity: false,
+      webSecurity: true,
+      contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
     }
   })
@@ -75,12 +76,17 @@ function createWindow () {
 
 }
 
+autoUpdater.on('update-downloaded', (release) => {
+  mainWindow.webContents.send('update-downloaded', release);
+});
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then( async() => {
-  autoUpdater.checkForUpdatesAndNotify();
   createWindow();
+
+  autoUpdater.checkForUpdates();
   
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
@@ -89,6 +95,10 @@ app.whenReady().then( async() => {
 
   })
 })
+
+ipcMain.on('restart-app', () => {
+  autoUpdater.quitAndInstall();
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
