@@ -889,3 +889,41 @@ animation: lds-ellipsis3 0.6s infinite;
     transform: translateY(0px);
     transition: 0.2s ease-in-out;
 }
+
+.update-downloaded-popup {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(51, 51, 51);
+    border-radius: 0.5em;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    width: 500px;
+    height: 200px;
+    text-align: center;
+    padding: 10px;
+}
+
+.update-downloaded-popup h1 {
+    color: white;
+    text-align: center;
+}
+
+.update-downloaded-popup p {
+    color: white;
+    text-align: center;
+}
+
+.update-downloaded-popup button {
+    background-color: #636262;
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 0.5em;
+    padding: 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: 0.2s;
+}

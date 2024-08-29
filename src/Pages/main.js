@@ -16,7 +16,7 @@ import Shield_3 from '../assets/home/Shield_3.png';
 // Import Modules
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
-import GetUsername from 'src/Scripts/mainPage/getUsername';
+const ipcRenderer = window.electron.ipcRenderer;
 
 // Component for showing if the client is reconnecting
 function ReconnectingBar() {
@@ -25,6 +25,29 @@ function ReconnectingBar() {
       <p>Reconnecting...</p>
     </div>
   )
+}
+
+function UpdateDownloaded() {
+  const [showUpdatePanel, setShowUpdatePanel] = useState();
+
+  useEffect(() => {
+    const updateDownloadedHandler = (release) => {
+      setShowUpdatePanel(release.version);
+    };
+
+    ipcRenderer.on('update-downloaded', updateDownloadedHandler);
+  }, []);
+
+  if (showUpdatePanel) {
+    return (
+      <div className='update-downloaded-popup'>
+        <h1>Update Ready</h1>
+        <p>Ringer version {showUpdatePanel} has been downloaded and will be installed upon next restart.</p>
+        <button onClick={() => setShowUpdatePanel(null)}>Maybe Later</button>
+        <button onClick={() => window.electronAPI.restartApp()} style={{backgroundColor: "orange"}}>Restart Now</button>
+      </div>
+    )
+  }
 }
 
 // Pop up menu for adding new conversations
@@ -1091,6 +1114,7 @@ function MainPage() {
         <MessageSender />
       </div>
       <ReconnectingBar />
+      <UpdateDownloaded />    
     </div>
   );
 }
