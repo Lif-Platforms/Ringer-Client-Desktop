@@ -1,7 +1,7 @@
 {
   "name": "ringer",
   "productName": "Ringer",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "private": true,
   "main": "main.js",
   "author": {
@@ -107,7 +107,7 @@
     "@electron-forge/maker-zip": "^6.4.2",
     "@electron-forge/plugin-auto-unpack-natives": "^6.4.2",
     "electron": "29.4.6",
-    "electron-builder": "^24.6.4"
+    "electron-builder": "^25.0.5"
   },
   "browser": {
     "fs": false,
