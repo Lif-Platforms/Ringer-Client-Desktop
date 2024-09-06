@@ -61,8 +61,10 @@
       "preload.js"
     ],
     "mac": {
-      "category": "public.app-category.developer-tools",
-      "icon": "public/icons/mac/icon.icns"
+      "hardenedRuntime": true,
+      "gatekeeperAssess": true,
+      "icon": "public/icons/mac/icon.icns",
+      "identity": null
     },
     "win": {
       "target": "nsis",
@@ -72,7 +74,7 @@
     }
   },
   "scripts": {
-    "build-": "react-app-rewired build && electron-builder --win --mac",
+    "build": "react-app-rewired build && electron-builder --win --mac",
     "build-win": "react-app-rewired build && electron-builder --win",
     "build-mac": "react-app-rewired build && electron-builder --mac",
     "deploy": "react-app-rewired build && electron-builder --publish=always",
@@ -107,7 +109,9 @@
     "@electron-forge/maker-zip": "^6.4.2",
     "@electron-forge/plugin-auto-unpack-natives": "^6.4.2",
     "electron": "29.4.6",
-    "electron-builder": "^25.0.5"
+    "electron-builder": "^25.0.5",
+    "electron-builder-notarize": "^1.5.2",
+    "electron-notarize": "^1.2.2"
   },
   "browser": {
     "fs": false,
