@@ -6,7 +6,7 @@ import SplashScreen from "./Pages/spash";
 
 function App() {
   return (
-    <div>
+    <div style={{width: '100%'}}>
       <Routes>
         <Route path="/" element={<SplashScreen />} />
         <Route path="/login" element={<LoginPage />} />
