@@ -48,6 +48,7 @@ function createWindow () {
 
   // Listen for open browser event
   ipcMain.on('open-url', (event, url) => {
+    console.log('opening ' + url);
     shell.openExternal(url);
   })
 

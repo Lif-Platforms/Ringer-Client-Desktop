@@ -2,6 +2,8 @@
 import '../App.css';
 import '../css/login.css';
 import { logIn } from '../Scripts/login.js';
+import waves from '../assets/login/waves.png';
+import Logo from '../assets/login/ringer_logo.png';
 // Import modules 
 import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -22,27 +24,15 @@ class LoginForm extends React.Component {
           className='loginButton' 
           ref={this.props.loginButtonRef}
           onClick={() => logIn(
-                            this.props.navigate, 
-                            this.props.loginRef.current,
-                            this.props.errorRef.current,
-                            this.props.loginButtonRef.current
-                          )} 
-          type="button">
+            this.props.navigate, 
+            this.props.loginRef.current,
+            this.props.errorRef.current,
+            this.props.loginButtonRef.current
+          )}
+        type="button">
             Login
         </button>
       </form>
-    );
-  }
-}
-
-// Component for sign-up form
-class SignUpForm extends React.Component {
-  render () {
-    return(
-      <div className='signUp'>
-        <h1 className='signUpHeader'>New Here?</h1>
-        <button onClick={() => window.electronAPI.openURL("https://my.lifplatforms.com/#/create_account")} type='button'>Sign Up</button>
-      </div>
     );
   }
 }
@@ -52,6 +42,7 @@ class LoginFooter extends React.Component {
     return(
       <div className='loginFooter'>
         <Link onClick={() => window.electronAPI.openURL('https://my.lifplatforms.com/#/account_recovery')}>Forgot Password</Link>
+        <p>Don't have an account? <Link onClick={() => window.electronAPI.openURL('https://my.lifplatforms.com/#/create_account')}>Create One.</Link></p>
         <p ref={this.props.errorRef} style={{"color": "red"}}></p>
       </div>
     );
@@ -70,12 +61,15 @@ function LoginPage() {
   return (
     <div className="App">
       <div className="container">
-        <section>
+        <div className='waves-section'>
+          <img className='waves' src={waves} />
+          <img className='logo' src={Logo} />
+        </div>
+        <div className='login-form'>
           <h1 className='loginLifHeader'>Login With Lif</h1>
           <LoginForm navigate={navigate} loginRef={loginFormRef} errorRef={errorRef} loginButtonRef={loginButtonRef} />
           <LoginFooter errorRef={errorRef} />
-        </section>
-        <SignUpForm />
+        </div>
       </div>
     </div>
   );

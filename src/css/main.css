@@ -1,8 +1,13 @@
 .appContainer {
     display: grid;
-    grid-template-columns: 200px auto;
+    grid-template-columns: 50px 230px auto;
+    gap: 20px;
     height: 100vh;
     overflow: auto;
+    grid-template-rows: 1fr;
+    background-color: #160900;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 /* width */
@@ -23,47 +28,49 @@
 }
 
 .sideBar {
-    margin-top: 10px;
     width: 100%;
-    height: 85%;
-    background-color: rgb(39, 39, 39);
-    border-radius: 0.5em;
+    height: 100%;
+    background-color: #181818;
+    border-radius: 14px;
     color: white;
-    margin-left: 20px;
     user-select: none;
 }
 
 .sidebarHeader {
-    text-align: center;
+    padding: 10px;
+    text-align: left;
     font-size: x-small;
     user-select: none;
+    display: block;
+    display: flex;
+    justify-content: space-between;
+}
+
+.sidebarHeader h1 {
+    margin: 0;
+    display: block;
+    font-weight: normal;
+    font-size: large;
 }
 
 .addFriendButton {
-    width: 90%;
-    font-weight: 900;
-    background-color: rgb(39, 39, 39);
-    border: solid;
-    border-color: white;
-    color: white;
-    border-radius: 0.5em;
-    text-align: center;
-    border-width: 1px;
+    width: auto;
+    height: 20px;
+    background-color: transparent;
+    border: none;
     transition: 0.2s;
+    cursor: pointer;
+    display: block;
+}
+
+.addFriendButton img {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
 }
 
 .addFriendButton:hover {
-    transition: 0.2s;
-    width: 90%;
-    font-weight: 900;
-    background-color: rgb(85, 85, 85);
-    border: solid;
-    border-color: white;
-    color: white;
-    border-radius: 0.5em;
-    text-align: center;
-    border-width: 1px;
-    cursor: pointer;
+    opacity: 0.5;
 }
 
 .userProfile {
@@ -157,26 +164,127 @@
     vertical-align: middle;
 }
 
-.messages {
-    background-color: rgb(39, 39, 39);
+@keyframes messages_loader {
+    0% {
+        background-color: #292929;
+    }
+    50% {
+        background-color: #545454;
+    }
+    100% {
+        background-color: #292929;
+    }
+}
+
+.messages .messages-loader {
     width: 100%;
-    height: 85%;
-    border-radius: 0.5em;
-    margin-top: 13px;
+    height: max-content;
+    display: block;
+}
+
+.messages .messages-loader .header {
+    background-color: #282828;
+    width: 98%;
+    border-radius: 22px;
+    display: block;
+    height: 80px;
+    box-sizing: border-box;
+    margin: auto;
+    display: flex;
+    margin-top: 10px;
+    animation: messages_loader 2s ease-in-out;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.messages .messages-loader .header .avatar {
+    background-color: #181818;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 10px;
+}
+
+.messages .messages-loader .header .username {
+    background-color: #181818;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 20px;
+    border-radius: 1em;
+    width: 200px;
+    height: 30px;
+}
+
+.messages .messages-loader .messages .message {
+    width: 95%;
+    height: max-content;
+    display: flex;
+    padding: 10px;
+    margin-top: 15px;
+}
+
+.messages .messages-loader .messages .message:hover {
+    background-color: transparent;
+}
+
+.messages .messages-loader .messages .message .avatar {
+    background-color: #282828;
+    height: 40px;
+    max-width: 40px;
+    border-radius: 50%;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 10px;
+    animation: messages_loader 2s ease-in-out;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.messages .messages-loader .messages .message .text {
+    height: 95%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.messages .messages-loader .messages .message .text .line1 {
+    height: 15px;
+    border-radius: 1em;
+    width: 100%;
+    background-color: #282828;
+    margin-bottom: 5px;
+    animation: messages_loader 2s ease-in-out;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.messages .messages-loader .messages .message .text .line2 {
+    height: 15px;
+    border-radius: 1em;
+    width: 80%;
+    background-color: #282828;
+    animation: messages_loader 2s ease-in-out;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.messages {
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    overflow: hidden; /* Hide any overflowing content */
+    overflow: auto; /* Hide any overflowing content */
     color: white;
-    position: relative;
 }
 
 .message-container {
-    width: 90%;
-    margin-top: 10px;
+    padding: 10px 15px;
     overflow: auto;
-    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .message {
@@ -222,6 +330,7 @@
     color: white;
     font-weight: normal;
     user-select: none;
+    text-align: left;
 }
 
 .message p {
@@ -231,6 +340,7 @@
     max-width: 100%; /* Message width limited to the container's width */
     word-break: break-word; /* Allow long words to break */
     white-space: pre-wrap;
+    text-align: left;
 }
 
 .message a {
@@ -248,28 +358,45 @@
 .messagesContainer {
     display: flex;
     flex-direction: column;
-    margin-left: 40px;
-    margin-right: 20px;
-    overflow: hidden; /* Ensure no overflow outside the grid cell */
+    background-color: #181818;
+    border-radius: 14px;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.message-box {
+    background-color: #282828;
+    border-radius: 12px;
+    display: flex;
+    z-index: 2;
+}
+
+.message-box button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+    z-index: 2;
 }
 
 .messageSender {
     box-sizing: border-box;
-    margin-top: 15px;
+    margin: 10px;
+    position: relative;
 }
 
-.messageSender textarea {
+.message-box textarea {
     width: 100%;
     box-sizing: border-box;
-    border-radius: 0.5em;
     height: 100%;
-    padding: 10px;
-    background-color: rgb(39, 39, 39);
+    padding: 15px;
     color: white;
-    border: solid;
-    border-color: transparent;
+    border: none;
     resize: none;
     font-family: Arial, Helvetica, sans-serif;
+    background-color: transparent;
+    z-index: 1;
 }
 
 .messageSender textarea:focus {
@@ -278,11 +405,11 @@
 
 @keyframes popUpAnimation {
     0% {
-        transform: translate(-50%, -70%);
+        transform: translate(-50%, -10%);
         opacity: 0;
     }
     100% {
-        transform: translate(-50%, -100%);
+        transform: translate(-50%, -50%);
         opacity: 1;
     }
 }
@@ -291,41 +418,43 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -100%);
-    background-color: rgb(51, 51, 51);
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    border-radius: 5px;
+    transform: translate(-50%, -50%);
+    background-color: #181818;
+    box-shadow: 0px 0px 20px black;
+    border-radius: 1em;
     padding: 20px;
     max-width: 400px;
     z-index: 999;
     animation: popUpAnimation 0.2s ease-out;
-  }
+}
   
-  .popup h3 {
+.popup h3 {
     font-size: 1.5rem;
     margin-top: 0;
-  }
-  
-  .popup p {
-    margin-bottom: 0;
-  }
+    text-align: center;
+}
 
-  .popup input {
-    background-color: rgb(51, 51, 51);
+.popup p {
+    margin-bottom: 0;
+}
+
+.popup input {
+    background-color: #414141;
     border: solid white 1px;
     border-radius: 0.5em;
     font-size: large;
     padding: 5px;
     color: white;
-  }
+    outline: none;
+}
   
-  .popup .close-btn {
+.popup .close-btn {
     position: absolute;
     top: -5px;
     right: 5px;
     cursor: pointer;
     font-size: x-large;
-  }
+}
 
 .addConversation {
     padding: 5px;
@@ -335,67 +464,73 @@
     cursor: pointer;
     padding-left: 20px;
     padding-right: 20px;
+    text-align: center;
+    display: block;
 }
 .notificationButton {
     background-color: transparent;
     border: none;
     cursor: pointer;
-}
-.notificationButton img {
-    width: 15px;
-    height: 15px;
-    
-}
-.notificationButton {
-    position: absolute;
-    top: 20px;
-    left: 180px;
+    width: 20px !important;
+    height: 20px !important;
+    display: block;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
 }
 
 @keyframes friendRequestPopupAnimation {
     0% {
-        left: 190px;
+        left: 0px;
         opacity: 0;
     }
     100% {
-        left: 225px;
+        left: 40px;
         opacity: 1;
     }
 }
 .friendRequestsPopup {
     animation: friendRequestPopupAnimation 0.2s ease-out;
     position: absolute;
-    top: 15px;
-    left: 225px;
-    background-color: rgb(51, 51, 51);
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    border-radius: 0.5em;
+    bottom: 0;
+    left: 40px;
+    background-color: #181818;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+    border-radius: 1em;
     padding: 10px;
+    width: 200px;
     z-index: 999;
+}
+
+.friendRequestsPopup h2 {
+    text-align: center;
+    color: white;
+}
+
+.friendRequestsPopup p {
+    text-align: center;
+    color: white;
 }
 
 .friendRequestsPopup ul {
     list-style-type: none;
     padding: 0;
     font-size: large;
+    color: white;
 }
 .closeRequestsButton:hover {
-    background-color: rgb(255, 198, 92);
-    border-radius: 0.5em;
-    border: none;
-    color: white;
-    font-size: large;
-    padding: 5px;
-    transition: 0.3s;
-    cursor: pointer;
+    background-color: #424242;
 }
 .closeRequestsButton  {
-    background-color: orange;
-    border-radius: 0.5em;
+    background-color: #282828;
+    border-radius: 1em;
     border: none;
     color: white;
     font-size: large;
-    padding: 5px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
     transition: 0.3s;
 }
 .acceptButton {
@@ -446,6 +581,8 @@
     top: -30px;
     height: min-content;
     transition: 0.2s;
+    box-sizing: border-box;
+    left: 0;
 }
 
 .reconnectBarHide p {
@@ -461,8 +598,10 @@
     width: 100%;
     position: absolute;
     top: 0;
+    left: 0;
     height: min-content;
     transition: 0.2s;
+    box-sizing: border-box;
 }
 
 .reconnectBarShow p {
@@ -474,48 +613,84 @@
 }
 
 .friends_list {
-    margin-top: 15px;
+    padding: 15px;
+    overflow: auto;
 }
 
+@keyframes friends_list_loader {
+    0% {
+        background-color: #292929;
+    }
+    50% {
+        background-color: #545454;
+    }
+    100% {
+        background-color: #292929;
+    }
+}
 
+.friends_list .loader {
+    background-color: #292929;
+    border-radius: 22px;
+    height: 50px;
+    width: 100%;
+    display: block;
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+    animation: friends_list_loader 2s ease-in-out;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.friends_list .loader .avatar {
+    width: 30px;
+    height: 30px;
+    background-color: #181818;
+    display: block;
+    border-radius: 50%;
+    margin: auto;
+}
+
+.friends_list .loader .username {
+    width: 120px;
+    height: 20px;
+    border-radius: 1em;
+    background-color: #181818;
+    display: block;
+    margin: auto;
+}
 
 .friends {
-    margin-left: 15px;
-    margin-right: 15px;
-    margin-top: 3px;
+    width: 100%;
+    margin-bottom: 10px;
     display: flex;
-    padding: 5px;
-    border-radius: 0.3em;
+    padding: 10px;
+    border-radius: 22px;
     transition: 0.3s;
+    background-color: #292929;
+    box-sizing: border-box;
 }
 
 .friends:active {
-    margin-left: 15px;
-    margin-right: 15px;
-    margin-top: 3px;
-    display: flex;
-    padding: 5px;
-    border-radius: 0.3em;
-    transition: 0.3s;
-    background-color: transparent;
     transform: scale(0.95);
 }
 
 .friends:hover {
-    margin-left: 15px;
-    margin-right: 15px;
-    display: flex;
-    margin-top: 3px;
-    padding: 5px;
     background-color: rgb(80, 80, 80);
-    border-radius: 0.3em;
-    transition: 0.3s;
 }
 
-.friends:hover {
-    .user-online-status {
-        border-color: rgb(80, 80, 80);
-    }
+.friends:hover .user-online-status {
+    border-color: rgb(80, 80, 80);
+}
+
+.friends.active {
+    background-color: #ffa200;
+}
+
+.friends.active .user-online-status {
+    border: 2px solid #ffa200;
 }
 
 .friends img {
@@ -527,11 +702,10 @@
     object-fit: cover;
 }
 
-.friends button{
+.friends span {
     font-size: medium;
     color: white;
-    background-color: transparent;
-    border-color: transparent;
+    margin: auto 10px;
 }
 
 .friends .user-online-status {
@@ -556,10 +730,9 @@
     align-items: center;
     padding: 10px 20px; /* Adjust padding for spacing */
     user-select: none;
-    background-color: rgb(58, 58, 58);
-    width: 90%;
-    margin-top: 10px;
-    border-radius: 0.5em;
+    background-color: #282828;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .conversationHeader img {
@@ -671,10 +844,10 @@ animation: lds-ellipsis3 0.6s infinite;
 .unfriend-popup {
     position: absolute;
     top: 30%;
-    left: 10%;
-    background-color: rgb(51, 51, 51);
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    border-radius: 0.5em;
+    left: 30%;
+    background-color: #181818;
+    box-shadow: 0px 0px 20px black;
+    border-radius: 1em;
     color: white;
     text-align: center;
     padding: 20px;
@@ -719,9 +892,9 @@ animation: lds-ellipsis3 0.6s infinite;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgb(51, 51, 51);
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    border-radius: 0.5em;
+    background-color: #181818;
+    box-shadow: 0px 0px 20px black;
+    border-radius: 1em;
     color: white;
     text-align: center;
     padding: 20px;
@@ -796,9 +969,9 @@ animation: lds-ellipsis3 0.6s infinite;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgb(51, 51, 51);
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    border-radius: 0.5em;
+    background-color: #181818;
+    box-shadow: 0px 0px 20px black;
+    border-radius: 1em;
     color: white;
     text-align: center;
     padding: 20px;
@@ -851,23 +1024,15 @@ animation: lds-ellipsis3 0.6s infinite;
     background-color: orange;
 }
 
-@keyframes typing-indicator-animation {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
 .typing-indicator-closed {
     background-color: #3f3f3f;
     position: absolute;
     width: 100%;
     left: 0;
-    bottom: 0;
-    transform: translateY(100px);
+    top: 0;
     transition: 0.2s ease-in-out;
+    opacity: 0;
+    z-index: 1;
 }
 
 .typing-indicator-closed p {
@@ -885,9 +1050,12 @@ animation: lds-ellipsis3 0.6s infinite;
     position: absolute;
     width: 100%;
     left: 0;
-    bottom: 0;
-    transform: translateY(0px);
+    top: -35px;
     transition: 0.2s ease-in-out;
+    border-radius: 0.5em;
+    color: white;
+    opacity: 1;
+    z-index: 1;
 }
 
 .update-downloaded-popup {
@@ -926,4 +1094,102 @@ animation: lds-ellipsis3 0.6s infinite;
     margin: 0 5px;
     cursor: pointer;
     transition: 0.2s;
+}
+
+.side-options-menu {
+    background-color: #181818;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border-radius: 14px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.side-options-menu img {
+    width: 100%;
+    height: max-content;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-drag: none;
+    display: block;
+    cursor: pointer;
+}
+
+.side-options-menu .avatar {
+    border-radius: 50%;
+}
+
+@keyframes account_panel_animation {
+    0% {
+        left: 0;
+        opacity: 0;
+    }
+    100% {
+        left: 40px;
+        opacity: 1;
+    }
+}
+
+.account-panel {
+    position: absolute;
+    bottom: 0;
+    left: 40px;
+    background-color: #181818;
+    box-shadow: 0 0 10px 5px black;
+    width: 200px;
+    height: max-content;
+    border-radius: 14px;
+    overflow: hidden;
+    animation: account_panel_animation 0.2s ease-in-out;
+}
+
+.account-panel .banner {
+    height: 60px;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.account-panel .banner .avatar {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    cursor: default;
+    display: block;
+    margin: auto;
+    transform: translateY(75%);
+    border: 4px solid #181818;
+}
+
+.account-panel h1 {
+    text-align: center;
+    color: white;
+    font-size: larger;
+    margin-top: 30px;
+}
+
+.account-panel .button-container {
+    padding: 10px;
+}
+
+.account-panel .button-container button {
+    background-color: #282828;
+    color: white;
+    border-radius: 1em;
+    padding: 10px;
+    width: 100%;
+    margin: 5px 0;
+    box-sizing: border-box;
+    border: none;
+    transition: 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.account-panel .button-container button:hover {
+    background-color: #464646;
 }

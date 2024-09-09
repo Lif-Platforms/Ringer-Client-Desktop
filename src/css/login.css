@@ -1,76 +1,51 @@
 .container {
     height: 100vh;
     display: grid;
-    grid-template-columns: 70% auto;
-    background-color: black;
+    width: 100%;
+    grid-template-columns: 40% auto;
+    background-color: #160900;
     color: white;
     user-select: none;
 }
 
-section {
+#root {
+    width: 100%;
+}
+
+div {
     text-align: center;
     padding: 0;
     margin: 0;
-    padding-top: 10%;
 }
 
-.signUp {
-    text-align: center;
-    background-image: url("../assets/login/login_bg.png");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    padding-top: 50%;
+.login-form {
+    background-color: #181818;
+    border-radius: 22px;
+    height: max-content;
+    width: max-content;
+    margin: auto;
+    padding: 20px 50px;
 }
 
-.signUpHeader {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    text-shadow: 5px 5px 20px rgb(0, 0, 0);
-}
-
-.signUp button {
-    padding: 8px;
-    background-color: white;
-    color: black;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: large;
-    border-color: transparent;
-    border-radius: 1em;
-    padding-left: 40px;
-    padding-right: 40px;
-    box-shadow: 5px 5px 20px rgb(150, 150, 150);
-    transition: 0.3s ease-in-out;
-}
-
-.signUp button:hover {
-    padding: 8px;
-    background-color: white;
-    color: black;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: large;
-    border-color: transparent;
-    border-radius: 1em;
-    padding-left: 40px;
-    padding-right: 40px;
-    box-shadow: 5px 5px 20px rgb(150, 150, 150);
-    transform: scale(1.1);
-    transition: 0.3s ease-in-out;
+.waves-section .waves {
+    width: 100%;
+    height: inherit;
 }
 
 .loginLifHeader {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 50px;
-    color: orange;
+    color: white;
 }
 
 .loginForm input {
     font-size: 30px;
-    padding: 10px;
+    padding: 20px;
     border-radius: 0.5em;
-    border-style: solid;
-    background-color: rgb(61, 61, 61);
+    border: none;
+    background-color: #282828;
     color: white;
+    outline: none;
 }
 
 .loginButton {
@@ -108,5 +83,5 @@ section {
 
 .loginFooter a {
     font-family: Arial, Helvetica, sans-serif;
-    color: aqua;
+    color: orange;
 }
