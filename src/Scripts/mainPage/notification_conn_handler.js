@@ -32,11 +32,15 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
                     console.log("Type of messagesRef.current:", typeof messagesRef.current);
                     // Update the ref values directly
                     messagesRef.current = [...messagesRef.current, server_data.Message];
-                    // You don't need to update conversationIdRef.current if it's not changing
 
                     // Call update_messages with the updated array
                     update_messages(messagesRef.current);
-                    console.log("Conversation Updated!");
+                    
+                    // If the conversation that the message was sent in is selected,
+                    // Tell the server that the message has been viewed
+                    if (conversationIdRef.current === server_data.Id && username !== server_data.Message.Author) {
+                        socket.send(JSON.stringify({MessageType: "VIEW_MESSAGE", Message_Id: server_data.Message.Id, Conversation_Id: server_data.Id}));
+                    }
                 } else {
                     console.log("Received message! Conversation Not Selected");
                 }
@@ -82,6 +86,15 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
                 });
 
                 document.dispatchEvent(user_typing_update_event);
+            } else if (server_data.Type === "DELETE_MESSAGE") {
+                const delete_message_event = new CustomEvent("Delete_Message", {
+                    detail: {
+                        conversation_id: server_data.Conversation_Id,
+                        message_id: server_data.Message_Id
+                    }
+                });
+
+                document.dispatchEvent(delete_message_event);
             }
         };
 
@@ -103,10 +116,19 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
 
     };
 
-    const send_message = async (message, conversation_id) => {
+    const send_message = async (message, conversation_id, self_destruct) => {
         // Check if the socket is open
         if (socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({ MessageType: "SEND_MESSAGE", ConversationId: conversation_id, Message: message }));
+            let data = { MessageType: "SEND_MESSAGE", ConversationId: conversation_id, Message: message }
+
+            // Check if message will self-destruct
+            if (self_destruct) {
+                data['Self-Destruct'] = self_destruct;
+            }
+
+            console.log("sent message: " + JSON.stringify(data));
+
+            socket.send(JSON.stringify(data));
     
             console.log("Message sent to server");
     
