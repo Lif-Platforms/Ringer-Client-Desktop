@@ -116,10 +116,16 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
 
     };
 
-    const send_message = async (message, conversation_id, self_destruct) => {
+    const send_message = async (message, conversation_id, self_destruct, message_type) => {
         // Check if the socket is open
         if (socket.readyState === WebSocket.OPEN) {
             let data = { MessageType: "SEND_MESSAGE", ConversationId: conversation_id, Message: message }
+
+            // Check if user is sending a GIF message
+            if (message_type && message_type.type === "GIF") {
+                data['Message_Type'] = "GIF";
+                data['GIF_URL'] = message_type.url;
+            }
 
             // Check if message will self-destruct
             if (self_destruct) {

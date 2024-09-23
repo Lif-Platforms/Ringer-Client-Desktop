@@ -16,6 +16,7 @@ import MessageDestructSelector from 'src/components/main/message_destruct_select
 // Import Modules
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
+import GifSelector from 'src/components/main/gif_selector';
 const ipcRenderer = window.electron.ipcRenderer;
 
 // Component for showing if the client is reconnecting
@@ -85,6 +86,7 @@ function MessageSender() {
   const [showSelector, setShowSelector] = useState(false);
   const [messageDestruct, setMessageDestruct] = useState(null);
   const [messageDestructIconSrc, setMessageDestructIconSrc] = useState(Clock);
+  const [showGifSelector, setShowGifSelector] = useState(false);
 
   useEffect(() => {
     if (messageDestruct) {
@@ -163,6 +165,10 @@ function MessageSender() {
       <TypingIndicator />
       <div className='message-box'>
         <textarea ref={messageBox} placeholder="Send a Message" onKeyDown={handle_send} id='message-box'rows="1" />
+        <button className='gif-selector-button'>
+          <span onClick={() => setShowGifSelector(!showGifSelector)}>GIF</span>
+          <GifSelector showGifSelector={showGifSelector} setShowGifSelector={setShowGifSelector} />
+        </button>
         <button title='Self-Destruct Message'>
           <img src={messageDestructIconSrc} onClick={() => setShowSelector(!showSelector)} />
           <MessageDestructSelector 
