@@ -725,6 +725,7 @@
     max-height: 30px;
     border-radius: 50%;
     object-fit: cover;
+    z-index: 1;
 }
 
 .friends span {
@@ -743,6 +744,7 @@
     position: absolute;
     bottom: 0;
     right: 0;
+    z-index: 2;
 }
 
 .online {
@@ -1169,6 +1171,7 @@ animation: lds-ellipsis3 0.6s infinite;
     border-radius: 14px;
     overflow: hidden;
     animation: account_panel_animation 0.2s ease-in-out;
+    z-index: 999 !important;
 }
 
 .account-panel .banner {
