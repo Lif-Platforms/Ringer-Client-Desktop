@@ -10,6 +10,9 @@ import SideBar from 'src/components/main/side_bar';
 import Messages from 'src/components/main/messages';
 import Send_Button from '../assets/home/send_button.svg';
 import TypingIndicator from 'src/components/main/typing_indicator';
+import Clock from '../assets/home/clock_icon.png';
+import Clock_Active from '../assets/home/clock_icon_active.png';
+import MessageDestructSelector from 'src/components/main/message_destruct_selector';
 // Import Modules
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
@@ -73,39 +76,23 @@ function UserOptionMenu({ optionMenuState, setOptionMenuState }) {
   }
 }
 
-// Component for user profile
-function UserProfile() {
-  const [username, setUsername] = useState('');
-  const [optionMenuState, setOptionMenuState] = useState('closed');
-
-  useEffect(() => {
-    async function fetchData() {
-      const username = localStorage.getItem('username');
-      setUsername(username);
-    }
-    fetchData();
-  }, []);
-  let url = `${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${username}.png`;
-  return (
-    <div className="userProfile">
-      <div className="avatar">
-        <img src={url} alt="Avatar" draggable="false" />
-      </div>
-      <div>
-        <h1>{username}</h1>
-      </div>
-      <button onClick={() => setOptionMenuState('open')}><img src={MoreIcon} /></button>
-      <UserOptionMenu optionMenuState={optionMenuState} setOptionMenuState={setOptionMenuState} />
-    </div>
-  );
-}
-
 // Component for text input
 function MessageSender() {
   const messageBox = useRef();
   const [typing, setTyping] = useState(false);
   const [typingTimer, setTypingTimer] = useState(null);
   const sendButton = useRef();
+  const [showSelector, setShowSelector] = useState(false);
+  const [messageDestruct, setMessageDestruct] = useState(null);
+  const [messageDestructIconSrc, setMessageDestructIconSrc] = useState(Clock);
+
+  useEffect(() => {
+    if (messageDestruct) {
+      setMessageDestructIconSrc(Clock_Active);
+    } else {
+      setMessageDestructIconSrc(Clock);
+    }
+  }, [messageDestruct]);
 
   // Get conversation id from url
   const { conversation_id } = useParams();
@@ -147,11 +134,12 @@ function MessageSender() {
       messageBox.current.disabled = true;
   
       // Send message
-      const message_status = await connectSocket.send_message(message, conversation_id);
+      const message_status = await connectSocket.send_message(message, conversation_id, messageDestruct);
   
       if (message_status === "message_sent") {
         // Tell the server the user is no longer typing
         connectSocket.update_typing_status(conversation_id, false);
+        setMessageDestruct(null);
         messageBox.current.value = null;
         messageBox.current.disabled = false;
         messageBox.current.focus();
@@ -175,6 +163,15 @@ function MessageSender() {
       <TypingIndicator />
       <div className='message-box'>
         <textarea ref={messageBox} placeholder="Send a Message" onKeyDown={handle_send} id='message-box'rows="1" />
+        <button title='Self-Destruct Message'>
+          <img src={messageDestructIconSrc} onClick={() => setShowSelector(!showSelector)} />
+          <MessageDestructSelector 
+            showSelector={showSelector}
+            messageDestruct={messageDestruct}
+            setMessageDestruct={setMessageDestruct}
+            setShowSelector={setShowSelector}
+          />
+        </button>
         <button ref={sendButton} onClick={() => handle_send(true)}>
           <img src={Send_Button} />
         </button>

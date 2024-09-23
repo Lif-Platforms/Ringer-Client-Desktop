@@ -4,6 +4,7 @@ import ProfilePopUp from "./profile_popup";
 import CheckLinkPopup from "./check_link_popup";
 import connectSocket from "../../Scripts/mainPage/notification_conn_handler";
 import UnfriendUser from "./unfriend_user";
+import Clock from '../../assets/home/clock_icon.png';
 
 export default function Messages({ friendsListState, setFriendsListState }) {
     const [messages, setMessages] = useState('loading');
@@ -12,7 +13,7 @@ export default function Messages({ friendsListState, setFriendsListState }) {
     const [popupUsername, setPopupUsername] = useState();
     const [checkLinkPopup, setCheckLinkPopup] = useState(false);
     const [conversationName, setConversationName] = useState();
-  
+
     const { conversation_id } = useParams();
   
     // Allow messages to be changed during the runtime of the socket function
@@ -54,6 +55,30 @@ export default function Messages({ friendsListState, setFriendsListState }) {
         connectSocket.close_conn();
       }
     }, []);
+
+    function handle_message_delete(data) {
+      console.log(data.detail.conversation_id);
+      if (data.detail.conversation_id === conversationIdRef.current) {
+        // Make a clone of messages to work with
+        let messages_ = [...messagesRef.current];
+
+        console.log(data.detail.message_id);
+
+        // Delete message from conversation
+        const new_messages = messages_.filter(message => message.Id !== data.detail.message_id);
+        setMessages(new_messages);
+        console.log("Deleted message");
+      } else {
+        console.log("conversation id did not match")
+      }
+    }
+    useEffect(() => {
+      document.addEventListener('Delete_Message', handle_message_delete);
+
+      return () => {
+        document.removeEventListener('Delete_Message', handle_message_delete);
+      }
+    }, [])
      
     // Load messages
     useEffect(() => {
@@ -176,7 +201,10 @@ export default function Messages({ friendsListState, setFriendsListState }) {
                 <div key={index} className='message'>
                   <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${message.Author}.png`} alt='' onClick={() => handle_open_popup(message.Author)} />
                   <div>
-                    <h1>{message.Author}</h1>
+                    <div className="message-header">
+                      <h1>{message.Author}</h1>
+                      {message.Self_Destruct && message.Self_Destruct !== "False" ? <img title="This message will self-destruct after viewing." src={Clock} className="clock" /> : null}
+                    </div>
                     <p>{renderMessageContent(message.Message)}</p>
                   </div>
                 </div>
