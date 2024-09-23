@@ -205,7 +205,11 @@ export default function Messages({ friendsListState, setFriendsListState }) {
                       <h1>{message.Author}</h1>
                       {message.Self_Destruct && message.Self_Destruct !== "False" ? <img title="This message will self-destruct after viewing." src={Clock} className="clock" /> : null}
                     </div>
-                    <p>{renderMessageContent(message.Message)}</p>
+                    {message.Message_Type === "GIF" ? (
+                      <img className="message-gif" src={message.GIF_URL} alt={message.Message} />
+                    ) : (
+                      <p>{renderMessageContent(message.Message)}</p>
+                    )}
                   </div>
                 </div>
               ))}
