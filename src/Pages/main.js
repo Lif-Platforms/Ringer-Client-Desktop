@@ -159,6 +159,12 @@ function MessageSender() {
       sendButton.current.disabled = true;
     }
   }, [conversation_id]);
+
+  function handle_gif_panel() {
+    if (conversation_id) {
+      setShowGifSelector(!showGifSelector);
+    }
+  }
   
   return (
     <div className="messageSender">
@@ -166,7 +172,7 @@ function MessageSender() {
       <div className='message-box'>
         <textarea ref={messageBox} placeholder="Send a Message" onKeyDown={handle_send} id='message-box'rows="1" />
         <button className='gif-selector-button'>
-          <span onClick={() => setShowGifSelector(!showGifSelector)}>GIF</span>
+          <span onClick={handle_gif_panel}>GIF</span>
           <GifSelector showGifSelector={showGifSelector} setShowGifSelector={setShowGifSelector} />
         </button>
         <button title='Self-Destruct Message'>
