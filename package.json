@@ -64,7 +64,8 @@
       "hardenedRuntime": true,
       "gatekeeperAssess": true,
       "icon": "public/icons/mac/icon.icns",
-      "identity": null
+      "identity": "Benjamin Bartlett (XP2Q2F8U97)",
+      "timestamp": "http://timestamp.apple.com/ts01"
     },
     "win": {
       "target": "nsis",
