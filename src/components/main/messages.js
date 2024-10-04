@@ -5,6 +5,7 @@ import CheckLinkPopup from "./check_link_popup";
 import connectSocket from "../../Scripts/mainPage/notification_conn_handler";
 import UnfriendUser from "./unfriend_user";
 import Clock from '../../assets/home/clock_icon.png';
+import GIPHY_LOGO from '../../assets/home/GIPHY_attrabution.png';
 
 export default function Messages({ friendsListState, setFriendsListState }) {
     const [messages, setMessages] = useState('loading');
@@ -206,7 +207,10 @@ export default function Messages({ friendsListState, setFriendsListState }) {
                       {message.Self_Destruct && message.Self_Destruct !== "False" ? <img title="This message will self-destruct after viewing." src={Clock} className="clock" /> : null}
                     </div>
                     {message.Message_Type === "GIF" ? (
-                      <img className="message-gif" src={message.GIF_URL} alt={message.Message} />
+                      <>
+                        <img className="message-gif" src={message.GIF_URL} alt={message.Message} />
+                        <img className="giphy-logo" src={GIPHY_LOGO} />
+                      </>
                     ) : (
                       <p>{renderMessageContent(message.Message)}</p>
                     )}
