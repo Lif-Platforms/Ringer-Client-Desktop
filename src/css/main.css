@@ -1393,3 +1393,15 @@ input[type="search"]::-webkit-search-cancel-button {
 .message-gif:hover {
     transform: scale(1) !important;
 }
+
+.giphy-logo {
+    min-width: 100px !important;
+    height: inherit;
+    object-fit: contain !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+}
+
+.giphy-logo:hover {
+    transform: scale(1) !important;
+}
