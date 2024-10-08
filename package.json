@@ -80,7 +80,7 @@
     "deploy": "react-app-rewired build && electron-builder --publish=always",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
-    "ringer-start": "concurrently \"cross-env BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron . --node-version=20.9.0\"",
+    "dev": "concurrently \"cross-env BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron . --node-version=20.9.0\"",
     "start": "react-app-rewired start"
   },
   "eslintConfig": {
