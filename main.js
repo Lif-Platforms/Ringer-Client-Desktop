@@ -2,6 +2,7 @@
 const {app, BrowserWindow, shell, ipcMain} = require('electron');
 const path = require('path');
 const { autoUpdater } = require('electron-updater');
+const { pushNotifications } = require('electron');
 require('dotenv').config();
 
 autoUpdater.autoDownload = true;
@@ -77,6 +78,17 @@ function createWindow () {
 
 }
 
+app.on('web-contents-created', () => {
+  console.log('Web contents created');
+
+  // Register device for push notifications
+  pushNotifications.registerForAPNSNotifications().then((token) => {
+    console.log("PUSH NOTIFICATIONS TOKEN: " + token);
+  }).catch((err) => {
+      console.error('Error registering for push notifications:', err);
+  });
+});
+
 autoUpdater.on('update-downloaded', (release) => {
   mainWindow.webContents.send('update-downloaded', release);
 });
@@ -93,7 +105,6 @@ app.whenReady().then( async() => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
-
   })
 })
 
