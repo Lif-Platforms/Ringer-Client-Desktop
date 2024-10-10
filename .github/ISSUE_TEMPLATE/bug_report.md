@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 ### Description
-A clear and concise description of what the bug is.
+<!--A clear and concise description of what the bug is.-->
 
 ### To Reproduce
 Steps to reproduce the behavior:
@@ -18,14 +18,15 @@ Steps to reproduce the behavior:
 4. See error
 
 ### Expected behavior
-A clear and concise description of what you expected to happen.
+<!--A clear and concise description of what you expected to happen.-->
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+### Screenshots
+<!--If applicable, add screenshots to help explain your problem. Otherwise, remove this section.-->
 
 ### Desktop (please complete the following information):
  - OS: [e.g. Windows]
- - Version [e.g. 4.0]
+ - OS Version: [e.g. 4.0]
+ - Ringer Version: [e.g 5.0]
 
 ### Additional context
-Add any other context about the problem here.
+<!--Add any other context about the problem here. Otherwise, remove this section-->
