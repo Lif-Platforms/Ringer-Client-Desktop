@@ -136,7 +136,33 @@ export default function FriendsList({
       if (friendsListState === "loading") {
         get_friends();
       }
-    }, [friendsListState]) // Add empty dependency array here
+    }, [friendsListState]);
+
+    // Update most recent message upon message update
+    function handle_message_update(data) {
+      console.log(data.detail.message);
+
+      // Make a copy of the friends list to modify
+      let friends_list = [...friendsListState];
+
+      friends_list.forEach((user) => {
+        if (user.Id === data.detail.conversation_id) {
+          user.Last_Message = data.detail.message;
+        }
+      });
+
+      setFriendsListState(friends_list);
+    }
+
+    // Listen for message updates and update the friends list
+    document.addEventListener("Message_Update", handle_message_update);
+
+    // Remove event listener upon unmount
+    useEffect(() => {
+      return () => {
+        document.removeEventListener("Message_Update", handle_message_update);
+      }
+    }, []);
   
     if (friendsListState === "loading") {
       return(
@@ -164,16 +190,17 @@ export default function FriendsList({
       )
     } else if (Array.isArray(friendsListState)) {
       return(
-        <div className='friends_list'>
-          {friendsListState.map(item => (
-            <Friend
-              username={item.Username}
-              id={item.Id}
-              online={item.Online}
-              selected_conversation={conversation_id}
-            />
-          ))}
-        </div> 
+          <div className='friends_list'>
+            {friendsListState.map(item => (
+                <Friend
+                username={item.Username}
+                id={item.Id}
+                online={item.Online}
+                last_message={item.Last_Message}
+                selected_conversation={conversation_id}
+              />
+            ))}
+          </div> 
       );
     }
   }

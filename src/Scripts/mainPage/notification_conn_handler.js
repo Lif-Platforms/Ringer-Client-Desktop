@@ -41,6 +41,15 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
                     if (conversationIdRef.current === server_data.Id && username !== server_data.Message.Author) {
                         socket.send(JSON.stringify({MessageType: "VIEW_MESSAGE", Message_Id: server_data.Message.Id, Conversation_Id: server_data.Id}));
                     }
+
+                    // Admit an event to update the friends list
+                    const message_update_event= new CustomEvent("Message_Update", {
+                        detail: {
+                            conversation_id: server_data.Id,
+                            message: `${server_data.Message.Author} - ${server_data.Message.Message}`
+                        }
+                    });
+                    document.dispatchEvent(message_update_event);
                 } else {
                     console.log("Received message! Conversation Not Selected");
                 }

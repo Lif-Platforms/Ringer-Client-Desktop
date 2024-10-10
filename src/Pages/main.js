@@ -210,14 +210,12 @@ function MainPage() {
     <div className="appContainer">
       <ReconnectingBar /> 
       <SideOptionsBar />
-      <div>
-        <SideBar 
-          friendsListState={friendsListState}
-          setFriendsListState={setFriendsListState}
-          friends={friends}
-          setFriends={setFriends}
-        />
-      </div>
+      <SideBar 
+        friendsListState={friendsListState}
+        setFriendsListState={setFriendsListState}
+        friends={friends}
+        setFriends={setFriends}
+      />
       <div className="messagesContainer">
         <Messages 
           friendsListState={friendsListState}
