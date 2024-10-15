@@ -1435,3 +1435,27 @@ input[type="search"]::-webkit-search-cancel-button {
 .giphy-logo:hover {
     transform: scale(1) !important;
 }
+
+@keyframes return-to-recent-animation {
+    0% {
+        opacity: 0;
+        bottom: 80px;
+    } 
+    100% {
+        opacity: 1;
+        bottom: 100px;
+    }
+}
+
+.return-to-recent-button {
+    background-color: #545454;
+    border: none;
+    border-radius: 0.5em;
+    padding: 10px;
+    color: white;
+    position: absolute;
+    right: 50px;
+    bottom: 100px;
+    cursor: pointer;
+    animation: return-to-recent-animation 0.2s ease-in-out;
+}
