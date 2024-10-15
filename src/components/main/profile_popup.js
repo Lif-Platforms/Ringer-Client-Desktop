@@ -43,7 +43,7 @@ export default function ProfilePopUp({ showPopup, popupUsername, setShowPopup })
             }
           })
           .then(bio => {
-            profileInfo.bio = bio.slice(1, -1);
+            profileInfo.bio = bio.slice(1, -1).replace(/\\n/g, '\n').replace(/\\r/g, '');
           })
           .catch(err => {
             profileInfo.bio = err;
