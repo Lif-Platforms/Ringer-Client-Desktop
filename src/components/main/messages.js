@@ -56,10 +56,8 @@ export default function Messages({ friendsListState, setFriendsListState }) {
           }
         }
 
-        console.log(messages.length);
-
         if (initialLoad.current) {
-          if (messages.length >= 20) {
+          if (messages && messages.length >= 20) {
             loadAdditionalMessages.current = true;
           } else {
             loadAdditionalMessages.current = false;
