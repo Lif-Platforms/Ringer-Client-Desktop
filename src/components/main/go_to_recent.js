@@ -20,10 +20,11 @@ export default function ReturnToRecent({ messages_container }) {
         
         return () => {
             if (messages_container.current) {
+                console.log("added messages scroll event listerner")
                 messages_container.current.removeEventListener("scroll", handle_button_toggle);    
             }
         }
-    }, [messages_container]);
+    }, [messages_container.current]);
 
     function reset_scroll() {
         messages_container.current.scrollTop = messages_container.current.scrollHeight;
