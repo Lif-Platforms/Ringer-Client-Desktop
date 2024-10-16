@@ -242,6 +242,15 @@ export default function Messages({ friendsListState, setFriendsListState }) {
         }
       }
     }, [messages]);
+
+    // Moves the scroll position down by the hight of the image
+    const handleGIFLoad = (event) => {
+      const imageHeight = event.target.height;
+
+      if (messages_container.current && initialLoad.current) {
+        messages_container.current.scrollTop = messages_container.current.scrollTop + imageHeight;
+      }
+    };
   
     return (
       <div className="messages">
@@ -298,7 +307,7 @@ export default function Messages({ friendsListState, setFriendsListState }) {
                     </div>
                     {message.Message_Type === "GIF" ? (
                       <>
-                        <img className="message-gif" src={message.GIF_URL} alt={message.Message} />
+                        <img onLoad={handleGIFLoad} className="message-gif" src={message.GIF_URL} alt={message.Message} />
                         <img className="giphy-logo" src={GIPHY_LOGO} />
                       </>
                     ) : (
