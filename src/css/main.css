@@ -34,6 +34,7 @@
     border-radius: 14px;
     color: white;
     user-select: none;
+    overflow: hidden;
 }
 
 .sidebarHeader {
@@ -648,8 +649,12 @@
 }
 
 .friends_list {
-    padding: 15px;
-    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 10px;
 }
 
 @keyframes friends_list_loader {
@@ -699,13 +704,13 @@
 
 .friends {
     width: 100%;
-    margin-bottom: 10px;
     display: flex;
     padding: 10px;
     border-radius: 22px;
     transition: 0.3s;
     background-color: #292929;
     box-sizing: border-box;
+    margin-bottom: 10px;
 }
 
 .friends:active {
