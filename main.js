@@ -3,6 +3,7 @@ const {app, BrowserWindow, shell, ipcMain} = require('electron');
 const path = require('path');
 const { autoUpdater } = require('electron-updater');
 require('dotenv').config();
+const { Notification } = require('electron')
 
 autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
@@ -50,6 +51,15 @@ function createWindow () {
   ipcMain.on('open-url', (event, url) => {
     console.log('opening ' + url);
     shell.openExternal(url);
+  })
+
+  ipcMain.on('send-notification', (event, title, description) => {
+    console.log('sending notification');
+    const myNotification = new Notification({ 
+        title: title, 
+        body: description 
+    });
+    myNotification.show();
   })
 
   // Remove the menu bar from the main window
