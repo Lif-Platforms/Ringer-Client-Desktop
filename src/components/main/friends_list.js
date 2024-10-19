@@ -98,9 +98,13 @@ export default function FriendsList({
     // Fetch friends list from server
     useEffect(() => {
       async function get_friends() {
-        // Gets username and token
-        const username = localStorage.getItem('username');
-        const token = localStorage.getItem('token');
+        let username = null;
+        let token = null;
+
+        await window.electronAPI.getAuthCredentials().then((authInfo) => {
+          username = authInfo.username;
+          token = authInfo.token;
+        })
   
         console.log("Request Username: " + username);
         console.log("Request Token: " + token);

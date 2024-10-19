@@ -198,12 +198,10 @@ function MainPage() {
   const [friendsListState, setFriendsListState] = useState('loading');
 
   useEffect(() => {
-    async function getToken() {
-      const token = localStorage.getItem('token');
-      console.log("Token: " + token);
-    }
-
-    getToken();
+    // Request authentication credentials
+    window.electronAPI.getAuthCredentials().then(authInfo => {
+      console.log('Authentication Info:', authInfo);
+    });
   }, []);
 
   return (

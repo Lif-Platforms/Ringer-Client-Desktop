@@ -24,9 +24,8 @@ export function logIn(navigate, formRef, errorRef, loginButtonRef) {
     }
     })
     .then(data => {
-        // Set username and token in local storage
-        localStorage.setItem("username", formData.get("username"));
-        localStorage.setItem("token", data.token);
+        // Set auth credentials in secure storage
+        window.electronAPI.setAuthCredentials(formData.get("username"), data.token);
 
         // Navigate to main page
         navigate('/direct_messages');

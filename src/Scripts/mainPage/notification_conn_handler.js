@@ -5,11 +5,7 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
     let reconnectInterval = 1000; // Initial reconnect interval in milliseconds
     const maxReconnectInterval = 30000; // Maximum reconnect interval in milliseconds
 
-    // Get client auth info
-    const username = localStorage.getItem('username');
-    const token = localStorage.getItem('token');
-
-    const connect = () => {
+    const connect = (username, token) => {
         console.log("Connecting to service...");
         if (socket !== null) {
             socket.close(); // Close the existing socket if it exists
@@ -202,12 +198,20 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
         }
     }
 
-    // Allow "close_conn" to be run by main page
     connectSocket.close_conn = close_conn;
     connectSocket.send_message = send_message;
     connectSocket.update_typing_status = update_typing_status;
 
-    connect();
+    let username = null;
+    let token = null
+
+    // Request credentials from main process
+    await window.electronAPI.getAuthCredentials().then((authInfo) => {
+        username = authInfo.username;
+        token = authInfo
+    });
+
+    connect(username, token);
 }
 
 export default connectSocket;

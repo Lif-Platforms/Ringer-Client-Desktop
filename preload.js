@@ -4,7 +4,9 @@ const { contextBridge, ipcRenderer } = require('electron/renderer')
 contextBridge.exposeInMainWorld('electronAPI', {
   openURL: (url) => ipcRenderer.send('open-url', url),
   restartApp: () => ipcRenderer.send('restart-app'),
-  sendNotification: (title, description) => ipcRenderer.send('send-notification', title, description)
+  sendNotification: (title, description) => ipcRenderer.send('send-notification', title, description),
+  setAuthCredentials: (username, token) => ipcRenderer.send('set-auth-credentials', username, token),
+  getAuthCredentials: () => ipcRenderer.invoke('get-auth-credentials')
 })
 
 contextBridge.exposeInMainWorld('electron', {
