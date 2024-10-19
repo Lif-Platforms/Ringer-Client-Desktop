@@ -15,9 +15,13 @@ export default function UnfriendUser({
       // Set popup state
       setUnfriendState('loading');
   
-      // Get client auth info
-      const username = localStorage.getItem('username');
-      const token = localStorage.getItem('token');
+      let username = null;
+      let token = null;
+
+      await window.electronAPI.getAuthCredentials().then((authInfo) => {
+        username = authInfo.username;
+        token = authInfo.token;
+      });
   
       fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/remove_conversation/${conversation_id}`, {
         headers: {

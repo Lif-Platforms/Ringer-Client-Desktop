@@ -3,7 +3,10 @@ const {app, BrowserWindow, shell, ipcMain} = require('electron');
 const path = require('path');
 const { autoUpdater } = require('electron-updater');
 require('dotenv').config();
-const { Notification } = require('electron')
+const { Notification } = require('electron');
+const Store = require('electron-store');
+
+const credentials_store = new Store();
 
 autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
@@ -15,6 +18,14 @@ const isDev = require('electron-is-dev');
 //app.commandLine.appendSwitch('remote-debugging-port', '9222');
 
 let mainWindow;
+
+// Register credentials handler only once during app initialization
+if (!ipcMain.listeners('get-auth-credentials').length) {
+  ipcMain.handle('get-auth-credentials', (event) => {
+    const authInfo = credentials_store.get('auth-credentials');
+    return authInfo;
+  });
+}
 
 function createWindow () {
   // Dynamically set the window width
@@ -51,7 +62,7 @@ function createWindow () {
   ipcMain.on('open-url', (event, url) => {
     console.log('opening ' + url);
     shell.openExternal(url);
-  })
+  });
 
   ipcMain.on('send-notification', (event, title, description) => {
     console.log('sending notification');
@@ -60,7 +71,14 @@ function createWindow () {
         body: description 
     });
     myNotification.show();
-  })
+  });
+
+  ipcMain.on('set-auth-credentials', (event, username, token) => {
+    credentials_store.set('auth-credentials', {
+      username: username,
+      token: token
+    });
+  });
 
   // Remove the menu bar from the main window
   mainWindow.setMenuBarVisibility(false);

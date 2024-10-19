@@ -12,10 +12,33 @@ function SplashScreen() {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        // Get username and toke from local storage
-        const username = window.localStorage.getItem("username");
-        const token = window.localStorage.getItem("token");
+    async function handle_authenticate() {
+        let username = null;
+        let token = null;
+
+        // Get username and token from HTML local storage
+        const localstorage_username = window.localStorage.getItem('username');
+        const localstorage_token = window.localStorage.getItem('token');
+
+        // Check if HTML local storage credentials exist
+        // If so, move them over to electron storage
+        if (localstorage_username && localstorage_token) {
+            window.electronAPI.setAuthCredentials(localstorage_username, localstorage_token);
+
+            // Remove HTML local storage credentials
+            window.localStorage.removeItem('username');
+            window.localStorage.removeItem('token');
+
+            console.log("HTML credentials detected! Moved to electron storage.");
+        }
+
+        // Request credentials from main process
+        await window.electronAPI.getAuthCredentials().then((authInfo) => {
+            if (authInfo) {
+                username = authInfo.username;
+                token = authInfo.token;
+            }
+        });
 
         // Create form data for request
         const formdata = new FormData();
@@ -39,7 +62,11 @@ function SplashScreen() {
             console.error(err);
             navigate("/login");
         })
-    }, [navigate]);
+    }
+
+    useEffect(() => {
+        handle_authenticate();
+    }, []);
 
     return (
        <div className="splash-screen">

@@ -6,9 +6,14 @@ export default function FriendRequestsPopup({ onClose, setFriendsListState }) {
 
   useEffect(() => {
     async function fetchData() {
-      // Gets username and token
-      const username = localStorage.getItem('username');
-      const token = localStorage.getItem('token');
+      let username = null;
+      let token = null;
+
+      // Request credentials from main process
+      await window.electronAPI.getAuthCredentials().then((authInfo) => {
+        username = authInfo.username;
+        token = authInfo.token;
+      });
 
       fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/get_friend_requests`, {
         headers: {
@@ -44,9 +49,14 @@ export default function FriendRequestsPopup({ onClose, setFriendsListState }) {
   }
 
   async function handleAccept(request) {
-    // Gets username and token
-    const username = localStorage.getItem('username');
-    const token = localStorage.getItem('token');
+    let username = null;
+    let token = null;
+
+    // Request credentials from main process
+    await window.electronAPI.getAuthCredentials().then((authInfo) => {
+      username = authInfo.username;
+      token = authInfo.token;
+    });
 
     // Create new formdata
     const formData = new FormData();
@@ -76,9 +86,14 @@ export default function FriendRequestsPopup({ onClose, setFriendsListState }) {
   }
 
   async function handleDeny(request) {
-    // Gets username and token
-    const username = localStorage.getItem('username');
-    const token = localStorage.getItem('token');
+    let username = null;
+    let token = null;
+
+    // Request credentials from main process
+    await window.electronAPI.getAuthCredentials().then((authInfo) => {
+      username = authInfo.username;
+      token = authInfo.token;
+    });
 
     // Create new form data
     const formData = new FormData();

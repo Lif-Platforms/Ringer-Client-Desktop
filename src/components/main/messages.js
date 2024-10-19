@@ -113,9 +113,14 @@ export default function Messages({ friendsListState, setFriendsListState }) {
     useEffect(() => {
       console.log("Selected Conversation: " + conversation_id)
       async function handle_message_load() {
-        // Get auth data
-        const username = localStorage.getItem('username');
-        const token = localStorage.getItem('token');
+        let username = null;
+        let token = null;
+
+        // Request auth data from main process
+        await window.electronAPI.getAuthCredentials().then((authInfo) => {
+          username = authInfo.username;
+          token = authInfo.token;
+        });
 
         // Reset additional message loader
         setIsLoadingAdditionalMessages(false);
@@ -191,7 +196,7 @@ export default function Messages({ friendsListState, setFriendsListState }) {
       if (messages !== 'loading' && messages !== null) {
         const messages_container = document.getElementById('message-container');
 
-        const handleScrollEnd = () => {
+        const handleScrollEnd = async () => {
           const scrollPosition = messages_container.scrollTop;
           console.log("load more messages: " + loadAdditionalMessages.current)
           if (scrollPosition === 0 && loadAdditionalMessages && loadAdditionalMessages.current) {
@@ -202,10 +207,19 @@ export default function Messages({ friendsListState, setFriendsListState }) {
               // Make a copy of messages to work with
               let new_messages = [...messages]
 
+              let username = null;
+              let token = null;
+
+              // Request auth credentials from main process
+              await window.electronAPI.getAuthCredentials().then((authInfo) => {
+                username = authInfo.username;
+                token = authInfo.token;
+              });
+
               fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/load_messages/${conversationIdRef.current}?offset=${messages.length}`, {
                 headers: {
-                  username: localStorage.getItem('username'),
-                  token: localStorage.getItem('token')
+                  username: username,
+                  token: token
                 }
               })
               .then((response) => {

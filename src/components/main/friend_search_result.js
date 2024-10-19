@@ -8,12 +8,18 @@ export default function FriendSearchResult({ username, disabled, setDisabled }) 
     const [buttonImageSrc, setButtonImageSrc] = useState(add_button);
     const [userAdded, setUserAdded] = useState(false);
 
-    function handle_add() {
+    async function handle_add() {
         setIsLoading(true);
         setDisabled(true);
 
-        const token = localStorage.getItem('token');
-        const username = localStorage.getItem('username');
+        let token = null;
+        let username = null;
+
+        // Request credentials from main process
+        await window.electronAPI.getAuthCredentials().then((authInfo) => {
+            username = authInfo.username;
+            token = authInfo.token;
+        });
 
         // Create new form data for request
         const formData = new FormData();
