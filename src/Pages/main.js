@@ -131,9 +131,11 @@ function MessageSender() {
     if (event.key === 'Enter' && !event.shiftKey || event === true) {
       console.log('Enter was pressed without Shift!');
   
-      const message = messageBox.current.value;
-      messageBox.current.value = "Sending...";
+      const message = messageBox.current.textValue;
+      messageBox.current.innerHTML = "Sending...";
       messageBox.current.disabled = true;
+
+      console.log(messageBox.current.textValue)
   
       // Send message
       const message_status = await connectSocket.send_message(message, conversation_id, messageDestruct);
@@ -142,7 +144,7 @@ function MessageSender() {
         // Tell the server the user is no longer typing
         connectSocket.update_typing_status(conversation_id, false);
         setMessageDestruct(null);
-        messageBox.current.value = null;
+        messageBox.current.innerHTML = null;
         messageBox.current.disabled = false;
         messageBox.current.focus();
       }
@@ -165,28 +167,68 @@ function MessageSender() {
       setShowGifSelector(!showGifSelector);
     }
   }
+
+  // Update placeholder text for message box
+  useEffect(() => {
+    const message_box = messageBox.current;
+    const placeholderText = 'Send a Message';
+
+    function updatePlaceholder() {
+        if (!message_box.textContent.trim()) {
+            message_box.classList.add('placeholder');
+            message_box.textContent = placeholderText;
+        } else {
+            message_box.classList.remove('placeholder');
+        }
+    }
+
+    function handle_focus() {
+      if (message_box.classList.contains('placeholder')) {
+        message_box.textContent = '';
+        message_box.classList.remove('placeholder');
+      }
+    }
+
+    message_box.addEventListener('focus', handle_focus);
+
+    function handle_blur() {
+      updatePlaceholder();
+    }
+
+    message_box.addEventListener('blur', handle_blur);
+
+    // Initialize placeholder
+    updatePlaceholder();
+
+    return () => {
+      message_box.removeEventListener('focus', handle_focus);
+      message_box.removeEventListener('blur', handle_blur);
+    }
+  }, [])
   
   return (
     <div className="messageSender">
       <TypingIndicator />
       <div className='message-box'>
-        <textarea ref={messageBox} placeholder="Send a Message" onKeyDown={handle_send} id='message-box'rows="1" />
-        <button className='gif-selector-button'>
-          <span onClick={handle_gif_panel}>GIF</span>
-          <GifSelector showGifSelector={showGifSelector} setShowGifSelector={setShowGifSelector} />
-        </button>
-        <button title='Self-Destruct Message'>
-          <img src={messageDestructIconSrc} onClick={() => setShowSelector(!showSelector)} />
-          <MessageDestructSelector 
-            showSelector={showSelector}
-            messageDestruct={messageDestruct}
-            setMessageDestruct={setMessageDestruct}
-            setShowSelector={setShowSelector}
-          />
-        </button>
-        <button ref={sendButton} onClick={() => handle_send(true)}>
-          <img src={Send_Button} />
-        </button>
+        <div contenteditable="true" className='text-box' ref={messageBox} onKeyDown={handle_send} id='message-box' />
+        <div className='options'>
+          <button className='gif-selector-button'>
+            <span onClick={handle_gif_panel}>GIF</span>
+            <GifSelector showGifSelector={showGifSelector} setShowGifSelector={setShowGifSelector} />
+          </button>
+          <button title='Self-Destruct Message'>
+            <img src={messageDestructIconSrc} onClick={() => setShowSelector(!showSelector)} />
+            <MessageDestructSelector 
+              showSelector={showSelector}
+              messageDestruct={messageDestruct}
+              setMessageDestruct={setMessageDestruct}
+              setShowSelector={setShowSelector}
+            />
+          </button>
+          <button ref={sendButton} onClick={() => handle_send(true)}>
+            <img src={Send_Button} />
+          </button>
+        </div>
       </div>
     </div>
   );

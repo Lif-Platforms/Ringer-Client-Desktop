@@ -422,7 +422,7 @@
     position: relative;
 }
 
-.message-box textarea {
+.message-box .text-box {
     width: 100%;
     box-sizing: border-box;
     height: 100%;
@@ -433,6 +433,21 @@
     font-family: Arial, Helvetica, sans-serif;
     background-color: transparent;
     z-index: 1;
+    outline: none;
+    text-align: left;
+    overflow-y: auto;
+    max-height: 200px;
+}
+
+.message-box .placeholder {
+    color: gray;
+}
+
+.message-box .options {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: auto;
+    margin-top: 10px;
 }
 
 .messageSender textarea:focus {
