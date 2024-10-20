@@ -87,6 +87,13 @@ function MessageSender() {
   const [messageDestruct, setMessageDestruct] = useState(null);
   const [messageDestructIconSrc, setMessageDestructIconSrc] = useState(Clock);
   const [showGifSelector, setShowGifSelector] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+  // Force a re-render of the message box to ensure the disabled property gets updated
+  const forceUpdate = useState(0)[1];
+
+  useEffect(() => {
+    forceUpdate((n) => n + 1); // Force re-render
+  }, [disabled]);
 
   useEffect(() => {
     if (messageDestruct) {
@@ -130,23 +137,45 @@ function MessageSender() {
     // Checks if the enter key was pressed without the shift key
     if (event.key === 'Enter' && !event.shiftKey || event === true) {
       console.log('Enter was pressed without Shift!');
-  
-      const message = messageBox.current.textValue;
-      messageBox.current.innerHTML = "Sending...";
-      messageBox.current.disabled = true;
 
-      console.log(messageBox.current.textValue)
+      // Check to ensure message is not blank
+      if (messageBox.current.textContent.trim() === "") {
+        event.preventDefault();
+        return;
+      }
+      
+      // Get raw message with HTML
+      const message_raw = messageBox.current.innerHTML;
+
+      function decodeHTMLEntities(text) {
+        const txt = document.createElement('textarea');
+        txt.innerHTML = text;
+        return txt.value;
+      }
+      
+      const format_message = decodeHTMLEntities(message_raw
+          .replace(/<br\s*\/?>/gi, '\n')
+          .replace(/&nbsp;/g, ' ')
+          .toString());
+
+      messageBox.current.textContent = "Sending...";
+      setDisabled(true);
   
       // Send message
-      const message_status = await connectSocket.send_message(message, conversation_id, messageDestruct);
+      const message_status = await connectSocket.send_message(format_message, conversation_id, messageDestruct);
   
       if (message_status === "message_sent") {
         // Tell the server the user is no longer typing
         connectSocket.update_typing_status(conversation_id, false);
         setMessageDestruct(null);
-        messageBox.current.innerHTML = null;
-        messageBox.current.disabled = false;
-        messageBox.current.focus();
+        messageBox.current.textContent = null;
+        setDisabled(false);
+
+        // Ensure message box is enabled before focusing it
+        setTimeout(() => {
+          messageBox.current.focus();
+        }, 1);
+        
       }
     }
   }  
@@ -154,11 +183,9 @@ function MessageSender() {
   useEffect(() => {
     // Only allows input if a conversation is selected
     if (conversation_id) {
-      messageBox.current.disabled = false;
-      sendButton.current.disabled = false;
+      setDisabled(false);
     } else {
-      messageBox.current.disabled = true;
-      sendButton.current.disabled = true;
+      setDisabled(true)
     }
   }, [conversation_id]);
 
@@ -210,13 +237,13 @@ function MessageSender() {
     <div className="messageSender">
       <TypingIndicator />
       <div className='message-box'>
-        <div contenteditable="true" className='text-box' ref={messageBox} onKeyDown={handle_send} id='message-box' />
+        <div contentEditable={!disabled} className='text-box' ref={messageBox} onKeyDown={handle_send} id='message-box' />
         <div className='options'>
           <button className='gif-selector-button'>
             <span onClick={handle_gif_panel}>GIF</span>
             <GifSelector showGifSelector={showGifSelector} setShowGifSelector={setShowGifSelector} />
           </button>
-          <button title='Self-Destruct Message'>
+          <button disabled={disabled} title='Self-Destruct Message'>
             <img src={messageDestructIconSrc} onClick={() => setShowSelector(!showSelector)} />
             <MessageDestructSelector 
               showSelector={showSelector}
@@ -225,7 +252,7 @@ function MessageSender() {
               setShowSelector={setShowSelector}
             />
           </button>
-          <button ref={sendButton} onClick={() => handle_send(true)}>
+          <button disabled={disabled} ref={sendButton} onClick={() => handle_send(true)}>
             <img src={Send_Button} />
           </button>
         </div>
