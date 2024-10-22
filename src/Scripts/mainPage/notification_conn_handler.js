@@ -1,21 +1,33 @@
+let socket = null;
+
 async function connectSocket(conversationIdRef, messagesRef, update_messages) {
     console.log("Conversation Id: " + conversationIdRef.current);
 
-    let socket = null;
     let reconnectInterval = 1000; // Initial reconnect interval in milliseconds
     const maxReconnectInterval = 30000; // Maximum reconnect interval in milliseconds
+    let username = null;
+    let token = null;
 
-    const connect = (username, token) => {
+    const connect = () => {
         console.log("Connecting to service...");
         if (socket !== null) {
             socket.close(); // Close the existing socket if it exists
         }
         socket = new WebSocket(`${process.env.REACT_APP_RINGER_WS_URL}/live_updates`);
 
-        socket.onopen = (event) => {
+        socket.onopen = async (event) => {
             console.log("WebSocket connection opened:", event);
+
+            // Update reconnect bar
             document.getElementById("ReconnectBar").classList.remove('reconnectBarShow');
             document.getElementById("ReconnectBar").classList.add('reconnectBarHide');
+
+            // Request auth credentials from main process
+            const authInfo = await window.electronAPI.getAuthCredentials();
+            username = authInfo.username;
+            token = authInfo.token;
+
+            // Send auth credentials
             socket.send(JSON.stringify({ Username: username, Token: token }));
         };
 
@@ -192,7 +204,8 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
         console.log("Conn closed!");
     }
 
-    const update_typing_status = (conversation_id, status) => {
+    const update_typing_status = async (conversation_id, status) => {
+        console.log("typing status socket: " + socket)
         if (socket.readyState === WebSocket.OPEN) {
             socket.send(JSON.stringify({MessageType: "USER_TYPING", ConversationId: conversation_id, Typing: status}));
         }
@@ -202,16 +215,7 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
     connectSocket.send_message = send_message;
     connectSocket.update_typing_status = update_typing_status;
 
-    let username = null;
-    let token = null
-
-    // Request credentials from main process
-    await window.electronAPI.getAuthCredentials().then((authInfo) => {
-        username = authInfo.username;
-        token = authInfo
-    });
-
-    connect(username, token);
+    connect();
 }
 
 export default connectSocket;

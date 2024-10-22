@@ -8,7 +8,9 @@ export default function TypingIndicator() {
     const { conversation_id } = useParams();
   
     async function handle_typing_update(event) {
-      const username = localStorage.getItem("username");
+      // Get auth credentials from main process
+      const authInfo = await window.electronAPI.getAuthCredentials();
+      const username = authInfo.username;
       
       if (event.detail.user !== username && conversation_id === event.detail.id) {
         setIsTyping(event.detail.typing);

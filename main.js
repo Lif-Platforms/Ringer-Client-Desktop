@@ -5,8 +5,9 @@ const { autoUpdater } = require('electron-updater');
 require('dotenv').config();
 const { Notification } = require('electron');
 const Store = require('electron-store');
-
-const credentials_store = new Store();
+const app_storage = new Store();
+const keytar = require('keytar');
+const crypto = require('crypto');
 
 autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
@@ -21,9 +22,32 @@ let mainWindow;
 
 // Register credentials handler only once during app initialization
 if (!ipcMain.listeners('get-auth-credentials').length) {
-  ipcMain.handle('get-auth-credentials', (event) => {
-    const authInfo = credentials_store.get('auth-credentials');
-    return authInfo;
+  ipcMain.handle('get-auth-credentials', async (event) => {
+    // Get account name from app storage
+    const authInfo = app_storage.get('auth-info');
+
+    // Check if account info exists
+    if (authInfo) {
+      const account_name = authInfo.account;
+
+      // Get credentials from OS password storage
+      const credentials_raw = await keytar.getPassword("Ringer", account_name);
+
+      let parsed_credentials;
+
+      // Parse credentials
+      if (credentials_raw) {
+        try {
+          parsed_credentials = JSON.parse(credentials_raw);
+        } catch {
+          parsed_credentials = null;
+        } 
+      }
+      
+      return parsed_credentials;
+    } else {
+      return null;
+    }
   });
 }
 
@@ -73,11 +97,34 @@ function createWindow () {
     myNotification.show();
   });
 
+  // Handles saving auth credentials to device
   ipcMain.on('set-auth-credentials', (event, username, token) => {
-    credentials_store.set('auth-credentials', {
-      username: username,
-      token: token
+    // Hash the account name for storage
+    const account_hash = crypto.createHash('sha256').update(username).digest('hex');
+
+    // Save account hash to app data
+    app_storage.set('auth-info', {
+      account: account_hash,
     });
+
+    // Convert credentials to JSON string for storage
+    const credentials_string = JSON.stringify({username: username, token: token});
+
+    // Save credentials to device password manager
+    keytar.setPassword("Ringer", account_hash, credentials_string);
+  });
+
+  // Handles the removal of user credentials from device
+  ipcMain.on('remove-auth-credentials', async (event) => {
+    // Get account name from app storage
+    const accountInfo = app_storage.get('auth-info');
+    const account_name = accountInfo.account;
+
+    // Remove credentials from password manager
+    await keytar.deletePassword("Ringer", account_name);
+
+    // Remove account name from app storage
+    app_storage.delete('auth-info');
   });
 
   // Remove the menu bar from the main window

@@ -3,8 +3,6 @@ import '../App.css';
 import '../css/main.css';
 import '../css/Animations/checkmark.css';
 import connectSocket from "../Scripts/mainPage/notification_conn_handler";
-import MoreIcon from "../assets/home/More-Icon.png";
-import { log_out } from '../Scripts/utils/user-log-out';
 import SideOptionsBar from 'src/components/main/side_options_menu';
 import SideBar from 'src/components/main/side_bar';
 import Messages from 'src/components/main/messages';
@@ -46,32 +44,6 @@ function UpdateDownloaded() {
         <p>Ringer version {showUpdatePanel} has been downloaded and will be installed upon next restart.</p>
         <button onClick={() => setShowUpdatePanel(null)}>Maybe Later</button>
         <button onClick={() => window.electronAPI.restartApp()} style={{backgroundColor: "orange"}}>Restart Now</button>
-      </div>
-    )
-  }
-}
-
-function UserOptionMenu({ optionMenuState, setOptionMenuState }) {
-
-  const navigate = useNavigate();
-
-  async function handle_log_out() {
-    const status = await log_out();
-
-    if (status === "OK") {
-      navigate("/login");
-    }
-  }
-
-  if (optionMenuState === "open") {
-    return(
-      <div className='user-option-menu'>
-        <h1>Options</h1>
-        <hr />
-        <div className='options'>
-          <button onClick={handle_log_out}>Log Out</button>
-          <button onClick={() => setOptionMenuState('closed')}>Close</button>     
-        </div>
       </div>
     )
   }

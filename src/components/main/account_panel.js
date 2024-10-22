@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { log_out } from "src/Scripts/utils/user-log-out";
 
 export default function AccountPanel({ accountPanelShow }) {
     const [username, setUsername] = useState();
@@ -19,12 +18,9 @@ export default function AccountPanel({ accountPanelShow }) {
     const navigate = useNavigate();
 
     async function handle_log_out() {
-        const status = await log_out();
-    
-        if (status === "OK") {
-          navigate("/login");
-        }
-      }
+        await window.electronAPI.removeAuthCredentials();
+        navigate("/login");
+    }
 
     if (accountPanelShow) {
         return (

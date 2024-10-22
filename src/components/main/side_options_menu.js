@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Direct_Messages from '../../assets/home/direct_messages.svg';
 import AccountPanel from './account_panel';
 import FriendRequestsPopup from './friend_request_popup';
@@ -7,6 +7,15 @@ import notification from '../../assets/home/Notification.png';
 export default function SideOptionsBar({ setFriendsListState }) {
     const [accountPanelShow, setAccountPanelShow] = useState(false);
     const [showNotificationPopup, setShowNotificationPopup] = useState(false);
+    const [username, setUsername] = useState("");
+
+    // Fetch username from main process
+    useEffect(async () => {
+        const authInfo = await window.electronAPI.getAuthCredentials();
+        const username_ = authInfo.username;
+
+        setUsername(username_);
+    }, [])
 
     const handleCloseNotificationPopup = () => {
         setShowNotificationPopup(false);
@@ -21,7 +30,7 @@ export default function SideOptionsBar({ setFriendsListState }) {
             <img src={Direct_Messages} />
             <div style={{'position': 'relative'}}>
                 <img onClick={handleNotificationButtonClick} className='notificationButton' src={notification} alt="notification"/>
-                <img onClick={() => setAccountPanelShow(!accountPanelShow)} className='avatar' src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/profile/get_avatar/${window.localStorage.getItem('username')}.png`} />
+                <img onClick={() => setAccountPanelShow(!accountPanelShow)} className='avatar' src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/profile/get_avatar/${username}.png`} />
                 <AccountPanel accountPanelShow={accountPanelShow} />
                 {showNotificationPopup && <FriendRequestsPopup onClose={handleCloseNotificationPopup} setFriendsListState={setFriendsListState} />}
             </div>
