@@ -156,7 +156,9 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
             console.log("Message sent to server");
     
             // Create a promise that resolves when the server acknowledges the message
-            const messageSentPromise = new Promise((resolve) => {
+            const messageSentPromise = new Promise((resolve, reject) => {
+                let messageSendTimeout;
+
                 const handleMessage = (event) => {
                     const data = event.data;
                     const parsedData = JSON.parse(data);
@@ -171,6 +173,11 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
     
                 // Attach the event listener
                 socket.addEventListener("message", handleMessage);
+
+                messageSendTimeout = setTimeout(() => {
+                    socket.removeEventListener("message", handleMessage);
+                    reject('failed_to_send');
+                }, 5000);
             });
     
             // Wait for the acknowledgment or other responses
@@ -179,7 +186,7 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
                 return response; // Return the processed value
             } catch (error) {
                 console.error("Error while waiting for server response:", error);
-                return null; // Handle any errors during communication
+                return "failed_to_send"; // Handle any errors during communication
             }
         } else {
             console.warn("WebSocket is not open. Cannot send message.");

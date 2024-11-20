@@ -8,9 +8,17 @@ import Clock from '../../assets/home/clock_icon.png';
 import GIPHY_LOGO from '../../assets/home/GIPHY_attrabution.png';
 import Spinner from '../../assets/global/loaders/loader-1.svg';
 import ReturnToRecent from "./go_to_recent";
+import SendLoader from "./send_loader";
+import Message from "./meassage";
 
-export default function Messages({ friendsListState, setFriendsListState }) {
-    const [messages, setMessages] = useState('loading');
+export default function Messages({
+  isSending,
+  friendsListState,
+  setFriendsListState,
+  messagesRef,
+  messages,
+  setMessages
+}) {
     const [unfriendState, setUnfriendState] = useState('hide');
     const [showPopup, setShowPopup] = useState(false);
     const [popupUsername, setPopupUsername] = useState();
@@ -24,9 +32,6 @@ export default function Messages({ friendsListState, setFriendsListState }) {
     const previous_scroll_position = useRef();
 
     const { conversation_id } = useParams();
-  
-    // Allow messages to be changed during the runtime of the socket function
-    const messagesRef = useRef(messages);
   
     // Allow the conversation id to be changed during the runtime of the socket function
     const conversationIdRef = useRef(conversation_id);
@@ -163,29 +168,6 @@ export default function Messages({ friendsListState, setFriendsListState }) {
       // Open popup
       setShowPopup(true);
     }
-  
-    function handle_link_click(url) {
-      setCheckLinkPopup(url);
-    }
-  
-    const renderMessageContent = (message) => {
-      const urlRegex = /(https?:\/\/[^\s]+)/g;
-      const parts = message.split(urlRegex);
-  
-      return parts.map((part, index) => {
-        if (urlRegex.test(part)) {
-          // If part is a URL, wrap it in an anchor tag
-          return (
-            <a key={index} onClick={() => handle_link_click(part)}>
-              {part}
-            </a>
-          );
-        } else {
-          // Otherwise, render plain text
-          return <span key={index}>{part}</span>;
-        }
-      });
-    };
 
     useEffect(() => {
       if (messages !== 'loading' && messages !== null) {
@@ -243,14 +225,27 @@ export default function Messages({ friendsListState, setFriendsListState }) {
       }
     }, [messages]);
 
-    // Moves the scroll position down by the hight of the image
-    const handleGIFLoad = (event) => {
-      const imageHeight = event.target.height;
+    // Listen for resend event and remove failed message from chat
+    useEffect(() => {
+      function handle_resend(event) {
+        let messages_copy = [...messages];
+        let index = 0;
 
-      if (messages_container.current && initialLoad.current) {
-        messages_container.current.scrollTop = messages_container.current.scrollTop + imageHeight;
+        messages_copy.forEach((message) => {
+          if (message.Id === event.detail.id) {
+            messages_copy.splice(index, 1);
+          } else {
+            index += 1;
+          }
+        });
+
+        setMessages(messages_copy);
       }
-    };
+
+      document.addEventListener('resend_message', handle_resend);
+
+      return () => document.removeEventListener('resend_message', handle_resend);
+    }, [])
   
     return (
       <div className="messages">
@@ -259,6 +254,7 @@ export default function Messages({ friendsListState, setFriendsListState }) {
             <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${conversationName}.png`} alt="Avatar" draggable="false" className='selectedConversationAvatar' />
             <h1>{conversationName}</h1>  
             <button className='unfriend-button' title="Unfriend" onClick={() => setUnfriendState(conversationName)}>&#10006;</button>
+            <SendLoader isSending={isSending} />
           </div>
         )}
         {messages === 'loading' ? (
@@ -298,23 +294,19 @@ export default function Messages({ friendsListState, setFriendsListState }) {
                 <img src={Spinner} />
               ): null}
               {messages.map((message, index) => (
-                <div key={index} className='message'>
-                  <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${message.Author}.png`} alt='' onClick={() => handle_open_popup(message.Author)} />
-                  <div>
-                    <div className="message-header">
-                      <h1>{message.Author}</h1>
-                      {message.Self_Destruct && message.Self_Destruct !== "False" ? <img title="This message will self-destruct after viewing." src={Clock} className="clock" /> : null}
-                    </div>
-                    {message.Message_Type === "GIF" ? (
-                      <>
-                        <img onLoad={handleGIFLoad} className="message-gif" src={message.GIF_URL} alt={message.Message} />
-                        <img className="giphy-logo" src={GIPHY_LOGO} />
-                      </>
-                    ) : (
-                      <p>{renderMessageContent(message.Message)}</p>
-                    )}
-                  </div>
-                </div>
+                <Message
+                  key={index}
+                  author={message.Author}
+                  content={message.Message}
+                  gif_url={message.GIF_URL}
+                  handle_open_popup={handle_open_popup}
+                  failed_to_send={message.FailedToSend}
+                  self_destruct={message.Self_Destruct}
+                  messages_container={messages_container}
+                  initialLoad={initialLoad}
+                  setCheckLinkPopup={setCheckLinkPopup}
+                  message_id={message.Message_Id}
+                />
               ))}
               <ProfilePopUp
                 showPopup={showPopup}
