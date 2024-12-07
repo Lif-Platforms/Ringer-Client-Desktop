@@ -59,6 +59,7 @@ export default function Message({
         });
 
         document.dispatchEvent(resend_event);
+        console.log('broadcasted resend event')
     }
 
     return (

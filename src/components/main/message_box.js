@@ -56,6 +56,41 @@ export default function MessageBox({ setIsSending, messages, setMessages }) {
         };
     }, [typingTimer]);
 
+    // Listen for and handle resend event
+    useEffect(() => {
+        async function handle_resend(event) {
+            setIsSending(true);
+            messageBox.current.value = null;
+            messageBox.current.disabled = true;
+
+            // Send message
+            const message_status = await connectSocket.send_message(event.detail.content, conversation_id, event.detail.self_destruct);
+
+            if (message_status === "message_sent") {
+                messageBox.current.disabled = false;
+                setIsSending(false);
+            } else if (message_status === "failed_to_send") {
+                messageBox.current.disabled = false;
+                setIsSending(false);
+
+                // Add message to list
+                let messages_copy = [...messages];
+
+                messages_copy.push({
+                    Author: localStorage.getItem('username'),
+                    Message: event.detail.content,
+                    Message_Id: event.detail.id,
+                    SelfDestruct: event.detail.self_destruct,
+                    FailedToSend: true
+                });
+
+                setMessages(messages_copy);
+            }
+        }
+
+        document.addEventListener("resend_message", handle_resend);
+    }, [])
+
     async function handle_send(event) {
         // Checks if the enter key was pressed without the shift key
         if (event.key === 'Enter' && !event.shiftKey || event === true) {

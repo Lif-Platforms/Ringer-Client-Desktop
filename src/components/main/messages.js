@@ -4,8 +4,6 @@ import ProfilePopUp from "./profile_popup";
 import CheckLinkPopup from "./check_link_popup";
 import connectSocket from "../../Scripts/mainPage/notification_conn_handler";
 import UnfriendUser from "./unfriend_user";
-import Clock from '../../assets/home/clock_icon.png';
-import GIPHY_LOGO from '../../assets/home/GIPHY_attrabution.png';
 import Spinner from '../../assets/global/loaders/loader-1.svg';
 import ReturnToRecent from "./go_to_recent";
 import SendLoader from "./send_loader";
@@ -232,8 +230,9 @@ export default function Messages({
         let index = 0;
 
         messages_copy.forEach((message) => {
-          if (message.Id === event.detail.id) {
+          if (message.Message_Id === event.detail.id) {
             messages_copy.splice(index, 1);
+            console.log('Removing message:', message);
           } else {
             index += 1;
           }
