@@ -13,7 +13,7 @@
 # 💬 Ringer-Client-Desktop
 Ringer is a new cross-platform messaging app for Windows, Mac, and Linux. It's currently in beta so bugs and quirks are expected.
 
-<img src="https://github.com/Lif-Platforms/Ringer-Client-Desktop/blob/master/.github/Ringer-Mockup-1.png" alt="Ringer Mockup" style="width: 100%" />
+<img src="https://github.com/Lif-Platforms/Ringer-Client-Desktop/blob/master/.github/Ringer-Mockup.png" alt="Ringer Mockup" style="width: 100%" />
 
 # ⬇️ Get Ringer
 Ringer can be downloaded from the Lif Platforms website. [Ringer Downloads](https://lifplatforms.com/ringer%20downloads).
@@ -28,7 +28,8 @@ This project is under the GNU 2.0 Licence. See the [`LICENSE`](LICENSE) file for
 Ringer has features such as: 
  - Lif Accounts
  - Instant Chatting
- - Account Recovery 
+ - GIFs
+ - Presence Indicators
 
 # 🧱 Built With...
 Ringer is built with these languages: 
