@@ -492,6 +492,27 @@
     font-size: x-large;
 }
 
+.popup .accept_button {
+    padding: 5px;
+    background-color: orange;
+    border-radius: 0.5em;
+    font-size: medium;
+    cursor: pointer;
+    padding: 5px 20px;
+    text-align: center;
+    display: block;
+    border: none;
+    color: white;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.popup .loader {
+    margin: auto;
+    display: block;
+}
+
 .addConversation {
     padding: 5px;
     background-color: orange;
@@ -569,46 +590,49 @@
     box-sizing: border-box;
     transition: 0.3s;
 }
+
+.request_buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.request_item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.request_item .loader {
+    width: 30px;
+    height: 30px;
+    display: block;
+    margin: auto 0;
+}
+
 .acceptButton {
     background-color: transparent;
     border: none;
-    border-radius: 0.5em;
+    border-radius: 0.3em;
     padding: 5px;
-    color:greenyellow;
-    font-size: large;
-    padding-left: 10px;
-    padding-right: 10px;
-    margin-left: 10px;
+    width: 25px;
+    height: 25px;
+    background-color: #006F00;
 }
 
 .acceptButton:hover {
-    background-color: transparent;
-    border: none;
-    border-radius: 0.5em;
-    padding: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-    color:greenyellow;
-    font-size: large;
-    margin-left: 10px;
-    background-color: rgb(83, 83, 83);
+    opacity: 0.5;
 }
+
 .denyButton {
     background-color: transparent;
     border: none;
-    border-radius: 0.5em;
+    border-radius: 0.3em;
     padding: 5px;
-    color:red;
-    font-size: large;
+    width: 25px;
+    height: 25px;
+    background-color: #C20000;
 }
 .denyButton:hover {
-    background-color: transparent;
-    border: none;
-    border-radius: 0.5em;
-    padding: 5px;
-    color:red;
-    font-size: large;
-    background-color: rgb(83, 83, 83);
+    opacity: 0.5;
 }
 .reconnectBarHide {
     background-color: orange;
