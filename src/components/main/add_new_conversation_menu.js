@@ -39,6 +39,8 @@ export default function AddNewConversationMenu(props) {
         setConversationState("sent");
       } else if (response.status === 409) {
         setConversationState("conflict");
+      } else if (response.status === 404) {
+        setConversationState("not_found");
       } else {
         throw new Error('Request failed with status code: ' + response.status);
       }
@@ -74,6 +76,12 @@ export default function AddNewConversationMenu(props) {
           <>
             <h3>Error</h3>
             <p>There was an error when trying to add this user.</p>
+            <button className="accept_button" onClick={handleClose}>Ok</button>
+          </>
+        ) : conversationState === "not_found" ? (
+          <>
+            <h3>User Not Found</h3>
+            <p>The user you are trying to add could not be found.</p>
             <button className="accept_button" onClick={handleClose}>Ok</button>
           </>
         ) : (

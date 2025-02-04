@@ -31,17 +31,30 @@ export default function FriendRequest({sender, id, remove_request}) {
           method: "POST",
           body: formData
         })
-        .then(response => {
+        .then((response) => {
             setIsLoading(false);
 
             if (response.ok) {
-                setIsLoading(false);
-                remove_request(id);
+                return response.json();
             } else {
                 throw new Error('Request failed with status code: ' + response.status);
             }
         })
-        .catch(error => {
+        .then((data) => {
+            // Remove request from list
+            remove_request(id);
+
+            // Update friends list
+            const friend_request_accept_event = new CustomEvent("Friend_Request_Accept", {
+                detail: {
+                    username: data.name,
+                    id: data.conversation_id,
+                    user_online: data.sender_presence
+                }
+            });
+            document.dispatchEvent(friend_request_accept_event);
+        })
+        .catch((error) => {
             setIsLoading(false);
             console.error(error);
         });
