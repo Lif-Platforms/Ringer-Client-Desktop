@@ -41,8 +41,8 @@ class LoginFooter extends React.Component {
   render() {
     return(
       <div className='loginFooter'>
-        <Link onClick={() => window.electronAPI.openURL('https://my.lifplatforms.com/#/account_recovery')}>Forgot Password</Link>
-        <p>Don't have an account? <Link onClick={() => window.electronAPI.openURL('https://my.lifplatforms.com/#/create_account')}>Create One.</Link></p>
+        <Link onClick={() => window.electronAPI.openURL('https://my.lifplatforms.com/account_recovery')}>Forgot Password</Link>
+        <p>Don't have an account? <Link onClick={() => window.electronAPI.openURL('https://my.lifplatforms.com/create_account')}>Create One.</Link></p>
         <p ref={this.props.errorRef} style={{"color": "red"}}></p>
       </div>
     );
