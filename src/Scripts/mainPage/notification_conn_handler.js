@@ -50,6 +50,15 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
                         }
                     });
                     document.dispatchEvent(message_update_event);
+
+                    // Get current logged in user
+                    const current_user = localStorage.getItem('username');
+
+                    // Only send notification if user is not the current logged in user and
+                    // only if the user is not active inside the window
+                    if (!document.hasFocus() && current_user !== server_data.Message.Author) {
+                        window.electronAPI.sendNotification(server_data.Message.Author, server_data.Message.Message);
+                    }
                 } else {
                     console.log("Received message! Conversation Not Selected");
                 }

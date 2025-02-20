@@ -1,0 +1,54 @@
+name: Bug Report
+description: Create a report to help us improve.
+title: "[BUG] "
+type: "bug"
+assignees: [""]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Describe the issue you are experiencing.
+    validations:
+      required: true
+  
+  - type: textarea
+    attributes:
+      label: Reproduction Steps
+      description: List the steps to reproduce the behavior.
+      value: |
+        1. 
+        2. 
+        3. 
+        4. 
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: A clear and concise description of what you expected to happen.
+      placeholder: Describe what you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: desktop-info
+    attributes:
+      label: App Info
+      description: Provide details about your app environment.
+      value: |
+        OS: Mac OS, Windows
+        OS Version: 
+        Ringer Version: 
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other context about the problem.
+      placeholder: Add any additional context about the issue.

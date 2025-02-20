@@ -1,0 +1,25 @@
+name: Tracking Issue
+description: Create a list of tasks
+title: "[TRACKING ISSUE] "
+type: "task"
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of the task.
+      placeholder: Describe your issue.
+    validations:
+      required: true
+    
+  - type: textarea
+    id: tasks
+    attributes:
+      label: Tasks
+      description: List of tasks to complete the issue.
+      value: |
+        - []
+        - []
+        - []
+    validations:
+      required: true
