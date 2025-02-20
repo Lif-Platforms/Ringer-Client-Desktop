@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Error_Image from '../../assets/global/Error.png';
+import FriendRequest from "./friend_request";
 
 export default function FriendRequestsPopup({ onClose, setFriendsListState }) {
   const [notificationData, setNotificationData] = useState('loading');
@@ -43,66 +44,15 @@ export default function FriendRequestsPopup({ onClose, setFriendsListState }) {
     onClose();
   }
 
-  async function handleAccept(request) {
-    // Gets username and token
-    const username = localStorage.getItem('username');
-    const token = localStorage.getItem('token');
+  function remove_request(id) {
+    // Make copy of notificationData
+    let newNotificationData = [...notificationData];
 
-    // Create new formdata
-    const formData = new FormData();
-    formData.append("user", request);
+    // Remove request from data
+    newNotificationData = newNotificationData.filter(item => item.Request_Id !== id);
 
-    fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/accept_friend_request`, {
-      headers: {
-        username: username,
-        token: token
-      },
-      method: "POST",
-      body: formData
-    })
-    .then(response => {
-      if (response.ok) {
-        // Reset popup status and close popup
-        setFriendsListState("loading")
-        onClose();
-      } else {
-        throw new Error('Request failed with status code: ' + response.status);
-      }
-    })
-    .catch(error => {
-      // Handle any errors
-      console.error(error);
-    });
-  }
-
-  async function handleDeny(request) {
-    // Gets username and token
-    const username = localStorage.getItem('username');
-    const token = localStorage.getItem('token');
-
-    // Create new form data
-    const formData = new FormData();
-    formData.append("user", request);
-
-    fetch(`${process.env.REACT_APP_RINGER_SERVER_URL}/deny_friend_request`, {
-      headers: {
-        username: username,
-        token: token
-      },
-      method: "POST",
-      body: formData
-    })
-    .then(response => {
-      if (response.ok) {
-        onClose();
-      } else {
-        throw new Error('Request failed with status code: ' + response.status);
-      }
-    })
-    .catch(error => {
-      // Handle any errors
-      console.error(error);
-    });
+    // Update notificationData
+    setNotificationData(newNotificationData);
   }
 
   if (notificationData === "loading") {
@@ -128,11 +78,12 @@ export default function FriendRequestsPopup({ onClose, setFriendsListState }) {
           <h2>Incoming Friend Requests</h2>
           <ul>
             {notificationData.map(item => (
-              <li key={item}>
-                {item.name}
-                <button className='acceptButton' onClick={() => handleAccept(item.name)}>&#x2713;</button>
-                <button className='denyButton' onClick={() => handleDeny(item.name)}>&#10060;</button>
-            </li>
+              <FriendRequest
+                sender={item.Sender}
+                id={item.Request_Id}
+                remove_request={remove_request}
+                key={item.Request_Id}
+              />
             ))}
           </ul>
           <button onClick={handleClosePopup} className='closeRequestsButton'>Close</button>

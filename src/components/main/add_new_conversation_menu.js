@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import loader from '../../assets/global/loaders/loader-1.svg';
 import FriendSearchResult from "./friend_search_result";
+import loader from '../../assets/global/loaders/loader-1.svg';
 
 export default function AddNewConversationMenu({ showPopup, setShowPopup }) {
     const [panelState, setPanelState] = useState('loading');
@@ -8,6 +8,7 @@ export default function AddNewConversationMenu({ showPopup, setShowPopup }) {
     const [searchResults, setSearchResults] = useState("");
     const searchInput = useRef();
     const [disabled, setDisabled] = useState(false);
+    const [errorText, setErrorText] = useState("");
 
     useEffect(() => {
       if (showPopup) {
@@ -48,12 +49,17 @@ export default function AddNewConversationMenu({ showPopup, setShowPopup }) {
           console.log('WebSocket connection is not open');
       }
     };
+
+    function handle_popup_close() {
+      setShowPopup(false);
+      setErrorText("");
+    }
     
     if (showPopup) {
       return (
         <div className="popup">
           <div className="popup-content">
-            <span className="close-btn" onClick={() => setShowPopup(false)}>
+            <span className="close-btn" onClick={handle_popup_close}>
               &times;
             </span>
             {panelState === 'loading' ? (
@@ -72,6 +78,7 @@ export default function AddNewConversationMenu({ showPopup, setShowPopup }) {
                         disabled={disabled}
                         username={username}
                         setDisabled={setDisabled}
+                        setErrorText={setErrorText}
                       />
                     ))
                   ) : Array.isArray(searchResults) && searchResults.length === 0 ? (
@@ -83,6 +90,7 @@ export default function AddNewConversationMenu({ showPopup, setShowPopup }) {
               </>
             )}
           </div>
+          <p style={{color: "red", fontSize: "medium"}}>{errorText}</p>
         </div>
       );
     }

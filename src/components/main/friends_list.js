@@ -27,7 +27,12 @@ export default function FriendsList({
         });
   
         if (!user_found) {
-          friends_list.push({Username: data.detail.username, Id: data.detail.id});
+          friends_list.push({
+            Username: data.detail.username,
+            Id: data.detail.id,
+            Online: data.detail.user_online,
+            Last_Message: "This is a new conversation!"
+          });
   
           // Update friends list
           setFriendsListState(friends_list);
