@@ -52,7 +52,12 @@ export default function FriendRequest({sender, id, remove_request}) {
                     user_online: data.sender_presence
                 }
             });
-            document.dispatchEvent(friend_request_accept_event);
+
+            // Check if "type" is "accept"
+            // If so then dispatch an event to update the friends list with the new conversation
+            if (type === "accept") {
+                document.dispatchEvent(friend_request_accept_event);
+            }
         })
         .catch((error) => {
             setIsLoading(false);
