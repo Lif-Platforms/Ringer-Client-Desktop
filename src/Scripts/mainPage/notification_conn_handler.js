@@ -121,7 +121,8 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
 
             // Reconnect only if the connection was not closed intentionally
             if (event.code !== 1000) {
-                console.log("Trying to reconnect...")
+                console.log("WebSocket disconnected with code:", event.code, "and reason:", event.reason);
+                console.log("Trying to reconnect...");
                 setTimeout(() => {
                     reconnectInterval = Math.min(reconnectInterval * 2, maxReconnectInterval);
                     document.getElementById("ReconnectBar").classList.remove('reconnectBarHide');
