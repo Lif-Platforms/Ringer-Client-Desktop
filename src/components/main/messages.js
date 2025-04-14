@@ -8,8 +8,12 @@ import Clock from '../../assets/home/clock_icon.png';
 import GIPHY_LOGO from '../../assets/home/GIPHY_attrabution.png';
 import Spinner from '../../assets/global/loaders/loader-1.svg';
 import ReturnToRecent from "./go_to_recent";
+import ConversationHeader from "./conversation_header/component";
 
-export default function Messages({ friendsListState, setFriendsListState }) {
+export default function Messages({
+  friendsListState,
+  setFriendsListState,
+}) {
     const [messages, setMessages] = useState('loading');
     const [unfriendState, setUnfriendState] = useState('hide');
     const [showPopup, setShowPopup] = useState(false);
@@ -255,11 +259,10 @@ export default function Messages({ friendsListState, setFriendsListState }) {
     return (
       <div className="messages">
         {conversationName && (
-          <div className='conversationHeader'>
-            <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${conversationName}.png`} alt="Avatar" draggable="false" className='selectedConversationAvatar' />
-            <h1>{conversationName}</h1>  
-            <button className='unfriend-button' title="Unfriend" onClick={() => setUnfriendState(conversationName)}>&#10006;</button>
-          </div>
+          <ConversationHeader 
+            conversationName={conversationName} 
+            setUnfriendState={setUnfriendState}
+          />
         )}
         {messages === 'loading' ? (
           <div className="messages-loader">
