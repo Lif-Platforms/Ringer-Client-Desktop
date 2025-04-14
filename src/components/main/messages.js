@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import ProfilePopUp from "./profile_popup";
 import CheckLinkPopup from "./check_link_popup";
 import connectSocket from "../../Scripts/mainPage/notification_conn_handler";
 import UnfriendUser from "./unfriend_user";
@@ -16,8 +15,6 @@ export default function Messages({
 }) {
     const [messages, setMessages] = useState('loading');
     const [unfriendState, setUnfriendState] = useState('hide');
-    const [showPopup, setShowPopup] = useState(false);
-    const [popupUsername, setPopupUsername] = useState();
     const [checkLinkPopup, setCheckLinkPopup] = useState(false);
     const [conversationName, setConversationName] = useState();
     const [isLoadingAdditionalMessages, setIsLoadingAdditionalMessages] = useState(false);
@@ -160,14 +157,6 @@ export default function Messages({
       }
     }, [conversation_id]);
   
-    function handle_open_popup(username) {
-      // Set popup username
-      setPopupUsername(username);
-  
-      // Open popup
-      setShowPopup(true);
-    }
-  
     function handle_link_click(url) {
       setCheckLinkPopup(url);
     }
@@ -302,7 +291,7 @@ export default function Messages({
               ): null}
               {messages.map((message, index) => (
                 <div key={index} className='message'>
-                  <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${message.Author}.png`} alt='' onClick={() => handle_open_popup(message.Author)} />
+                  <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${message.Author}.png`} alt='' />
                   <div>
                     <div className="message-header">
                       <h1>{message.Author}</h1>
@@ -319,12 +308,6 @@ export default function Messages({
                   </div>
                 </div>
               ))}
-              <ProfilePopUp
-                showPopup={showPopup}
-                profileInfo={popupUsername}
-                setShowPopup={setShowPopup}
-                popupUsername={popupUsername}
-              />
               <CheckLinkPopup 
                 checkLinkPopup={checkLinkPopup}
                 setCheckLinkPopup={setCheckLinkPopup}

@@ -320,11 +320,6 @@
     -webkit-user-drag: none;
     user-select: none;
     object-fit: cover;
-    transition: 0.2s ease-in-out;
-}
-
-.message img:hover {
-    transform: scale(0.90);
 }
 
 .message-header {
