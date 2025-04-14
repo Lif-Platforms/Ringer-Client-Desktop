@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import ProfilePopUp from "./profile_popup";
 import CheckLinkPopup from "./check_link_popup";
 import connectSocket from "../../Scripts/mainPage/notification_conn_handler";
 import UnfriendUser from "./unfriend_user";
@@ -8,12 +7,14 @@ import Clock from '../../assets/home/clock_icon.png';
 import GIPHY_LOGO from '../../assets/home/GIPHY_attrabution.png';
 import Spinner from '../../assets/global/loaders/loader-1.svg';
 import ReturnToRecent from "./go_to_recent";
+import ConversationHeader from "./conversation_header/component";
 
-export default function Messages({ friendsListState, setFriendsListState }) {
+export default function Messages({
+  friendsListState,
+  setFriendsListState,
+}) {
     const [messages, setMessages] = useState('loading');
     const [unfriendState, setUnfriendState] = useState('hide');
-    const [showPopup, setShowPopup] = useState(false);
-    const [popupUsername, setPopupUsername] = useState();
     const [checkLinkPopup, setCheckLinkPopup] = useState(false);
     const [conversationName, setConversationName] = useState();
     const [isLoadingAdditionalMessages, setIsLoadingAdditionalMessages] = useState(false);
@@ -156,14 +157,6 @@ export default function Messages({ friendsListState, setFriendsListState }) {
       }
     }, [conversation_id]);
   
-    function handle_open_popup(username) {
-      // Set popup username
-      setPopupUsername(username);
-  
-      // Open popup
-      setShowPopup(true);
-    }
-  
     function handle_link_click(url) {
       setCheckLinkPopup(url);
     }
@@ -255,11 +248,10 @@ export default function Messages({ friendsListState, setFriendsListState }) {
     return (
       <div className="messages">
         {conversationName && (
-          <div className='conversationHeader'>
-            <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${conversationName}.png`} alt="Avatar" draggable="false" className='selectedConversationAvatar' />
-            <h1>{conversationName}</h1>  
-            <button className='unfriend-button' title="Unfriend" onClick={() => setUnfriendState(conversationName)}>&#10006;</button>
-          </div>
+          <ConversationHeader 
+            conversationName={conversationName} 
+            setUnfriendState={setUnfriendState}
+          />
         )}
         {messages === 'loading' ? (
           <div className="messages-loader">
@@ -299,7 +291,7 @@ export default function Messages({ friendsListState, setFriendsListState }) {
               ): null}
               {messages.map((message, index) => (
                 <div key={index} className='message'>
-                  <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${message.Author}.png`} alt='' onClick={() => handle_open_popup(message.Author)} />
+                  <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${message.Author}.png`} alt='' />
                   <div>
                     <div className="message-header">
                       <h1>{message.Author}</h1>
@@ -316,12 +308,6 @@ export default function Messages({ friendsListState, setFriendsListState }) {
                   </div>
                 </div>
               ))}
-              <ProfilePopUp
-                showPopup={showPopup}
-                profileInfo={popupUsername}
-                setShowPopup={setShowPopup}
-                popupUsername={popupUsername}
-              />
               <CheckLinkPopup 
                 checkLinkPopup={checkLinkPopup}
                 setCheckLinkPopup={setCheckLinkPopup}

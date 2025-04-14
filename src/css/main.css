@@ -1,6 +1,5 @@
 .appContainer {
-    display: grid;
-    grid-template-columns: 50px 230px auto;
+    display: grid; /* Template columns are set in Pages/main.js based on the info sidebar state */
     gap: 20px;
     height: 100vh;
     overflow: auto;
@@ -321,11 +320,6 @@
     -webkit-user-drag: none;
     user-select: none;
     object-fit: cover;
-    transition: 0.2s ease-in-out;
-}
-
-.message img:hover {
-    transform: scale(0.90);
 }
 
 .message-header {
@@ -878,31 +872,6 @@
     text-align: left;
 }
 
-.conversationHeader {
-    display: flex;
-    align-items: center;
-    padding: 10px 20px; /* Adjust padding for spacing */
-    user-select: none;
-    background-color: #282828;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.conversationHeader img {
-    width: 50px;
-    height: 50px; /* Adjust height if needed */
-    border-radius: 2em;
-    margin-right: 10px; /* Add margin between image and h1 */
-    object-fit: cover;
-}
-
-.conversationHeader h1 {
-    color: white;
-    font-size: large;
-    margin: 0; /* Remove default margin for h1 */
-    padding-left: 10px;
-}
-
 .error_image {
     width: 50px;
     padding-top: 20px;
@@ -973,21 +942,6 @@ animation: lds-ellipsis3 0.6s infinite;
         transform: translateY(0px);
         opacity: 1;
     }
-}
-
-.unfriend-button {
-    background-color: transparent;
-    border: none;
-    color: red;
-    font-weight: bold;
-    font-size: large;
-    margin-left: 20px;
-    transition: 0.2s ease-in-out;
-}
-
-.unfriend-button:hover {
-    background-color: #636262;
-    border-radius: 2em;
 }
 
 .unfriend-button:active {
