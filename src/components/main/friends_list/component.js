@@ -1,7 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
-import Error_Image from '../../assets/global/Error.png';
-import Friend from "./friend";
+import Error_Image from '../../../assets/global/Error.png';
+import Friend from "../friend";
+import styles from './styles.module.css';
 
 export default function FriendsList({
     friendsListState,
@@ -171,7 +172,7 @@ export default function FriendsList({
   
     if (friendsListState === "loading") {
       return(
-        <div className='friends_list'>
+        <div className={styles.friends_list}>
           <div className="loader">
             <div className="avatar" />
             <div className="username" />
@@ -188,22 +189,22 @@ export default function FriendsList({
       )
     } else if (friendsListState === "Error"){
       return(
-        <div className='friends_list'>
+        <div className={styles.friends_list}>
           <img src={Error_Image} alt='Error' className='error_image' />
           <p>Something Went Wrong!</p>
         </div>
       )
     } else if (Array.isArray(friendsListState)) {
       return(
-          <div className='friends_list'>
+          <div className={styles.friends_list}>
             {friendsListState.map(item => (
                 <Friend
-                username={item.Username}
-                id={item.Id}
-                online={item.Online}
-                last_message={item.Last_Message}
-                selected_conversation={conversation_id}
-              />
+                  username={item.Username}
+                  id={item.Id}
+                  online={item.Online}
+                  last_message={item.Last_Message}
+                  selected_conversation={conversation_id}
+                />
             ))}
           </div> 
       );

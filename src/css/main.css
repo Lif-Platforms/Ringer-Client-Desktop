@@ -1,9 +1,7 @@
 .appContainer {
     display: grid; /* Template columns are set in Pages/main.js based on the info sidebar state */
     gap: 20px;
-    height: 100vh;
-    overflow: auto;
-    grid-template-rows: 1fr;
+    height: 100%;
     background-color: #160900;
     padding: 20px;
     box-sizing: border-box;
@@ -28,11 +26,14 @@
 
 .sideBar {
     width: 100%;
-    height: 100%;
+    flex: 1;
     background-color: #181818;
     border-radius: 14px;
     color: white;
     user-select: none;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
 }
 
@@ -41,7 +42,6 @@
     text-align: left;
     font-size: x-small;
     user-select: none;
-    display: block;
     display: flex;
     justify-content: space-between;
 }
@@ -733,60 +733,6 @@
     font-weight: bold;
 }
 
-.friends_list {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow-y: auto;
-    box-sizing: border-box;
-    padding: 10px;
-}
-
-@keyframes friends_list_loader {
-    0% {
-        background-color: #292929;
-    }
-    50% {
-        background-color: #545454;
-    }
-    100% {
-        background-color: #292929;
-    }
-}
-
-.friends_list .loader {
-    background-color: #292929;
-    border-radius: 22px;
-    height: 50px;
-    width: 100%;
-    display: block;
-    display: flex;
-    justify-content: flex-start;
-    gap: 10px;
-    margin-bottom: 20px;
-    animation: friends_list_loader 2s ease-in-out;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-}
-
-.friends_list .loader .avatar {
-    width: 30px;
-    height: 30px;
-    background-color: #181818;
-    display: block;
-    border-radius: 50%;
-    margin: auto;
-}
-
-.friends_list .loader .username {
-    width: 120px;
-    height: 20px;
-    border-radius: 1em;
-    background-color: #181818;
-    display: block;
-    margin: auto;
-}
-
 .friends {
     width: 100%;
     display: flex;
@@ -795,7 +741,6 @@
     transition: 0.3s;
     background-color: #292929;
     box-sizing: border-box;
-    margin-bottom: 10px;
 }
 
 .friends:active {

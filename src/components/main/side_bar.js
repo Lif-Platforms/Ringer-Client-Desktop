@@ -1,4 +1,4 @@
-import FriendsList from "./friends_list";
+import FriendsList from "./friends_list/component.js";
 import Add_Icon from '../../assets/home/add_icon.png';
 import { useState } from "react";
 import AddNewConversationMenu from "./add_new_conversation_menu";
