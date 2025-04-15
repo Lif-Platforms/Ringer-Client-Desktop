@@ -1,4 +1,4 @@
-.friends_list {
+.friendsList {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -9,23 +9,25 @@
     height: auto;
 }
 
-.friends_list::-webkit-scrollbar-track {
+.friendsList::-webkit-scrollbar-track {
     margin-bottom: 15px;
 }
 
-@keyframes friends_list_loader {
+@keyframes friendsListLoader {
     0% {
         background-color: #292929;
     }
+
     50% {
         background-color: #545454;
     }
+
     100% {
         background-color: #292929;
     }
 }
 
-.friends_list .loader {
+.friendsList .loader {
     background-color: #292929;
     border-radius: 22px;
     height: 50px;
@@ -35,12 +37,12 @@
     justify-content: flex-start;
     gap: 10px;
     margin-bottom: 20px;
-    animation: friends_list_loader 2s ease-in-out;
+    animation: friendsListLoader 2s ease-in-out;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
 }
 
-.friends_list .loader .avatar {
+.friendsList .loader .avatar {
     width: 30px;
     height: 30px;
     background-color: #181818;
@@ -49,7 +51,7 @@
     margin: auto;
 }
 
-.friends_list .loader .username {
+.friendsList .loader .username {
     width: 120px;
     height: 20px;
     border-radius: 1em;
