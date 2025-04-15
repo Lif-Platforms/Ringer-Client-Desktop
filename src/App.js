@@ -7,7 +7,6 @@ import { InfoSidebarProvider } from "./providers/info_sidebar";
 
 function App() {
   return (
-    <div style={{width: '100%'}}>
       <InfoSidebarProvider>
         <Routes>
           <Route path="/" element={<SplashScreen />} />
@@ -15,7 +14,6 @@ function App() {
           <Route path="/direct_messages/:conversation_id?" element={<MainPage />} />
         </Routes>
       </InfoSidebarProvider>
-    </div>
   );
 }
 
