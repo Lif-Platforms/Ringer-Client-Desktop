@@ -4,8 +4,20 @@
     background-color: #181818;
     border-radius: 14px;
     color: white;
-    overflow: auto;
+    overflow-y: auto;
     position: relative;
+    overflow-x: hidden;
+}
+
+.username {
+    text-overflow: ellipsis;
+    max-width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 0px 10px;
+    cursor: default;
 }
 
 .banner_container {

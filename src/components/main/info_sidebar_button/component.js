@@ -4,7 +4,7 @@ import { InfoSidebarContext } from 'src/providers/info_sidebar';
 
 export default function InfoSidebarButton({ username }) {
     // Access info sidebar context
-    const { open_sidebar, close_sidebar, infoSidebarOpen } = useContext(InfoSidebarContext);
+    const { open_sidebar, close_sidebar, infoSidebarOpen, shouldReopen } = useContext(InfoSidebarContext);
 
     // State to track the button's active status
     const [isActive, setIsActive] = useState(false);
@@ -32,13 +32,21 @@ export default function InfoSidebarButton({ username }) {
     useEffect(() => {
         if (windowSize >= 1100) {
             setIsActive(true);
+
+            // Check if the sidebar should be reopen automatically
+            if (shouldReopen) {
+                open_sidebar(username);
+            }
         } else {
             setIsActive(false);
 
             // Close the sidebar if the window is resized to a smaller size
-            close_sidebar();
+            // but tell it to reopen when the window is resized again
+            if (infoSidebarOpen) {
+                close_sidebar(true);
+            }
         }
-    }, [windowSize]);
+    }, [windowSize, shouldReopen]);
 
     function toggle_sidebar() {
         if (infoSidebarOpen) {

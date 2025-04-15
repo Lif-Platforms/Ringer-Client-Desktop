@@ -95,7 +95,7 @@ export default function InfoSideBar() {
             <div className={styles.avatar_container}>
                 <img className={styles.avatar} src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${infoSidebarUsername}.png`} alt="Avatar" draggable="false" />
             </div>
-            <h1>{infoSidebarUsername}</h1>
+            <h1 className={styles.username} title={infoSidebarUsername}>{infoSidebarUsername}</h1>
             <div className={styles.info}>
                 <h2>Pronouns</h2>
                 <p style={userPronouns === "No pronouns set" ? {opacity: 0.5} : null}>{userPronouns}</p>
