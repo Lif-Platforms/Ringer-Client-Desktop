@@ -53,7 +53,8 @@
       "output": "dist"
     },
     "asarUnpack": [
-      "main.js"
+      "main.js",
+      "build/sounds/*.mp3"
     ],
     "files": [
       "build/**/*",

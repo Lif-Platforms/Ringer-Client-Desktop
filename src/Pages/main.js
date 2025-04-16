@@ -257,9 +257,11 @@ function MainPage() {
   // Listen for 'open-conversation' event from main process
   useEffect(() => {
     ipcRenderer.on('open-conversation', (data) => {
+      console.debug('shits happening')
       navigate(`/direct_messages/${data.conversation_id}`);
     });
-  }, [navigate]);
+  }, []);
+  
 
   return (
     <div className="appContainer" style={{ gridTemplateColumns: gridTemplateColumns}}>
