@@ -3,7 +3,8 @@ const {app, BrowserWindow, shell, ipcMain} = require('electron');
 const path = require('path');
 const { autoUpdater } = require('electron-updater');
 require('dotenv').config();
-const { Notification } = require('electron')
+const { Notification } = require('electron');
+const sound = require("sound-play");
 
 autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
@@ -53,13 +54,34 @@ function createWindow () {
     shell.openExternal(url);
   })
 
-  ipcMain.on('send-notification', (event, title, description) => {
-    console.log('sending notification');
-    const myNotification = new Notification({ 
-        title: title, 
-        body: description 
+  ipcMain.on('send-notification', (event, title, description, conversation_id) => {
+    // Create a new notification
+    const notification = new Notification({ 
+      title: title,
+      subtitle: 'Ringer',
+      body: description, 
+      icon: path.join(__dirname, 'public/favicon.ico'),
+      silent: true,
+      onClick: () => {
+        console.log('Notification clicked');
+      }
     });
-    myNotification.show();
+
+    // If a conversation ID is provided, add a click event to open the conversation
+    if (conversation_id) {
+      notification.on('click', () => {
+        mainWindow.show();
+        mainWindow.focus();
+        mainWindow.webContents.send('open-conversation', { conversation_id });
+        notification.close();
+      });
+    }
+
+    // Show the notification
+    notification.show();
+
+    // Play sound when notification is shown
+    sound.play(path.join(__dirname, 'public/sounds/notification_1.mp3'));
   })
 
   // Remove the menu bar from the main window
@@ -98,6 +120,11 @@ app.whenReady().then( async() => {
   createWindow();
 
   autoUpdater.checkForUpdates();
+
+  // Set the app name for windows
+  if (process.platform === 'win32') {
+    app.setAppUserModelId(app.name);
+  }
   
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
