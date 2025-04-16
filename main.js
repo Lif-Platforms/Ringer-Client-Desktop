@@ -55,16 +55,15 @@ function createWindow () {
   })
 
   ipcMain.on('send-notification', (event, title, description, conversation_id) => {
+    // Get icon path
+    const iconDir = isDev ? 'public' : 'build';
+
     // Create a new notification
     const notification = new Notification({ 
       title: title,
-      subtitle: 'Ringer',
       body: description, 
-      icon: path.join(__dirname, 'public/favicon.ico'),
+      icon: path.join(iconDir, 'favicon.ico'),
       silent: true,
-      onClick: () => {
-        console.log('Notification clicked');
-      }
     });
 
     // If a conversation ID is provided, add a click event to open the conversation
@@ -81,7 +80,8 @@ function createWindow () {
     notification.show();
 
     // Play sound when notification is shown
-    sound.play(path.join(__dirname, 'public/sounds/notification_1.mp3'));
+    const sound_path = isDev ? path.join(__dirname, 'public/sounds/notification_1.mp3') : path.join(__dirname, 'build/sounds/notification_1.mp3');
+    sound.play(sound_path);
   })
 
   // Remove the menu bar from the main window
