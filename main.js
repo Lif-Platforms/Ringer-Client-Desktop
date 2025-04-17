@@ -3,7 +3,6 @@ const {app, BrowserWindow, shell, ipcMain} = require('electron');
 const path = require('path');
 const { autoUpdater } = require('electron-updater');
 require('dotenv').config();
-const { Notification } = require('electron')
 
 autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
@@ -16,14 +15,17 @@ const isDev = require('electron-is-dev');
 
 let mainWindow;
 
-function createWindow () {
-  // Dynamically set the window width
-  const window_width = isDev ? 1500 : 1000;
+async function createWindow () {
+  const { default: Store } = await import('electron-store'); // Dynamically import electron-store
+  const store = new Store();
+
+  // Get window information
+  const windowState = store.get('windowState', { width: 1000, height: 600, isMaximized: false });
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: window_width,
-    height: 600,
+    width: windowState.width,
+    height: windowState.height,
     minWidth:900,
     minHeight: 600,
     frame: true,
@@ -37,7 +39,12 @@ function createWindow () {
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
     }
-  })
+  });
+
+  // If window should be maximized, maximize it.
+  if (windowState.isMaximized) {
+    mainWindow.maximize();
+  }
 
   // Open dev tools based on environment
   if (isDev) {
@@ -85,6 +92,14 @@ function createWindow () {
   // Sets the icon for the app
   mainWindow.setIcon(path.join(__dirname, iconPath));
 
+  mainWindow.on('resized', () => {
+    const bounds = mainWindow.getBounds();
+    store.set('windowState', {
+      width: bounds.width,
+      height: bounds.height,
+      isMaximized: mainWindow.isMaximized()
+    });
+  });
 }
 
 autoUpdater.on('update-downloaded', (release) => {
