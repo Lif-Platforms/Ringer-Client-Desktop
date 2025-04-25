@@ -1,22 +1,23 @@
 import FriendsList from "./friends_list";
 import Add_Icon from '../../assets/home/add_icon.png';
-import { useState } from "react";
-import AddNewConversationMenu from "./add_new_conversation_menu";
+import { PopupContext } from "src/providers/popup";
+import { useContext } from "react";
+import AddUserSearch from "./add_user_search/component";
 
 export default function SideBar({ friendsListState, setFriendsListState }) {
-    const [showPopup, setShowPopup] = useState(false);
+    const { showPopup } = useContext(PopupContext);
   
     return (
       <div className="sideBar">
         <div className="sidebarHeader">
           <h1>Direct Messages</h1>
-          <button onClick={() => setShowPopup(true)} className='addFriendButton'>
+          <button onClick={() => showPopup(
+            "Add Friend",
+            "center",
+            <AddUserSearch />
+          )} className='addFriendButton'>
             <img src={Add_Icon} />
           </button>
-          <AddNewConversationMenu 
-            showPopup={showPopup}
-            setShowPopup={setShowPopup}
-          />
         </div>
         <FriendsList 
           friendsListState={friendsListState} 
