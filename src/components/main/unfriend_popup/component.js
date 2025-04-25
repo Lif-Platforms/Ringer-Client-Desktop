@@ -1,11 +1,15 @@
 import styles from './styles.module.css';
 import { useParams, useNavigate } from "react-router-dom";
+import { useState, useContext } from 'react';
+import { PopupContext } from 'src/providers/popup';
 
 export default function UnfriendPopup({ username }) {
     const [unfriendState, setUnfriendState] = useState('default');
 
     const { conversation_id } = useParams();
     const navigate = useNavigate();
+
+    const { closePopup } = useContext(PopupContext);
 
     async function handle_unfriend() {
         // Set popup state
@@ -24,24 +28,9 @@ export default function UnfriendPopup({ username }) {
         })
           .then(response => {
             if (response.ok) {
-              // Make clone of friends list
-              let friends_list = [...friendsListState];
-    
-              // Keep track of array index
-              let index = 0;
-    
-              // Remove conversation from friends list
-              friends_list.forEach((conversation) => {
-                if (conversation.Id === conversation_id) {
-                  friends_list.splice(index, 1);
-    
-                } else {
-                  index += 1;
-                }
-              });
-    
-              // Update friends list
-              setFriendsListState(friends_list);
+              // Send send an event to remove the conversation from the list
+              const event = new CustomEvent('remove_conversation', { detail: conversation_id }); // TODO: add an event listener in the friends list for this
+              window.dispatchEvent(event);
     
               // Set elected conversation
               navigate('/direct_messages');
@@ -62,7 +51,7 @@ export default function UnfriendPopup({ username }) {
             <p>Are your sure you want to unfriend <b>{username}</b>? You will no longer be able to send or receive messages from this person.</p>
             <div className={styles.buttonContainer}>
                 <button style={{backgroundColor: "red"}} onClick={() => console.log('Unfriend')}>Yes, Do it!</button>
-                <button onClick={() => console.log('Cancel')}>No, Don't!</button>
+                <button onClick={closePopup}>No, Don't!</button>
             </div>
         </div>
     )

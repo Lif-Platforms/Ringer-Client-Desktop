@@ -66,12 +66,12 @@ export default function FriendSearchResult({ username, disabled, setDisabled, se
     }, [isLoading, userAdded]);
 
     return (
-        <div className="friend">
-            <div className="info">
+        <div className={styles.result}>
+            <div className={styles.userInfo}>
                 <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/profile/get_avatar/${username}.png`} />
                 <h2>{username}</h2>
             </div>
-            <button onClick={handle_add} disabled={disabled} className="add-button">
+            <button onClick={handle_add} disabled={disabled} className={styles.addButton}>
                 <img src={buttonImageSrc} />
             </button>
         </div>
