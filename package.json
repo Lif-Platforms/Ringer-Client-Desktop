@@ -44,6 +44,7 @@
   },
   "build": {
     "appId": "com.lifplatforms.ringer",
+    "productName": "Ringer",
     "extends": null,
     "publish": "github",
     "directories": {
@@ -61,10 +62,13 @@
       "preload.js"
     ],
     "mac": {
-      "hardenedRuntime": true,
-      "gatekeeperAssess": true,
       "icon": "public/icons/mac/icon.icns",
-      "identity": null
+      "artifactName": "${productName}.${ext}",
+      "type": "distribution",
+      "hardenedRuntime": true,
+      "entitlements": "public/entitlements.mac.plist",
+      "entitlementsInherit": "public/entitlements.mac.plist",
+      "gatekeeperAssess": false
     },
     "win": {
       "target": "nsis",
