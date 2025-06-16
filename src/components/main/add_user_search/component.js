@@ -62,6 +62,7 @@ export default function AddUserSearch() {
                     <p className={styles.noResults}>No results found</p>
                 )}
             </div>
+            <p className={styles.errorText}>{errorText}</p>
         </div>
     )
 }

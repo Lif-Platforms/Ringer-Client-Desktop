@@ -2,9 +2,11 @@ import styles from './styles.module.css';
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useContext } from 'react';
 import { PopupContext } from 'src/providers/popup';
+import Loader from '../../../assets/global/loaders/loader-2.svg';
 
 export default function UnfriendPopup({ username }) {
     const [unfriendState, setUnfriendState] = useState('default');
+    const [isLoading, setIsLoading] = useState(false);
 
     const { conversation_id } = useParams();
     const navigate = useNavigate();
@@ -14,6 +16,7 @@ export default function UnfriendPopup({ username }) {
     async function handle_unfriend() {
         // Set popup state
         setUnfriendState('loading');
+        setIsLoading(true)
     
         // Get client auth info
         const username = localStorage.getItem('username');
@@ -29,13 +32,15 @@ export default function UnfriendPopup({ username }) {
           .then(response => {
             if (response.ok) {
               // Send send an event to remove the conversation from the list
-              const event = new CustomEvent('remove_conversation', { detail: conversation_id }); // TODO: add an event listener in the friends list for this
-              window.dispatchEvent(event);
+              const event = new CustomEvent('Conversation_Removal', { detail: {
+                id: conversation_id
+              } });
+              document.dispatchEvent(event);
     
               // Set elected conversation
               navigate('/direct_messages');
     
-              setUnfriendState("completed");
+              closePopup();
             } else {
               throw new Error('Request failed with status code: ' + response.status);
             }
@@ -43,6 +48,7 @@ export default function UnfriendPopup({ username }) {
           .catch(error => {
             // Handle any errors
             console.error(error);
+            setIsLoading(false);
           });
     }
 
@@ -50,7 +56,11 @@ export default function UnfriendPopup({ username }) {
         <div className={styles.unfriendPopup}>
             <p>Are your sure you want to unfriend <b>{username}</b>? You will no longer be able to send or receive messages from this person.</p>
             <div className={styles.buttonContainer}>
-                <button style={{backgroundColor: "red"}} onClick={() => console.log('Unfriend')}>Yes, Do it!</button>
+                <button style={{backgroundColor: "red"}} onClick={handle_unfriend}>
+                  {isLoading ? (
+                    <img src={Loader} />
+                  ): ("Yes, Do It!")}
+                </button>
                 <button onClick={closePopup}>No, Don't!</button>
             </div>
         </div>
