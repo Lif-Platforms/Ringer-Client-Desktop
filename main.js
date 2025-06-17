@@ -20,7 +20,14 @@ async function createWindow () {
   const store = new Store();
 
   // Get window information
-  const windowState = store.get('windowState', { width: 1000, height: 600, isMaximized: false });
+  const windowState = store.get('windowState', { 
+    width: 1000,
+    height: 600,
+    isMaximized: false
+  });
+
+  // Store the current window size
+  let windowSize = { width: windowState.width, height: windowState.height };
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -93,10 +100,37 @@ async function createWindow () {
   mainWindow.setIcon(path.join(__dirname, iconPath));
 
   mainWindow.on('resized', () => {
+    // Get the size of the window
     const bounds = mainWindow.getBounds();
+    const windowWidth = bounds.width;
+    const windowHeight = bounds.height;
+
+    // Save window size in storage
     store.set('windowState', {
-      width: bounds.width,
-      height: bounds.height,
+      width: windowWidth,
+      height: windowHeight,
+      isMaximized: mainWindow.isMaximized()
+    });
+
+    // Update window size var
+    windowSize.width = windowWidth;
+    windowSize.height = windowHeight;
+  });
+
+  mainWindow.on('maximize', () => {
+    // Store window state in storage
+    store.set('windowState', {
+      width: windowSize.width,
+      height: windowSize.height,
+      isMaximized: mainWindow.isMaximized()
+    });
+  });
+
+  mainWindow.on('unmaximize', () => {
+    // Store window state in storage
+    store.set('windowState', {
+      width: windowSize.width,
+      height: windowSize.height,
       isMaximized: mainWindow.isMaximized()
     });
   });
