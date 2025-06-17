@@ -4,7 +4,6 @@ const path = require('path');
 const { autoUpdater } = require('electron-updater');
 require('dotenv').config();
 const { Notification } = require('electron');
-const sound = require("sound-play");
 
 autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
@@ -71,14 +70,14 @@ async function createWindow () {
 
   ipcMain.on('send-notification', (event, title, description, conversation_id) => {
     // Get icon path
-    const iconDir = isDev ? 'public' : 'build';
+    const iconDir = isDev ? 'public' : path.join(__dirname, 'build');
 
     // Create a new notification
     const notification = new Notification({ 
       title: title,
       body: description, 
       icon: path.join(iconDir, 'favicon.ico'),
-      silent: true,
+      silent: false,
     });
 
     // If a conversation ID is provided, add a click event to open the conversation
@@ -93,10 +92,6 @@ async function createWindow () {
 
     // Show the notification
     notification.show();
-
-    // Play sound when notification is shown
-    const sound_path = isDev ? path.join(__dirname, 'public/sounds/notification_1.mp3') : path.join(__dirname, 'build/sounds/notification_1.mp3');
-    sound.play(sound_path);
   })
 
   // Remove the menu bar from the main window
