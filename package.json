@@ -25,7 +25,7 @@
     "dotenv": "^16.3.1",
     "electron-log": "^5.1.1",
     "electron-notification": "^1.0.0",
-    "electron-store": "^8.1.0",
+    "electron-store": "^10.0.1",
     "electron-unhandled": "^4.0.1",
     "electron-updater": "^6.3.0",
     "fs": "^0.0.1-security",
@@ -36,7 +36,7 @@
     "react": "^18.2.0",
     "react-app-rewired": "^2.2.1",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.18.0",
+    "react-router-dom": "^7.5.2",
     "react-scripts": "5.0.1",
     "sound-play": "^1.1.0",
     "wait-on": "^7.2.0",
@@ -45,6 +45,7 @@
   },
   "build": {
     "appId": "com.lifplatforms.ringer",
+    "productName": "Ringer",
     "extends": null,
     "publish": "github",
     "directories": {
@@ -63,10 +64,13 @@
       "preload.js"
     ],
     "mac": {
-      "hardenedRuntime": true,
-      "gatekeeperAssess": true,
       "icon": "public/icons/mac/icon.icns",
-      "identity": null
+      "artifactName": "${productName}.${ext}",
+      "type": "distribution",
+      "hardenedRuntime": true,
+      "entitlements": "public/entitlements.mac.plist",
+      "entitlementsInherit": "public/entitlements.mac.plist",
+      "gatekeeperAssess": false
     },
     "win": {
       "target": "nsis",

@@ -4,7 +4,6 @@ const path = require('path');
 const { autoUpdater } = require('electron-updater');
 require('dotenv').config();
 const { Notification } = require('electron');
-const sound = require("sound-play");
 
 autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
@@ -17,14 +16,24 @@ const isDev = require('electron-is-dev');
 
 let mainWindow;
 
-function createWindow () {
-  // Dynamically set the window width
-  const window_width = isDev ? 1500 : 1000;
+async function createWindow () {
+  const { default: Store } = await import('electron-store'); // Dynamically import electron-store
+  const store = new Store();
+
+  // Get window information
+  const windowState = store.get('windowState', { 
+    width: 1000,
+    height: 600,
+    isMaximized: false
+  });
+
+  // Store the current window size
+  let windowSize = { width: windowState.width, height: windowState.height };
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: window_width,
-    height: 600,
+    width: windowState.width,
+    height: windowState.height,
     minWidth:900,
     minHeight: 600,
     frame: true,
@@ -38,7 +47,12 @@ function createWindow () {
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
     }
-  })
+  });
+
+  // If window should be maximized, maximize it.
+  if (windowState.isMaximized) {
+    mainWindow.maximize();
+  }
 
   // Open dev tools based on environment
   if (isDev) {
@@ -56,14 +70,14 @@ function createWindow () {
 
   ipcMain.on('send-notification', (event, title, description, conversation_id) => {
     // Get icon path
-    const iconDir = isDev ? 'public' : 'build';
+    const iconDir = isDev ? 'public' : path.join(__dirname, 'build');
 
     // Create a new notification
     const notification = new Notification({ 
       title: title,
       body: description, 
       icon: path.join(iconDir, 'favicon.ico'),
-      silent: true,
+      silent: false,
     });
 
     // If a conversation ID is provided, add a click event to open the conversation
@@ -78,10 +92,6 @@ function createWindow () {
 
     // Show the notification
     notification.show();
-
-    // Play sound when notification is shown
-    const sound_path = isDev ? path.join(__dirname, 'public/sounds/notification_1.mp3') : path.join(__dirname, 'build/sounds/notification_1.mp3');
-    sound.play(sound_path);
   })
 
   // Remove the menu bar from the main window
@@ -107,6 +117,41 @@ function createWindow () {
   // Sets the icon for the app
   mainWindow.setIcon(path.join(__dirname, iconPath));
 
+  mainWindow.on('resized', () => {
+    // Get the size of the window
+    const bounds = mainWindow.getBounds();
+    const windowWidth = bounds.width;
+    const windowHeight = bounds.height;
+
+    // Save window size in storage
+    store.set('windowState', {
+      width: windowWidth,
+      height: windowHeight,
+      isMaximized: mainWindow.isMaximized()
+    });
+
+    // Update window size var
+    windowSize.width = windowWidth;
+    windowSize.height = windowHeight;
+  });
+
+  mainWindow.on('maximize', () => {
+    // Store window state in storage
+    store.set('windowState', {
+      width: windowSize.width,
+      height: windowSize.height,
+      isMaximized: mainWindow.isMaximized()
+    });
+  });
+
+  mainWindow.on('unmaximize', () => {
+    // Store window state in storage
+    store.set('windowState', {
+      width: windowSize.width,
+      height: windowSize.height,
+      isMaximized: mainWindow.isMaximized()
+    });
+  });
 }
 
 autoUpdater.on('update-downloaded', (release) => {
