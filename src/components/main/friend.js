@@ -17,7 +17,7 @@ export default function Friend({ username, online, id, selected_conversation, la
     return (
         <div className="friends" ref={friendsRef} onClick={() => navigate(`/direct_messages/${id}`)}>
             <div style={{position: 'relative'}}>
-                <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${username}.png`} alt="Profile" />
+                <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/profile/v1/get_avatar/${username}.png`} alt="Profile" />
                 <div className={`user-online-status ${online ? 'online' : ''}`} />
             </div>
             <div className="username_section">

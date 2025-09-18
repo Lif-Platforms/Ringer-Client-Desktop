@@ -291,7 +291,7 @@ export default function Messages({
               ): null}
               {messages.map((message, index) => (
                 <div key={index} className='message'>
-                  <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${message.Author}.png`} alt='' />
+                  <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/profile/v1/get_avatar/${message.Author}.png`} alt='' />
                   <div>
                     <div className="message-header">
                       <h1>{message.Author}</h1>
