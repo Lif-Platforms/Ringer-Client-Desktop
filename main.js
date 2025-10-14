@@ -46,13 +46,17 @@ async function createWindow () {
       webSecurity: true,
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
-    }
+    },
+    show: false
   });
 
   // If window should be maximized, maximize it.
   if (windowState.isMaximized) {
     mainWindow.maximize();
   }
+
+  // Show the window after maximization
+  mainWindow.show();
 
   // Open dev tools based on environment
   if (isDev) {
