@@ -18,7 +18,7 @@ export default function ConversationHeader({
 
     return (
         <div className={styles.conversationHeader}>
-            <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${conversationName}.png`} alt="Avatar" draggable="false" />
+            <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/profile/v1/get_avatar/${conversationName}.png`} alt="Avatar" draggable="false" />
             <h1>{conversationName}</h1>
             <div className={styles.controls}>
                 <button title="Unfriend" onClick={() => setUnfriendState(conversationName)}>

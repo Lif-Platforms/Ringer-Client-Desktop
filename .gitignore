@@ -34,3 +34,6 @@ yarn-error.log*
 
 # Certs
 *.p12
+
+# Other files
+package-mac.sh
