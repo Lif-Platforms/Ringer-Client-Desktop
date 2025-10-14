@@ -9,6 +9,11 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
     const username = localStorage.getItem('username');
     const token = localStorage.getItem('token');
 
+    // Handle sending notifications to the main process
+    function handleNotification(title, body, conversation_id) {
+        window.electronAPI.sendNotification(title, body, conversation_id);
+    }
+
     const connect = () => {
         console.log("Connecting to service...");
         if (socket !== null) {
@@ -50,17 +55,15 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
                         }
                     });
                     document.dispatchEvent(message_update_event);
+                }
 
-                    // Get current logged in user
-                    const current_user = localStorage.getItem('username');
+                // Get current logged in user
+                const current_user = localStorage.getItem('username');
 
-                    // Only send notification if user is not the current logged in user and
-                    // only if the user is not active inside the window
-                    if (!document.hasFocus() && current_user !== server_data.Message.Author) {
-                        window.electronAPI.sendNotification(server_data.Message.Author, server_data.Message.Message);
-                    }
-                } else {
-                    console.log("Received message! Conversation Not Selected");
+                // Only send notification if user is not the current logged in user and
+                // only if the user is not active inside the window
+                if (!document.hasFocus() && current_user !== server_data.Message.Author) {
+                    handleNotification(server_data.Message.Author, server_data.Message.Message, server_data.Id);
                 }
             } else if (server_data.Type === "FRIEND_REQUEST_ACCEPT") {
                 // Create accept friend request event

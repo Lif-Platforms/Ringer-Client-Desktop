@@ -243,6 +243,8 @@ function MainPage() {
   // Create instance of info sidebar provider
   const { gridTemplateColumns } = useContext(InfoSidebarContext);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     async function getToken() {
       const token = localStorage.getItem('token');
@@ -251,6 +253,15 @@ function MainPage() {
 
     getToken();
   }, []);
+
+  // Listen for 'open-conversation' event from main process
+  useEffect(() => {
+    ipcRenderer.on('open-conversation', (data) => {
+      console.debug('shits happening')
+      navigate(`/direct_messages/${data.conversation_id}`);
+    });
+  }, []);
+  
 
   return (
     <div className="appContainer" style={{ gridTemplateColumns: gridTemplateColumns}}>

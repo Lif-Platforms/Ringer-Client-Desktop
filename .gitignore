@@ -29,7 +29,10 @@ yarn-error.log*
 # Log files
 *.log
 
-# Cert files
+# Shell scripts
+*.sh
+
+# Certs
 *.p12
 
 # Other files
