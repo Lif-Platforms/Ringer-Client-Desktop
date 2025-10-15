@@ -27,7 +27,14 @@ export const PopupProvider = ({ children }) => {
     };
 
     return (
-        <PopupContext.Provider value={{ popupOpen, showPopup, closePopup, title, titleAlignment, body }}>
+        <PopupContext.Provider value={{
+            popupOpen,
+            showPopup,
+            closePopup,
+            title,
+            titleAlignment,
+            body
+        }}>
             {children}
         </PopupContext.Provider>
     )
