@@ -12,6 +12,9 @@ import Clock from '../assets/home/clock_icon.png';
 import Clock_Active from '../assets/home/clock_icon_active.png';
 import MessageDestructSelector from 'src/components/main/message_destruct_selector';
 import { InfoSidebarContext } from 'src/providers/info_sidebar';
+import PopupRenderer from 'src/components/main/popup_renderer/component';
+import { PopupProvider } from 'src/providers/popup';
+
 // Import Modules
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
@@ -264,25 +267,28 @@ function MainPage() {
   
 
   return (
-    <div className="appContainer" style={{ gridTemplateColumns: gridTemplateColumns}}>
-      <ReconnectingBar /> 
-      <SideOptionsBar />
-      <SideBar 
-        friendsListState={friendsListState}
-        setFriendsListState={setFriendsListState}
-        friends={friends}
-        setFriends={setFriends}
-      />
-      <div className="messagesContainer">
-        <Messages 
+    <PopupProvider>
+      <div className="appContainer" style={{ gridTemplateColumns: gridTemplateColumns}}>
+        <ReconnectingBar /> 
+        <SideOptionsBar />
+        <SideBar 
           friendsListState={friendsListState}
           setFriendsListState={setFriendsListState}
+          friends={friends}
+          setFriends={setFriends}
         />
-        <MessageSender />
+        <div className="messagesContainer">
+          <Messages 
+            friendsListState={friendsListState}
+            setFriendsListState={setFriendsListState}
+          />
+          <MessageSender />
+        </div>
+        <InfoSideBar />
+        <UpdateDownloaded />
       </div>
-      <InfoSideBar />
-      <UpdateDownloaded />
-    </div>
+      <PopupRenderer />
+    </PopupProvider>
   );
 }
 

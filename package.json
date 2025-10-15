@@ -30,6 +30,7 @@
     "electron-updater": "^6.3.0",
     "fs": "^0.0.1-security",
     "js-cookie": "^3.0.5",
+    "motion": "^12.23.24",
     "net": "^1.0.2",
     "path": "^0.12.7",
     "path-browserify": "^1.0.1",
