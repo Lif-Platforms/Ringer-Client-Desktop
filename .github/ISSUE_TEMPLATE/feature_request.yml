@@ -1,0 +1,12 @@
+name: Feature Request
+description: Request an idea for this project.
+type: "feature"
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe your idea for this project.
+      placeholder: Describe your issue.
+    validations:
+      required: true

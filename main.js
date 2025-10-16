@@ -3,7 +3,7 @@ const {app, BrowserWindow, shell, ipcMain} = require('electron');
 const path = require('path');
 const { autoUpdater } = require('electron-updater');
 require('dotenv').config();
-const { Notification } = require('electron')
+const { Notification } = require('electron');
 
 autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
@@ -16,14 +16,24 @@ const isDev = require('electron-is-dev');
 
 let mainWindow;
 
-function createWindow () {
-  // Dynamically set the window width
-  const window_width = isDev ? 1500 : 1000;
+async function createWindow () {
+  const { default: Store } = await import('electron-store'); // Dynamically import electron-store
+  const store = new Store();
+
+  // Get window information
+  const windowState = store.get('windowState', { 
+    width: 1000,
+    height: 600,
+    isMaximized: false
+  });
+
+  // Store the current window size
+  let windowSize = { width: windowState.width, height: windowState.height };
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: window_width,
-    height: 600,
+    width: windowState.width,
+    height: windowState.height,
     minWidth:900,
     minHeight: 600,
     frame: true,
@@ -36,8 +46,17 @@ function createWindow () {
       webSecurity: true,
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
-    }
-  })
+    },
+    show: false
+  });
+
+  // If window should be maximized, maximize it.
+  if (windowState.isMaximized) {
+    mainWindow.maximize();
+  }
+
+  // Show the window after maximization
+  mainWindow.show();
 
   // Open dev tools based on environment
   if (isDev) {
@@ -53,13 +72,30 @@ function createWindow () {
     shell.openExternal(url);
   })
 
-  ipcMain.on('send-notification', (event, title, description) => {
-    console.log('sending notification');
-    const myNotification = new Notification({ 
-        title: title, 
-        body: description 
+  ipcMain.on('send-notification', (event, title, description, conversation_id) => {
+    // Get icon path
+    const iconDir = isDev ? 'public' : path.join(__dirname, 'build');
+
+    // Create a new notification
+    const notification = new Notification({ 
+      title: title,
+      body: description, 
+      icon: path.join(iconDir, 'favicon.ico'),
+      silent: false,
     });
-    myNotification.show();
+
+    // If a conversation ID is provided, add a click event to open the conversation
+    if (conversation_id) {
+      notification.on('click', () => {
+        mainWindow.show();
+        mainWindow.focus();
+        mainWindow.webContents.send('open-conversation', { conversation_id });
+        notification.close();
+      });
+    }
+
+    // Show the notification
+    notification.show();
   })
 
   // Remove the menu bar from the main window
@@ -85,6 +121,41 @@ function createWindow () {
   // Sets the icon for the app
   mainWindow.setIcon(path.join(__dirname, iconPath));
 
+  mainWindow.on('resized', () => {
+    // Get the size of the window
+    const bounds = mainWindow.getBounds();
+    const windowWidth = bounds.width;
+    const windowHeight = bounds.height;
+
+    // Save window size in storage
+    store.set('windowState', {
+      width: windowWidth,
+      height: windowHeight,
+      isMaximized: mainWindow.isMaximized()
+    });
+
+    // Update window size var
+    windowSize.width = windowWidth;
+    windowSize.height = windowHeight;
+  });
+
+  mainWindow.on('maximize', () => {
+    // Store window state in storage
+    store.set('windowState', {
+      width: windowSize.width,
+      height: windowSize.height,
+      isMaximized: mainWindow.isMaximized()
+    });
+  });
+
+  mainWindow.on('unmaximize', () => {
+    // Store window state in storage
+    store.set('windowState', {
+      width: windowSize.width,
+      height: windowSize.height,
+      isMaximized: mainWindow.isMaximized()
+    });
+  });
 }
 
 autoUpdater.on('update-downloaded', (release) => {
@@ -98,6 +169,11 @@ app.whenReady().then( async() => {
   createWindow();
 
   autoUpdater.checkForUpdates();
+
+  // Set the app name for windows
+  if (process.platform === 'win32') {
+    app.setAppUserModelId(app.name);
+  }
   
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

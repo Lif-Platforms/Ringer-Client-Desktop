@@ -3,8 +3,6 @@ import '../App.css';
 import '../css/main.css';
 import '../css/Animations/checkmark.css';
 import connectSocket from "../Scripts/mainPage/notification_conn_handler";
-import MoreIcon from "../assets/home/More-Icon.png";
-import { log_out } from '../Scripts/utils/user-log-out';
 import SideOptionsBar from 'src/components/main/side_options_menu';
 import SideBar from 'src/components/main/side_bar';
 import Messages from 'src/components/main/messages';
@@ -13,10 +11,15 @@ import TypingIndicator from 'src/components/main/typing_indicator';
 import Clock from '../assets/home/clock_icon.png';
 import Clock_Active from '../assets/home/clock_icon_active.png';
 import MessageDestructSelector from 'src/components/main/message_destruct_selector';
+import { InfoSidebarContext } from 'src/providers/info_sidebar';
+import PopupRenderer from 'src/components/main/popup_renderer/component';
+import { PopupProvider } from 'src/providers/popup';
+
 // Import Modules
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import GifSelector from 'src/components/main/gif_selector';
+import InfoSideBar from 'src/components/main/info_sidebar/component';
 const ipcRenderer = window.electron.ipcRenderer;
 
 // Component for showing if the client is reconnecting
@@ -46,32 +49,6 @@ function UpdateDownloaded() {
         <p>Ringer version {showUpdatePanel} has been downloaded and will be installed upon next restart.</p>
         <button onClick={() => setShowUpdatePanel(null)}>Maybe Later</button>
         <button onClick={() => window.electronAPI.restartApp()} style={{backgroundColor: "orange"}}>Restart Now</button>
-      </div>
-    )
-  }
-}
-
-function UserOptionMenu({ optionMenuState, setOptionMenuState }) {
-
-  const navigate = useNavigate();
-
-  async function handle_log_out() {
-    const status = await log_out();
-
-    if (status === "OK") {
-      navigate("/login");
-    }
-  }
-
-  if (optionMenuState === "open") {
-    return(
-      <div className='user-option-menu'>
-        <h1>Options</h1>
-        <hr />
-        <div className='options'>
-          <button onClick={handle_log_out}>Log Out</button>
-          <button onClick={() => setOptionMenuState('closed')}>Close</button>     
-        </div>
       </div>
     )
   }
@@ -266,6 +243,11 @@ function MainPage() {
   const [friends, setFriends] = useState({});
   const [friendsListState, setFriendsListState] = useState('loading');
 
+  // Create instance of info sidebar provider
+  const { gridTemplateColumns } = useContext(InfoSidebarContext);
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     async function getToken() {
       const token = localStorage.getItem('token');
@@ -275,25 +257,38 @@ function MainPage() {
     getToken();
   }, []);
 
+  // Listen for 'open-conversation' event from main process
+  useEffect(() => {
+    ipcRenderer.on('open-conversation', (data) => {
+      console.debug('shits happening')
+      navigate(`/direct_messages/${data.conversation_id}`);
+    });
+  }, []);
+  
+
   return (
-    <div className="appContainer">
-      <ReconnectingBar /> 
-      <SideOptionsBar />
-      <SideBar 
-        friendsListState={friendsListState}
-        setFriendsListState={setFriendsListState}
-        friends={friends}
-        setFriends={setFriends}
-      />
-      <div className="messagesContainer">
-        <Messages 
+    <PopupProvider>
+      <div className="appContainer" style={{ gridTemplateColumns: gridTemplateColumns}}>
+        <ReconnectingBar /> 
+        <SideOptionsBar />
+        <SideBar 
           friendsListState={friendsListState}
           setFriendsListState={setFriendsListState}
+          friends={friends}
+          setFriends={setFriends}
         />
-        <MessageSender />
+        <div className="messagesContainer">
+          <Messages 
+            friendsListState={friendsListState}
+            setFriendsListState={setFriendsListState}
+          />
+          <MessageSender />
+        </div>
+        <InfoSideBar />
+        <UpdateDownloaded />
       </div>
-      <UpdateDownloaded />
-    </div>
+      <PopupRenderer />
+    </PopupProvider>
   );
 }
 

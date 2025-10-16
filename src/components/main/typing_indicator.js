@@ -23,11 +23,11 @@ export default function TypingIndicator() {
         document.removeEventListener("User_Typing_Update", handle_typing_update);
       }
   
-    }, [])
+    }, [conversation_id])
   
     return (
       <div className={isTyping ? 'typing-indicator-open' : 'typing-indicator-closed'}>
-        <p>{userTyping} is typing...</p>
+        <p style={{textAlign: "left"}}>{userTyping} is typing...</p>
       </div>
     )
   }

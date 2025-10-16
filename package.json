@@ -1,7 +1,7 @@
 {
   "name": "ringer",
   "productName": "Ringer",
-  "version": "5.1.0",
+  "version": "5.2.1",
   "private": true,
   "main": "main.js",
   "author": {
@@ -25,25 +25,28 @@
     "dotenv": "^16.3.1",
     "electron-log": "^5.1.1",
     "electron-notification": "^1.0.0",
-    "electron-store": "^8.1.0",
+    "electron-store": "^10.0.1",
     "electron-unhandled": "^4.0.1",
     "electron-updater": "^6.3.0",
     "fs": "^0.0.1-security",
     "js-cookie": "^3.0.5",
+    "motion": "^12.23.24",
     "net": "^1.0.2",
     "path": "^0.12.7",
     "path-browserify": "^1.0.1",
     "react": "^18.2.0",
     "react-app-rewired": "^2.2.1",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.18.0",
+    "react-router-dom": "^7.5.2",
     "react-scripts": "5.0.1",
+    "sound-play": "^1.1.0",
     "wait-on": "^7.2.0",
     "web-vitals": "^2.1.4",
     "yarn": "^1.22.19"
   },
   "build": {
     "appId": "com.lifplatforms.ringer",
+    "productName": "Ringer",
     "extends": null,
     "publish": "github",
     "directories": {
@@ -51,7 +54,8 @@
       "output": "dist"
     },
     "asarUnpack": [
-      "main.js"
+      "main.js",
+      "build/sounds/*.mp3"
     ],
     "files": [
       "build/**/*",
@@ -61,10 +65,13 @@
       "preload.js"
     ],
     "mac": {
-      "hardenedRuntime": true,
-      "gatekeeperAssess": true,
       "icon": "public/icons/mac/icon.icns",
-      "identity": null
+      "artifactName": "${productName}.${ext}",
+      "type": "distribution",
+      "hardenedRuntime": true,
+      "entitlements": "public/entitlements.mac.plist",
+      "entitlementsInherit": "public/entitlements.mac.plist",
+      "gatekeeperAssess": false
     },
     "win": {
       "target": "nsis",
@@ -108,7 +115,7 @@
     "@electron-forge/maker-squirrel": "^6.4.2",
     "@electron-forge/maker-zip": "^6.4.2",
     "@electron-forge/plugin-auto-unpack-natives": "^6.4.2",
-    "electron": "29.4.6",
+    "electron": "35.7.5",
     "electron-builder": "^25.1.8",
     "electron-builder-notarize": "^1.5.2",
     "electron-notarize": "^1.2.2"
