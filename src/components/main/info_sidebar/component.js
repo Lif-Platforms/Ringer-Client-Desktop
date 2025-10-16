@@ -89,11 +89,11 @@ export default function InfoSideBar() {
     return (
         <div className={styles.sidebar}>
             <div className={styles.banner_container}>
-                <img className={styles.banner} src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/profile/get_banner/${infoSidebarUsername}.png`} alt="Banner" draggable="false" />
+                <img className={styles.banner} src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/profile/v1/get_banner/${infoSidebarUsername}.png`} alt="Banner" draggable="false" />
                 <div className={styles.banner_fade} />
             </div>
             <div className={styles.avatar_container}>
-                <img className={styles.avatar} src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${infoSidebarUsername}.png`} alt="Avatar" draggable="false" />
+                <img className={styles.avatar} src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/profile/v1/get_avatar/${infoSidebarUsername}.png`} alt="Avatar" draggable="false" />
             </div>
             <h1 className={styles.username} title={infoSidebarUsername}>{infoSidebarUsername}</h1>
             <div className={styles.info}>

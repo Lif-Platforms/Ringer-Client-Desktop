@@ -3,6 +3,7 @@ const {app, BrowserWindow, shell, ipcMain} = require('electron');
 const path = require('path');
 const { autoUpdater } = require('electron-updater');
 require('dotenv').config();
+const { Notification } = require('electron');
 
 autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
@@ -45,13 +46,17 @@ async function createWindow () {
       webSecurity: true,
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
-    }
+    },
+    show: false
   });
 
   // If window should be maximized, maximize it.
   if (windowState.isMaximized) {
     mainWindow.maximize();
   }
+
+  // Show the window after maximization
+  mainWindow.show();
 
   // Open dev tools based on environment
   if (isDev) {
@@ -67,13 +72,30 @@ async function createWindow () {
     shell.openExternal(url);
   })
 
-  ipcMain.on('send-notification', (event, title, description) => {
-    console.log('sending notification');
-    const myNotification = new Notification({ 
-        title: title, 
-        body: description 
+  ipcMain.on('send-notification', (event, title, description, conversation_id) => {
+    // Get icon path
+    const iconDir = isDev ? 'public' : path.join(__dirname, 'build');
+
+    // Create a new notification
+    const notification = new Notification({ 
+      title: title,
+      body: description, 
+      icon: path.join(iconDir, 'favicon.ico'),
+      silent: false,
     });
-    myNotification.show();
+
+    // If a conversation ID is provided, add a click event to open the conversation
+    if (conversation_id) {
+      notification.on('click', () => {
+        mainWindow.show();
+        mainWindow.focus();
+        mainWindow.webContents.send('open-conversation', { conversation_id });
+        notification.close();
+      });
+    }
+
+    // Show the notification
+    notification.show();
   })
 
   // Remove the menu bar from the main window
@@ -147,6 +169,11 @@ app.whenReady().then( async() => {
   createWindow();
 
   autoUpdater.checkForUpdates();
+
+  // Set the app name for windows
+  if (process.platform === 'win32') {
+    app.setAppUserModelId(app.name);
+  }
   
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

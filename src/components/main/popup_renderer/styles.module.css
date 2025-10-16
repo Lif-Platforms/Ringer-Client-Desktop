@@ -1,0 +1,52 @@
+.overlay  {
+    background-color: rgba(0, 0, 0, 0.492);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 998;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup {
+    z-index: 999;
+    background-color: #181818;
+    border-radius: 0.5em;
+    width: max-content;
+    box-shadow: 0px 0px 20px black;
+    padding: 10px;
+}
+
+.popup .header {
+    display: grid;
+    grid-template-columns: auto 20px;
+    width: 100%;
+}
+
+.popup .header h2 {
+    color: white;
+    font-size: 1.5em;
+    margin: 5px 0;
+}
+
+.popup .header button {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 0;
+    margin: auto;
+    width: 15px;
+    height: 15px;
+}
+
+.popup .header button img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}

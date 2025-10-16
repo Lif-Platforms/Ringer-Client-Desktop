@@ -1,0 +1,46 @@
+.result {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    flex-direction: row;
+    padding: 5px;
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+.userInfo {
+    display: flex;
+    flex-direction: row;
+}
+
+.userInfo img {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin: auto 0;
+}
+
+.userInfo h2 {
+    color: white;
+    margin: auto 10px;
+    font-weight: normal;
+}
+
+.addButton {
+    background-color: green;
+    border: none;
+    border-radius: 0.5em;
+    cursor: pointer;
+    width: 50px;
+    height: 25px;
+    margin: auto 0;
+}
+
+.addButton img {
+    width: 15px;
+    height: 15px;
+    margin: auto;
+    display: block;
+}

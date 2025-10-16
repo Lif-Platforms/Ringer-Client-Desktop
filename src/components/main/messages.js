@@ -1,21 +1,16 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { useParams } from "react-router-dom";
-import CheckLinkPopup from "./check_link_popup";
 import connectSocket from "../../Scripts/mainPage/notification_conn_handler";
-import UnfriendUser from "./unfriend_user";
 import Clock from '../../assets/home/clock_icon.png';
 import GIPHY_LOGO from '../../assets/home/GIPHY_attrabution.png';
 import Spinner from '../../assets/global/loaders/loader-1.svg';
 import ReturnToRecent from "./go_to_recent";
 import ConversationHeader from "./conversation_header/component";
+import { PopupContext } from "src/providers/popup";
+import CheckLinkPopup from "./check_link_popup/component";
 
-export default function Messages({
-  friendsListState,
-  setFriendsListState,
-}) {
+export default function Messages() {
     const [messages, setMessages] = useState('loading');
-    const [unfriendState, setUnfriendState] = useState('hide');
-    const [checkLinkPopup, setCheckLinkPopup] = useState(false);
     const [conversationName, setConversationName] = useState();
     const [isLoadingAdditionalMessages, setIsLoadingAdditionalMessages] = useState(false);
     const loadAdditionalMessages = useRef(false);
@@ -25,6 +20,8 @@ export default function Messages({
     const previous_scroll_position = useRef();
 
     const { conversation_id } = useParams();
+
+    const { showPopup } = useContext(PopupContext);
   
     // Allow messages to be changed during the runtime of the socket function
     const messagesRef = useRef(messages);
@@ -158,7 +155,11 @@ export default function Messages({
     }, [conversation_id]);
   
     function handle_link_click(url) {
-      setCheckLinkPopup(url);
+      showPopup(
+        "Open Link",
+        "Center",
+        <CheckLinkPopup link={url} />
+      )
     }
   
     const renderMessageContent = (message) => {
@@ -248,10 +249,7 @@ export default function Messages({
     return (
       <div className="messages">
         {conversationName && (
-          <ConversationHeader 
-            conversationName={conversationName} 
-            setUnfriendState={setUnfriendState}
-          />
+          <ConversationHeader conversationName={conversationName} />
         )}
         {messages === 'loading' ? (
           <div className="messages-loader">
@@ -291,7 +289,7 @@ export default function Messages({
               ): null}
               {messages.map((message, index) => (
                 <div key={index} className='message'>
-                  <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/get_pfp/${message.Author}.png`} alt='' />
+                  <img src={`${process.env.REACT_APP_LIF_AUTH_SERVER_URL}/profile/v1/get_avatar/${message.Author}.png`} alt='' />
                   <div>
                     <div className="message-header">
                       <h1>{message.Author}</h1>
@@ -308,22 +306,12 @@ export default function Messages({
                   </div>
                 </div>
               ))}
-              <CheckLinkPopup 
-                checkLinkPopup={checkLinkPopup}
-                setCheckLinkPopup={setCheckLinkPopup}
-              />
             </div>
           ) : (
             <h1>Nothing to see here...</h1>
           )
         )}
         <ReturnToRecent messages_container={messages_container} />
-        <UnfriendUser 
-          unfriendState={unfriendState}
-          setUnfriendState={setUnfriendState}
-          friendsListState={friendsListState} 
-          setFriendsListState={setFriendsListState}
-        />
       </div>
     );
   }
