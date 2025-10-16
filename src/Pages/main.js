@@ -248,27 +248,16 @@ function MainPage() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    async function getToken() {
-      const token = localStorage.getItem('token');
-      console.log("Token: " + token);
-    }
-
-    getToken();
-  }, []);
-
   // Listen for 'open-conversation' event from main process
   useEffect(() => {
     ipcRenderer.on('open-conversation', (data) => {
-      console.debug('shits happening')
       navigate(`/direct_messages/${data.conversation_id}`);
     });
   }, []);
-  
 
   return (
     <PopupProvider>
-      <div className="appContainer" style={{ gridTemplateColumns: gridTemplateColumns}}>
+      <div className="appContainer" style={{ gridTemplateColumns: gridTemplateColumns, overflow: "hidden"}}>
         <ReconnectingBar /> 
         <SideOptionsBar />
         <SideBar 
