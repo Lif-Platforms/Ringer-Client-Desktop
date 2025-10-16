@@ -28,3 +28,12 @@ yarn-error.log*
 
 # Log files
 *.log
+
+# Shell scripts
+*.sh
+
+# Certs
+*.p12
+
+# Other files
+package-mac.sh

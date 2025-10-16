@@ -1,0 +1,27 @@
+.popup {
+    width: 500px;
+    color: white;
+    user-select: none;
+}
+
+.popup i {
+    text-decoration: underline;
+}
+
+.popup button {
+    padding: 10px;
+    border-radius: 0.5em;
+    border: none;
+    margin: 0 5px;
+    cursor: pointer;
+    background-color: #636262;
+    color: white;
+}
+
+.popup h1 {
+    margin: 5px 0;
+}
+
+.shield {
+    width: 60px;
+}
