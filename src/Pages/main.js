@@ -20,16 +20,8 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import GifSelector from 'src/components/main/gif_selector';
 import InfoSideBar from 'src/components/main/info_sidebar/component';
+import ReconnectBar from 'src/components/main/reconnect_bar/component';
 const ipcRenderer = window.electron.ipcRenderer;
-
-// Component for showing if the client is reconnecting
-function ReconnectingBar() {
-  return (
-    <div className='reconnectBarHide' id="ReconnectBar">
-      <p>Reconnecting...</p>
-    </div>
-  )
-}
 
 function UpdateDownloaded() {
   const [showUpdatePanel, setShowUpdatePanel] = useState();
@@ -258,7 +250,7 @@ function MainPage() {
   return (
     <PopupProvider>
       <div className="appContainer" style={{ gridTemplateColumns: gridTemplateColumns, overflow: "hidden"}}>
-        <ReconnectingBar /> 
+        <ReconnectBar /> 
         <SideOptionsBar />
         <SideBar 
           friendsListState={friendsListState}

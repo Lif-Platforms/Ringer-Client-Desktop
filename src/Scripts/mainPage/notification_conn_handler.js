@@ -14,6 +14,17 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
         window.electronAPI.sendNotification(title, body, conversation_id);
     }
 
+    // Handle sending websocket events
+    // Mainly used by the reconnect bar to show when the connection is reconnecting
+    function handleWsEvent(connected) {
+        const wsEvent = new CustomEvent("wsEvent", {
+            detail: {
+                connected: connected
+            }
+        });
+        document.dispatchEvent(wsEvent);
+    }
+
     const connect = () => {
         console.log("Connecting to service...");
         if (socket !== null) {
@@ -23,9 +34,8 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
 
         socket.onopen = (event) => {
             console.log("WebSocket connection opened:", event);
-            document.getElementById("ReconnectBar").classList.remove('reconnectBarShow');
-            document.getElementById("ReconnectBar").classList.add('reconnectBarHide');
             socket.send(JSON.stringify({ Username: username, Token: token }));
+            handleWsEvent(true);
         };
 
         socket.onmessage = async (event) => {
@@ -128,14 +138,11 @@ async function connectSocket(conversationIdRef, messagesRef, update_messages) {
                 console.log("Trying to reconnect...");
                 setTimeout(() => {
                     reconnectInterval = Math.min(reconnectInterval * 2, maxReconnectInterval);
-                    document.getElementById("ReconnectBar").classList.remove('reconnectBarHide');
-                    document.getElementById("ReconnectBar").classList.add('reconnectBarShow');
+                    handleWsEvent(false);
                     connect();
                 }, reconnectInterval);
             }
         };
-
-
     };
 
     const send_message = async (message, conversation_id, self_destruct, message_type) => {
